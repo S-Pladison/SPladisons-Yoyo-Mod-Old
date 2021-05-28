@@ -49,7 +49,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
     {
         public override void Load()
         {
-            Mod.AddModTranslation("GameUI.FlamingFlowerMapIcon", "Strange Flower", "Странный цветок");
+            Mod.AddModTranslation(key: "GameUI.FlamingFlowerMapIcon", eng: "Strange Flower", rus: "Странный цветок");
         }
 
         public override void SetDefaults()

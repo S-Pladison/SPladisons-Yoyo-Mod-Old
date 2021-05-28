@@ -48,8 +48,13 @@ namespace SPladisonsYoyoMod.Common
             On.Terraria.Main.DrawMiscMapIcons += (On.Terraria.Main.orig_DrawMiscMapIcons orig, Main self, SpriteBatch spriteBatch, Vector2 mapTopLeft, Vector2 mapX2Y2AndOff, Rectangle? mapRect, float mapScale, float drawScale, ref string mouseTextString) =>
             {
                 Content.Items.Accessories.FlamingFlowerTile.DrawMapIcon(spriteBatch, mapTopLeft, mapX2Y2AndOff, mapRect, mapScale, drawScale, ref mouseTextString);
-
                 orig(self, spriteBatch, mapTopLeft, mapX2Y2AndOff, mapRect, mapScale, drawScale, ref mouseTextString);
+            };
+
+            On.Terraria.Main.DrawProjectiles += (orig, self) =>
+            {
+                SPladisonsYoyoMod.Primitives?.Draw(Main.spriteBatch);
+                orig(self);
             };
         }
 
@@ -63,9 +68,9 @@ namespace SPladisonsYoyoMod.Common
             ILCursor c = new ILCursor(il);
 
             // IL_012E: ldloc.1
-	        // IL_012F: ldfld     int32 Terraria.Projectile::aiStyle
-	        // IL_0134: ldc.i4.s  99
-	        // IL_0136: bne.un    IL_0634
+            // IL_012F: ldfld     int32 Terraria.Projectile::aiStyle
+            // IL_0134: ldc.i4.s  99
+            // IL_0136: bne.un    IL_0634
 
             if (!c.TryGotoNext(MoveType.After,
                 i => i.MatchLdloc(1),
@@ -100,7 +105,8 @@ namespace SPladisonsYoyoMod.Common
                 i => i.MatchStindR4())) return;
 
             c.Emit(Ldarg_1); // index
-            c.EmitDelegate<Func<int, Vector2>>((i) => {
+            c.EmitDelegate<Func<int, Vector2>>((i) =>
+            {
                 var player = Main.player[Main.projectile[i].owner];
 
                 // I need to get a better handle on this

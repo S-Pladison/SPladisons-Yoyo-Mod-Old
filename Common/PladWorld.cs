@@ -21,7 +21,7 @@ namespace SPladisonsYoyoMod.Common
 
         public override void PostUpdateEverything()
         {
-            //SPladisonsYoyoMod.Primitives.UpdateTrails();
+            SPladisonsYoyoMod.Primitives?.UpdateTrails();
         }
 
         public override TagCompound SaveWorldData()

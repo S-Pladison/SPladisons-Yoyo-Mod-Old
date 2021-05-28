@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace SPladisonsYoyoMod
 {
     public class SPladisonsYoyoMod : Mod
-	{
+    {
         public static Mod Instance { get; private set; }
 
         public static PrimitiveSystem Primitives { get; private set; }
@@ -34,7 +34,7 @@ namespace SPladisonsYoyoMod
 
         private void RenderSpecial(GameTime obj)
         {
-            Primitives.Render();
+            Primitives?.Render();
         }
     }
 }
