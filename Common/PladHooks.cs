@@ -18,8 +18,6 @@ namespace SPladisonsYoyoMod.Common
     {
         public void Load(Mod mod)
         {
-            //GetFrontHandPosition_MethodInfo = typeof(Player).GetMethod("GetFrontHandPosition", BindingFlags.NonPublic | BindingFlags.Instance);
-
             IL.Terraria.Main.DrawProj += ModifyYoyoStringPosition;
 
             On.Terraria.Projectile.AI_099_2 += (orig, projectile) =>

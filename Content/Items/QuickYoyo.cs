@@ -8,7 +8,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Content
+namespace SPladisonsYoyoMod.Content.Items
 {
     public abstract class YoyoItem : PladItem
     {
@@ -80,7 +80,7 @@ namespace SPladisonsYoyoMod.Content
             Projectile.width = 16;
             Projectile.height = 16;
 
-            Projectile.aiStyle = Global.PladGlobalProjectile.YoyoAIStyle;
+            Projectile.aiStyle = Common.Global.PladGlobalProjectile.YoyoAIStyle;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
 

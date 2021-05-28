@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod
+namespace SPladisonsYoyoMod.Content
 {
     public abstract class PladTile : ModTile
     {

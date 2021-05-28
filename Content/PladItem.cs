@@ -10,7 +10,7 @@ using Terraria.GameContent.Creative;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod
+namespace SPladisonsYoyoMod.Content
 {
     public abstract class PladItem : ModItem
     {

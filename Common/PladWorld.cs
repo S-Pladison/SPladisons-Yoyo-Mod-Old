@@ -19,6 +19,11 @@ namespace SPladisonsYoyoMod.Common
             this.UpdateFlamingFlower();
         }
 
+        public override void PostUpdateEverything()
+        {
+            //SPladisonsYoyoMod.Primitives.UpdateTrails();
+        }
+
         public override TagCompound SaveWorldData()
         {
             return new TagCompound
