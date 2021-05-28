@@ -1,0 +1,3 @@
+displayName = S-Pladison's Yoyo Mod
+author = S-Pladison
+version = 0.0.0.1
