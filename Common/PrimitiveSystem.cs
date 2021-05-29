@@ -11,7 +11,6 @@ namespace SPladisonsYoyoMod.Common
 {
     public class PrimitiveSystem
     {
-        public RenderTarget2D Target { get; private set; }
         public GraphicsDevice GraphicsDevice { get; private set; }
 
         private readonly List<Trail> _trails;
@@ -19,26 +18,15 @@ namespace SPladisonsYoyoMod.Common
         public PrimitiveSystem(GraphicsDevice graphicsDevice)
         {
             this.GraphicsDevice = graphicsDevice;
-            this.Target = (!Main.dedServ) ? new RenderTarget2D(graphicsDevice, Main.screenWidth, Main.screenHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents) : null;
 
             _trails = new List<Trail>();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawTrails(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            spriteBatch.Draw(this.Target, Main.screenPosition, Color.White);
-            spriteBatch.End();
-        }
-
-        public void Render()
-        {
-            GraphicsDevice.SetRenderTarget(Target);
-            GraphicsDevice.Clear(Color.Transparent);
-
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             foreach (var trail in _trails) trail.Draw();
-
-            GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.End();
         }
 
         public void UpdateTrails()
@@ -46,9 +34,9 @@ namespace SPladisonsYoyoMod.Common
             foreach (var trail in _trails) trail.Update();
         }
 
-        public Trail CreateTrail(Entity target, int maxPoints, Func<float, float> widthFunc, Func<float, Color> colorFunc)
+        public Trail CreateTrail(Entity target, float length, Func<float, float> widthFunc, Func<float, Color> colorFunc, Effect effect = null)
         {
-            Trail trail = new Trail(target, maxPoints, widthFunc, colorFunc);
+            Trail trail = new Trail(target, length, widthFunc, colorFunc, effect);
             _trails.Add(trail);
             return trail;
         }
@@ -59,25 +47,32 @@ namespace SPladisonsYoyoMod.Common
 
             public bool active = true;
 
-            private readonly int _maxPoints;
+            private readonly float _maxLength;
             private readonly List<Vector2> _points;
 
-            private readonly Func<float, float> _widthFunc; // (progress) => return width
-            private readonly Func<float, Color> _colorFunc; // (progress) => return color
+            private readonly Func<float, float> _widthFunc; // (progress) => return width;
+            private readonly Func<float, Color> _colorFunc; // (progress) => return color;
 
-            public Trail(Entity target, int maxPoints, Func<float, float> widthFunc, Func<float, Color> colorFunc)
+            private readonly Effect _effect;
+
+            public Trail(Entity target, float length, Func<float, float> widthFunc, Func<float, Color> colorFunc, Effect effect = null)
             {
                 this.Target = target;
 
-                _maxPoints = maxPoints;
+                _maxLength = length;
                 _points = new List<Vector2>();
 
                 _widthFunc = widthFunc;
+                _colorFunc = colorFunc;
+
+                _effect = effect;
             }
 
             public void Draw()
             {
-                
+                if (!active || _points.Count <= 1) return;
+
+                // ...
             }
 
             public void Update()
@@ -88,8 +83,7 @@ namespace SPladisonsYoyoMod.Common
                     return;
                 }
 
-                _points.Insert(0, Target.Center);
-                if (_points.Count >= _maxPoints) _points.Remove(_points.Last());
+                // ...
             }
 
             public void Kill()

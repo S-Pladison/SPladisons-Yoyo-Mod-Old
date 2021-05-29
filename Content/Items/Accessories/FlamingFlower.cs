@@ -25,7 +25,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
                 eng: "12% increased yoyo critical strike chance\n" +
                      "Replaces «On Fire!» debuff with «Flaming Fragrance», which increases yoyo critical strike chance by 10%",
                 rus: "Увеличивает шанс критического попадания йо-йо на 12%\n" +
-                     "Заменяет дебафф «В огне!» на «Пылающий аромат», который увеличивает шанс критического попадания йо-йо на 10%"
+                     "Критические атаки ..."
                 );
         }
 
@@ -41,7 +41,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetModPlayer<PladPlayer>().flameFlowerEquipped = true;
+            player.GetPladPlayer().flameFlowerEquipped = true;
         }
     }
 
@@ -64,17 +64,17 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             TileObjectData.newTile.Origin = new Point16(0, 1);
             TileObjectData.addTile(Type);
 
-            this.CreateMapEntry(new Color(238, 145, 105), "Flaming Flower", "Пылающий цветок");
+            this.CreateMapEntry(color: new Color(238, 145, 105), eng: "Flaming Flower", rus: "Пылающий цветок");
 
-            //DustType = ModContent.DustType<Dusts.VaporDust>();
-            SoundType = SoundID.Grass;
+            //this.DustType = ModContent.DustType<Dusts.VaporDust>();
+            this.SoundType = SoundID.Grass;
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             Item.NewItem(i * 16, j * 16, 32, 48, ModContent.ItemType<FlamingFlower>());
 
-            Common.PladWorld.flamingFlowerPosition = Point.Zero;
+            PladWorld.flamingFlowerPosition = Point.Zero;
         }
 
         public override void NearbyEffects(int i, int j, bool closer)
@@ -97,13 +97,11 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             player.cursorItemIconID = ModContent.ItemType<FlamingFlower>();
         }
 
-        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        public override void PladModifyLight(int i, int j, ref Color color)
         {
             float progress = MathHelper.Lerp(0.3f, 0.5f, (float)Math.Abs(Math.Pow(Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), 4f)));
 
-            r = 1f * progress;
-            g = 0.4f * progress;
-            b = 0.12f * progress;
+            color = new Color(1f, 0.4f, 0.12f) * progress;
         }
 
         public override void DrawEffects(int i, int j)
@@ -133,7 +131,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
             if (Main.drawToScreen) zero = Vector2.Zero;
 
-            Texture2D texture = Mod.GetTexture($"Assets/Textures/Glowmasks/{this.Name}_Glowmask").Value;
+            Texture2D texture = Mod.GetTexture($"Assets/Textures/Tiles/{this.Name}_Glow").Value;
             int height = tile.frameY == 36 ? 18 : 16;
             float progress = MathHelper.Lerp(0.4f, 0.9f, (float)Math.Abs(Math.Pow(Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), 4f)));
 

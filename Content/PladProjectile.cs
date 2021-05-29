@@ -10,19 +10,7 @@ namespace SPladisonsYoyoMod.Content
 {
     public abstract class PladProjectile : ModProjectile
     {
-        private bool _spawn = true;
-
         public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Projectiles/" + this.Name;
-
-        public sealed override bool PreAI()
-        {
-            if (_spawn)
-            {
-                this.OnSpawn();
-                _spawn = false;
-            }
-            return this.PladPreAI();
-        }
 
         public void SetDisplayName(string eng, string rus = "")
         {
@@ -33,7 +21,6 @@ namespace SPladisonsYoyoMod.Content
             }
         }
 
-        public virtual bool PladPreAI() { return true; }
         public virtual void OnSpawn() { }
     }
 }

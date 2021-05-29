@@ -13,6 +13,15 @@ namespace SPladisonsYoyoMod.Content
     {
         public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Tiles/" + this.Name;
 
+        public sealed override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            Color color = new Color(r, g, b);
+
+            this.PladModifyLight(i, j, ref color);
+
+            r = color.R; g = color.G; b = color.B;
+        }
+
         public void CreateMapEntry(Color color, string eng, string rus = "")
         {
             ModTranslation name = CreateMapEntryName();
@@ -20,5 +29,7 @@ namespace SPladisonsYoyoMod.Content
             if (rus != "") name.AddTranslation(GameCulture.FromCultureName(GameCulture.CultureName.Russian), rus);
             AddMapEntry(color, name);
         }
+
+        public virtual void PladModifyLight(int i, int j, ref Color color) { }
     }
 }

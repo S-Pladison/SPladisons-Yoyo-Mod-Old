@@ -51,9 +51,19 @@ namespace SPladisonsYoyoMod.Common
                 orig(self, spriteBatch, mapTopLeft, mapX2Y2AndOff, mapRect, mapScale, drawScale, ref mouseTextString);
             };
 
+            On.Terraria.Projectile.NewProjectile_float_float_float_float_int_int_float_int_float_float += (orig, X, Y, SpeedX, SpeedY, Type, Damage, KnockBack, Owner, ai0, ai1) =>
+            {
+                var index = orig(X, Y, SpeedX, SpeedY, Type, Damage, KnockBack, Owner, ai0, ai1);
+                var proj = Main.projectile[index];
+
+                if (proj.ModProjectile is Content.PladProjectile pladProj) pladProj.OnSpawn();
+
+                return index;
+            };
+
             On.Terraria.Main.DrawProjectiles += (orig, self) =>
             {
-                SPladisonsYoyoMod.Primitives?.Draw(Main.spriteBatch);
+                SPladisonsYoyoMod.Primitives?.DrawTrails(Main.spriteBatch);
                 orig(self);
             };
         }

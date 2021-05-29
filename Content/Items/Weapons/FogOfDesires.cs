@@ -48,12 +48,17 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void YoyoSetDefaults()
         {
-            
+
         }
 
         public override void OnSpawn()
         {
-            //SPladisonsYoyoMod.Primitives.CreateTrail(Projectile);
+            SPladisonsYoyoMod.Primitives.CreateTrail(
+                target: Projectile,
+                length: 16 * 5,
+                widthFunc: (progress) => 16 * (1 - progress),
+                colorFunc: (progress) => Color.White
+            );
         }
 
         public override void ModifyYoyo(ref float lifeTimeMult, ref float maxRangeMult, ref float topSpeedMult)
