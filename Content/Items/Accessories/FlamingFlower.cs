@@ -41,7 +41,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetPladPlayer().flameFlowerEquipped = true;
+            player.GetPladPlayer().flamingFlowerEquipped = true;
         }
     }
 

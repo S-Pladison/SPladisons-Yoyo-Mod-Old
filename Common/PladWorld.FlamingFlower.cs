@@ -17,7 +17,7 @@ namespace SPladisonsYoyoMod.Common
     {
         public static Point flamingFlowerPosition;
 
-        private void UpdateFlamingFlower()
+        public void UpdateFlamingFlower()
         {
             if (flamingFlowerPosition != Point.Zero)
             {
@@ -28,7 +28,7 @@ namespace SPladisonsYoyoMod.Common
             if (flamingFlowerPosition == Point.Zero && Main.time == 0) this.GenerateFlamingFlower();
         }
 
-        private void GenerateFlamingFlower()
+        public void GenerateFlamingFlower()
         {
             bool flag = false;
 

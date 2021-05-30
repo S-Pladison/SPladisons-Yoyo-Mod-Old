@@ -22,12 +22,17 @@ namespace SPladisonsYoyoMod.Content
             r = color.R; g = color.G; b = color.B;
         }
 
-        public void CreateMapEntry(Color color, string eng, string rus = "")
+        public void CreateMapEntry(Color color, string eng, string rus = "", Func<string, int, int, string> nameFunc = null)
         {
-            ModTranslation name = CreateMapEntryName();
+            this.CreateMapEntry(color, null, eng, rus, nameFunc);
+        }
+
+        public void CreateMapEntry(Color color, string key, string eng, string rus = "", Func<string, int, int, string> nameFunc = null)
+        {
+            ModTranslation name = CreateMapEntryName(key);
             name.SetDefault(eng);
             if (rus != "") name.AddTranslation(GameCulture.FromCultureName(GameCulture.CultureName.Russian), rus);
-            AddMapEntry(color, name);
+            AddMapEntry(color, name, nameFunc);
         }
 
         public virtual void PladModifyLight(int i, int j, ref Color color) { }

@@ -34,7 +34,12 @@ namespace SPladisonsYoyoMod.Common
             foreach (var trail in _trails) trail.Update();
         }
 
-        public Trail CreateTrail(Entity target, float length, Func<float, float> widthFunc, Func<float, Color> colorFunc, Effect effect = null)
+        public Trail CreateTrail(Entity target, float length, Func<float, float> widthFunc, Func<float, Color> colorFunc)
+        {
+            return this.CreateTrail(target, length, widthFunc, colorFunc, null);
+        }
+
+        public Trail CreateTrail(Entity target, float length, Func<float, float> widthFunc, Func<float, Color> colorFunc, Effect effect)
         {
             Trail trail = new Trail(target, length, widthFunc, colorFunc, effect);
             _trails.Add(trail);

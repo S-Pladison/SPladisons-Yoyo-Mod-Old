@@ -9,18 +9,18 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common
 {
-    public partial class PladPlayer : ModPlayer
+    public class PladPlayer : ModPlayer
     {
-        public bool flameFlowerEquipped = false;
+        public bool flamingFlowerEquipped = false;
 
         public override void ResetEffects()
         {
-            flameFlowerEquipped = false;
+            flamingFlowerEquipped = false;
         }
 
         public override void ModifyWeaponCrit(Item item, ref int crit)
         {
-            if (flameFlowerEquipped && ItemID.Sets.Yoyo[item.type]) crit += 12;
+            if (flamingFlowerEquipped && ItemID.Sets.Yoyo[item.type]) crit += 12;
         }
     }
 }

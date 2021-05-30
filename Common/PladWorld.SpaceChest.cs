@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using Terraria;
+using Terraria.ID;
+using Terraria.IO;
+using Terraria.Localization;
+using Terraria.ModLoader;
+using Terraria.WorldBuilding;
+
+namespace SPladisonsYoyoMod.Common
+{
+    public partial class PladWorld : ModSystem
+    {
+        public void GenerateSpaceChest(GenerationProgress progress, GameConfiguration configuration)
+        {
+            progress.Message = Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest_0");
+
+            bool flag = false;
+            while (!flag)
+            {
+                object dMinX = typeof(WorldGen).GetField("dMinX", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(null);
+                object dMaxX = typeof(WorldGen).GetField("dMaxX", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(null);
+                object dMaxY = typeof(WorldGen).GetField("dMaxY", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(null);
+
+                int x = WorldGen.genRand.Next((int)dMinX, (int)dMaxX);
+                int y = WorldGen.genRand.Next((int)Main.worldSurface, (int)dMaxY);
+
+                if (Main.wallDungeon[(int)Main.tile[x, y].wall] && !Main.tile[x, y].active())
+                {
+                    flag = WorldGen.AddBuriedChest(x, y, ItemID.Terrarian, false, 1, chestTileType: (ushort)ModContent.TileType<Content.Items.Placeables.SpaceChestTile>());
+                }
+            }
+        }
+    }
+}

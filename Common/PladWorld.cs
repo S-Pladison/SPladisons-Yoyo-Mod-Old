@@ -7,13 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.GameContent.Generation;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.WorldBuilding;
 
 namespace SPladisonsYoyoMod.Common
 {
     public partial class PladWorld : ModSystem
     {
+        public override void Load()
+        {
+            Mod.AddModTranslation(key: "WorldGen.SpaceChest", eng: "S-Pladison's Yoyo Mod: Space Chest", rus: "S-Pladison's Yoyo Mod: Космический сундук");
+            Mod.AddModTranslation(key: "WorldGen.SpaceChest_0", eng: "Adding a piece of space to the dungeon...", rus: "Добавление кусочка космоса в подземелье...");
+        }
+
         public override void PostUpdateWorld()
         {
             this.UpdateFlamingFlower();
@@ -22,6 +31,15 @@ namespace SPladisonsYoyoMod.Common
         public override void PostUpdateEverything()
         {
             SPladisonsYoyoMod.Primitives?.UpdateTrails();
+        }
+
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+        {
+            int index = tasks.FindIndex(genpass => genpass.Name.Equals("Dungeon"));
+            if (index >= 0)
+            {
+                tasks.Insert(index + 1, new PassLegacy(Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest"), this.GenerateSpaceChest));
+            }
         }
 
         public override TagCompound SaveWorldData()

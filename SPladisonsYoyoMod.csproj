@@ -15,7 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Effects\" />
-    <Folder Include="Assets\Textures\Items\" />
     <Folder Include="Assets\Textures\Buffs\" />
     <Folder Include="Content\Items\Accessories\" />
   </ItemGroup>
