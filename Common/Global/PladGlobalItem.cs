@@ -14,7 +14,7 @@ namespace SPladisonsYoyoMod.Common.Global
     {
         public override void UseStyle(Item item, Player player, Rectangle heldItemFrame)
         {
-            if (ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle && ItemID.Sets.Yoyo[item.type])
+            if (ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle && item.IsYoyo())
             {
                 float rotation = player.itemRotation * player.gravDir - 1.57079637f * player.direction;
                 player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotation);

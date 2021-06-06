@@ -11,10 +11,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Reflection;
+using MonoMod.RuntimeDetour.HookGen;
 
 namespace SPladisonsYoyoMod.Common
 {
-    public class PladHooks : ILoadable
+    public partial class PladHooks : ILoadable
     {
         public void Load(Mod mod)
         {
@@ -66,11 +67,15 @@ namespace SPladisonsYoyoMod.Common
                 SPladisonsYoyoMod.Primitives?.DrawTrails(Main.spriteBatch);
                 orig(self);
             };
+
+            LoadThorium(ModLoader.GetMod("ThoriumMod"));
         }
 
         public void Unload()
         {
             IL.Terraria.Main.DrawProj -= ModifyYoyoStringPosition;
+
+            UnloadThorium();
         }
 
         private void ModifyYoyoStringPosition(ILContext il)

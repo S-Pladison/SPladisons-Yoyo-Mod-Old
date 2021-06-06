@@ -8,13 +8,13 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
 {
-    public class Stable : YoyoItem
+    public class Blackhole : YoyoItem
     {
-        public Stable() : base(gamepadExtraRange: 15) { }
+        public Blackhole() : base(gamepadExtraRange: 15) { }
 
         public override void YoyoSetStaticDefaults()
         {
-            this.SetDisplayName(eng: "Stable", rus: "Стабильный");
+            this.SetDisplayName(eng: "Blackhole", rus: "Черная дыра");
             this.SetTooltip(
                 eng: "...",
                 rus: "..."
@@ -26,20 +26,20 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Item.damage = 43;
             Item.knockBack = 2.5f;
 
-            Item.shoot = ModContent.ProjectileType<StableProjectile>();
+            Item.shoot = ModContent.ProjectileType<FogOfDesiresProjectile>();
 
-            Item.rare = ItemRarityID.Lime;
+            Item.rare = ItemRarityID.Cyan;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
         }
     }
 
-    public class StableProjectile : YoyoProjectile
+    public class BlackholeProjectile : YoyoProjectile
     {
-        public StableProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
+        public BlackholeProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
 
         public override void YoyoSetStaticDefaults()
         {
-            this.SetDisplayName(eng: "Stable", rus: "Стабильный");
+            this.SetDisplayName(eng: "Blackhole", rus: "Черная дыра");
         }
     }
 }

@@ -46,11 +46,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             this.SetDisplayName(eng: "Fog of Desires", rus: "Туман желаний");
         }
 
-        public override void YoyoSetDefaults()
-        {
-
-        }
-
         public override void OnSpawn()
         {
             SPladisonsYoyoMod.Primitives.CreateTrail(
@@ -59,11 +54,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 widthFunc: (progress) => 16 * (1 - progress),
                 colorFunc: (progress) => Color.White
             );
-        }
-
-        public override void ModifyYoyo(ref float lifeTimeMult, ref float maxRangeMult, ref float topSpeedMult)
-        {
-
         }
     }
 }
