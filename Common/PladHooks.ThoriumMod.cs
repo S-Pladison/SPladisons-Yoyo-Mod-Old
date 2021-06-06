@@ -14,6 +14,8 @@ namespace SPladisonsYoyoMod.Common
     // Why not use Vanilla AI...
     public partial class PladHooks : ILoadable
     {
+        public static bool ModifiedThorium { get; private set; }
+
         public static MethodInfo ThoriumYoyoAIMethod { get; private set; }
         public static MethodInfo ThoriumDrawStringMethod { get; private set; }
 
@@ -30,32 +32,44 @@ namespace SPladisonsYoyoMod.Common
                 }
             }
 
-            if (ThoriumYoyoAIMethod != null && ThoriumDrawStringMethod != null)
+            try
             {
+                ModifiedThorium = false;
+
                 ModifyThoriumYoyoAIMethod += (orig, projIndex, lifeTime, maxRange, topSpeed, rotateSpeed, _unknownAction, _unknownAction2) =>
                 {
-                    var proj = Main.projectile[projIndex];
+                    if (PladHooks.ModifiedThorium)
+                    {
+                        var proj = Main.projectile[projIndex];
 
-                    float oldLifeTime = lifeTime;
-                    float oldMaxRange = maxRange;
-                    float oldTopSpeed = topSpeed;
+                        float oldLifeTime = lifeTime;
+                        float oldMaxRange = maxRange;
+                        float oldTopSpeed = topSpeed;
 
-                    var globalProjectile = proj.GetPladGlobalProjectile();
-                    globalProjectile.ModifyYoyo(proj, ref lifeTime, ref maxRange, ref topSpeed);
+                        var globalProjectile = proj.GetPladGlobalProjectile();
+                        globalProjectile.ModifyYoyo(proj, ref lifeTime, ref maxRange, ref topSpeed);
 
-                    orig(projIndex, lifeTime, maxRange, topSpeed, rotateSpeed, _unknownAction, _unknownAction2);
+                        orig(projIndex, lifeTime, maxRange, topSpeed, rotateSpeed, _unknownAction, _unknownAction2);
 
-                    lifeTime = oldLifeTime;
-                    maxRange = oldMaxRange;
-                    topSpeed = oldTopSpeed;
+                        lifeTime = oldLifeTime;
+                        maxRange = oldMaxRange;
+                        topSpeed = oldTopSpeed;
+                    }
+                    else orig(projIndex, lifeTime, maxRange, topSpeed, rotateSpeed, _unknownAction, _unknownAction2);
                 };
 
                 ModifyThoriumDrawStringMethod += (orig, projIndex, start) =>
                 {
-                    if (ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle && Main.projectile[projIndex].IsYoyo()) return;
+                    if (PladHooks.ModifiedThorium && ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle && Main.projectile[projIndex].IsYoyo() && start == default(Vector2)) return;
 
                     orig(projIndex, start);
                 };
+
+                ModifiedThorium = true;
+            }
+            catch
+            {
+                SPladisonsYoyoMod.Instance.Logger.Error("Failed to modify Thorium Mod");
             }
         }
 
@@ -63,6 +77,8 @@ namespace SPladisonsYoyoMod.Common
         {
             ThoriumYoyoAIMethod = null;
             ThoriumDrawStringMethod = null;
+
+            ModifiedThorium = false;
         }
 
         // YoyoAI(int, float, float, float, float, ThoriumMod.Projectiles.ExtraAction, ThoriumMod.Projectiles.ExtraAction)
