@@ -19,7 +19,7 @@ namespace SPladisonsYoyoMod.Content
 
             this.PladModifyLight(i, j, ref color);
 
-            r = color.R; g = color.G; b = color.B;
+            r = color.R / 255f; g = color.G / 255f; b = color.B / 255f;
         }
 
         public void CreateMapEntry(Color color, string eng, string rus = "", Func<string, int, int, string> nameFunc = null)
@@ -32,7 +32,9 @@ namespace SPladisonsYoyoMod.Content
             ModTranslation name = CreateMapEntryName(key);
             name.SetDefault(eng);
             if (rus != "") name.AddTranslation(GameCulture.FromCultureName(GameCulture.CultureName.Russian), rus);
-            AddMapEntry(color, name, nameFunc);
+
+            if (nameFunc == null) AddMapEntry(color, name);
+            else AddMapEntry(color, name, nameFunc);
         }
 
         public virtual void PladModifyLight(int i, int j, ref Color color) { }

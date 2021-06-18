@@ -95,6 +95,8 @@ namespace SPladisonsYoyoMod.Content.Items
             _topSpeed = topSpeed;
         }
 
+        public bool IsReturning => Projectile.ai[0] == -1;
+
         public sealed override void SetStaticDefaults()
         {
             ProjectileID.Sets.YoyosLifeTimeMultiplier[Type] = _lifeTime;
@@ -111,7 +113,7 @@ namespace SPladisonsYoyoMod.Content.Items
             Projectile.width = 16;
             Projectile.height = 16;
 
-            Projectile.aiStyle = Common.Global.PladGlobalProjectile.YoyoAIStyle;
+            Projectile.aiStyle = Common.Global.YoyoGlobalProjectile.YoyoAIStyle;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
 

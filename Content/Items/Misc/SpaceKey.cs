@@ -12,10 +12,9 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
         public override void PladSetStaticDefaults()
         {
             this.SetDisplayName(eng: "Space Key", rus: "Космический ключ");
-            this.SetTooltip(
-                eng: "Unlocks a Space Chest in the dungeon",
-                rus: "Открывает космический сундук в Темнице"
-                );
+            this.SetTooltip(eng: "Unlocks a Space Chest in the dungeon",
+                            rus: "Открывает космический сундук в Темнице"
+                            );
         }
 
         public override void SetDefaults()

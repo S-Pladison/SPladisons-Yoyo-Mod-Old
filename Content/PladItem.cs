@@ -14,8 +14,6 @@ namespace SPladisonsYoyoMod.Content
 {
     public abstract class PladItem : ModItem
     {
-        public virtual int SacrificeCount => 1;
-
         public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Items/" + this.Name;
 
         public sealed override void SetStaticDefaults()
@@ -43,6 +41,7 @@ namespace SPladisonsYoyoMod.Content
             }
         }
 
+        public virtual int SacrificeCount => 1;
         public virtual void PladSetStaticDefaults() { }
     }
 }

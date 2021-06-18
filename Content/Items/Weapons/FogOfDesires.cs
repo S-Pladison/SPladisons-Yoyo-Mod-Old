@@ -19,10 +19,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override void YoyoSetStaticDefaults()
         {
             this.SetDisplayName(eng: "Fog of Desires", rus: "Туман желаний");
-            this.SetTooltip(
-                eng: "...",
-                rus: "..."
-                );
+            this.SetTooltip(eng: "...",
+                            rus: "...");
         }
 
         public override void YoyoSetDefaults()

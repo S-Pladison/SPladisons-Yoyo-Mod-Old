@@ -11,16 +11,13 @@ namespace SPladisonsYoyoMod.Common
 {
     public class PladPlayer : ModPlayer
     {
-        public bool flamingFlowerEquipped = false;
+        public bool desecratedDiceEquipped;
+        public bool flamingFlowerEquipped;
 
         public override void ResetEffects()
         {
+            desecratedDiceEquipped = false;
             flamingFlowerEquipped = false;
-        }
-
-        public override void ModifyWeaponCrit(Item item, ref int crit)
-        {
-            if (flamingFlowerEquipped && ItemID.Sets.Yoyo[item.type]) crit += 12;
         }
     }
 }

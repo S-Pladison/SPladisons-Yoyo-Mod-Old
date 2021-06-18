@@ -21,12 +21,10 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         public override void PladSetStaticDefaults()
         {
             this.SetDisplayName(eng: "Flaming Flower", rus: "Пылающий цветок");
-            this.SetTooltip(
-                eng: "12% increased yoyo critical strike chance\n" +
-                     "Replaces «On Fire!» debuff with «Flaming Fragrance», which increases yoyo critical strike chance by 10%",
-                rus: "Увеличивает шанс критического попадания йо-йо на 12%\n" +
-                     "Критические атаки ..."
-                );
+            this.SetTooltip(eng: "12% increased yoyo critical strike chance\n" +
+                            "Replaces «On Fire!» debuff with «Flaming Fragrance», which increases yoyo critical strike chance by 10%",
+                            rus: "Увеличивает шанс критического попадания йо-йо на 12%\n" +
+                            "Критические атаки ...");
         }
 
         public override void SetDefaults()

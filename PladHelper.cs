@@ -20,23 +20,12 @@ namespace SPladisonsYoyoMod
         }
 
         public static PladPlayer GetPladPlayer(this Player player) => player.GetModPlayer<PladPlayer>();
-        public static PladGlobalProjectile GetPladGlobalProjectile(this Projectile projectile) => projectile.GetGlobalProjectile<PladGlobalProjectile>();
+        public static YoyoGlobalProjectile GetPladGlobalProjectile(this Projectile projectile) => projectile.GetGlobalProjectile<YoyoGlobalProjectile>();
 
-        public static bool IsYoyo(this Projectile projectile) => projectile.aiStyle == PladGlobalProjectile.YoyoAIStyle;
-        public static bool IsYoyo(this Item item)
-        {
-            if (ItemID.Sets.Yoyo[item.type]) return true;
+        public static YoyoGlobalItem GetYoyoGlobalItem(this Item item) => item.GetGlobalItem<YoyoGlobalItem>();
 
-            if (item.shoot > ProjectileID.None)
-            {
-                var proj = new Projectile();
-                proj.SetDefaults(item.shoot);
-
-                if (proj.IsYoyo()) return true;
-            }
-
-            return false;
-        }
+        public static bool IsYoyo(this Projectile projectile) => projectile.aiStyle == YoyoGlobalProjectile.YoyoAIStyle;
+        public static bool IsYoyo(this Item item) => SPladisonsYoyoMod.GetYoyos.Contains(item.type);
 
         public static void AddModTranslation(this Mod mod, string key, string eng, string rus = "")
         {
