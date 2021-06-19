@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.GameContent.UI;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -54,8 +55,7 @@ namespace SPladisonsYoyoMod.Common.Global
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
-            int index = tooltips.FindLastIndex(i => i.Name == "OneDropLogo" || i.Name == $"Tooltip{item.ToolTip.Lines - 1}") + 1;
-
+            int index = tooltips.FindLastIndex(i => i.Name == "OneDropLogo" || i.Name.StartsWith("Tooltip")) + 1;
             if (index > 0)
             {
                 if (lifeTimeMult != 1)
@@ -82,6 +82,13 @@ namespace SPladisonsYoyoMod.Common.Global
                 {
 
                 }
+            }
+
+            var tooltip = tooltips.Find(i => i.mod == "Terraria" && i.text.Contains("|?|"));
+            if (tooltip != null)
+            {
+                tooltip.text = tooltip.text.Replace("|?| ", "");
+                tooltip.overrideColor = ItemRarity.GetColor(item.rare);
             }
         }
 

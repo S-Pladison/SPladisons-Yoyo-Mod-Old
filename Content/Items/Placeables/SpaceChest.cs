@@ -1,14 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.Achievements;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
@@ -43,6 +40,33 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
         }
     }
 
+    public class SpaceKey : PladItem
+    {
+        public override void PladSetStaticDefaults()
+        {
+            this.SetDisplayName(eng: "Space Key", rus: "Космический ключ");
+            this.SetTooltip(eng: "Unlocks a Space Chest in the dungeon",
+                            rus: "Открывает космический сундук в Темнице");
+        }
+
+        public override void SetDefaults()
+        {
+            Item.width = 14;
+            Item.height = 26;
+
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 2, silver: 0, copper: 0);
+            Item.maxStack = 99;
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            var tooltip = tooltips.Find(i => i.mod == "Terraria" && i.Name.StartsWith("Tooltip"));
+
+            if (tooltip != null && !NPC.downedPlantBoss) tooltip.text = Language.GetTextValue("LegacyTooltip.59");
+        }
+    }
+
     public class SpaceChestTile : PladTile
     {
         public override void SetDefaults()
@@ -50,14 +74,18 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
             Main.tileLighted[Type] = true;
             Main.tileSpelunker[Type] = true;
             Main.tileContainer[Type] = true;
-            Main.tileShine2[Type] = true;
-            Main.tileShine[Type] = 1200;
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
             Main.tileOreFinderPriority[Type] = 500;
+
             TileID.Sets.HasOutlines[Type] = true;
             TileID.Sets.BasicChest[Type] = true;
+            TileID.Sets.IsAContainer[Type] = true;
+            TileID.Sets.FriendlyFairyCanLureTo[Type] = true;
+            TileID.Sets.GeneralPlacementTiles[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
+            TileID.Sets.AvoidedByNPCs[Type] = true;
+            TileID.Sets.InteractibleByNPCs[Type] = true;
 
             //this.DustType = ModContent.DustType<Sparkle>();
             this.AdjTiles = new int[] { TileID.Containers };
@@ -89,12 +117,13 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
         public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].frameX / 36);
         public override bool HasSmartInteract() => true;
         public override bool IsLockedChest(int i, int j) => Main.tile[i, j].frameX / 36 == 1;
-
         public override void NumDust(int i, int j, bool fail, ref int num) => num = 1;
 
         public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
         {
-            this.DustType = dustType;
+            if (!NPC.downedPlantBoss) return false;
+
+            AchievementsHelper.NotifyProgressionEvent(AchievementHelperID.Events.UnlockedBiomeChest);
             return true;
         }
 
@@ -152,7 +181,7 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
             {
                 if (isLocked)
                 {
-                    int key = ModContent.ItemType<Misc.SpaceKey>();
+                    int key = ModContent.ItemType<SpaceKey>();
                     if (player.ConsumeItem(key) && Chest.Unlock(left, top))
                     {
                         if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -206,7 +235,7 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
                 if (player.cursorItemIconText == "Space Chest")
                 {
                     player.cursorItemIconID = ModContent.ItemType<SpaceChest>();
-                    if (Main.tile[left, top].frameX / 36 == 1) player.cursorItemIconID = ModContent.ItemType<Misc.SpaceKey>();
+                    if (Main.tile[left, top].frameX / 36 == 1) player.cursorItemIconID = ModContent.ItemType<SpaceKey>();
                     player.cursorItemIconText = "";
                 }
             }

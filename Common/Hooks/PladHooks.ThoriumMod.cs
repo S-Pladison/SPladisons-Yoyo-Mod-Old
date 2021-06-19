@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Common
+namespace SPladisonsYoyoMod.Common.Hooks
 {
     // Why not use Vanilla AI...
     public partial class PladHooks : ILoadable
@@ -46,7 +46,7 @@ namespace SPladisonsYoyoMod.Common
                         float oldMaxRange = maxRange;
                         float oldTopSpeed = topSpeed;
 
-                        var globalProjectile = proj.GetPladGlobalProjectile();
+                        var globalProjectile = proj.GetYoyoGlobalProjectile();
                         globalProjectile.ModifyYoyo(proj, ref lifeTime, ref maxRange, ref topSpeed);
 
                         orig(projIndex, lifeTime, maxRange, topSpeed, rotateSpeed, _unknownAction, _unknownAction2);

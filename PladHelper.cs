@@ -20,8 +20,8 @@ namespace SPladisonsYoyoMod
         }
 
         public static PladPlayer GetPladPlayer(this Player player) => player.GetModPlayer<PladPlayer>();
-        public static YoyoGlobalProjectile GetPladGlobalProjectile(this Projectile projectile) => projectile.GetGlobalProjectile<YoyoGlobalProjectile>();
 
+        public static YoyoGlobalProjectile GetYoyoGlobalProjectile(this Projectile projectile) => projectile.GetGlobalProjectile<YoyoGlobalProjectile>();
         public static YoyoGlobalItem GetYoyoGlobalItem(this Item item) => item.GetGlobalItem<YoyoGlobalItem>();
 
         public static bool IsYoyo(this Projectile projectile) => projectile.aiStyle == YoyoGlobalProjectile.YoyoAIStyle;

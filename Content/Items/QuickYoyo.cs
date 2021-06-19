@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,9 +85,13 @@ namespace SPladisonsYoyoMod.Content.Items
 
     public abstract class YoyoProjectile : PladProjectile
     {
+        public bool YoyoGloveActivated { get; set; }
+
         private readonly float _lifeTime;
         private readonly float _maxRange;
         private readonly float _topSpeed;
+
+        public bool IsReturning => Projectile.ai[0] == -1;
 
         public YoyoProjectile(float lifeTime, float maxRange, float topSpeed)
         {
@@ -94,8 +99,6 @@ namespace SPladisonsYoyoMod.Content.Items
             _maxRange = maxRange;
             _topSpeed = topSpeed;
         }
-
-        public bool IsReturning => Projectile.ai[0] == -1;
 
         public sealed override void SetStaticDefaults()
         {
@@ -120,8 +123,34 @@ namespace SPladisonsYoyoMod.Content.Items
             this.YoyoSetDefaults();
         }
 
+        public sealed override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            var owner = Main.player[Projectile.owner];
+            if (owner.yoyoGlove) YoyoGloveActivated = true;
+
+            this.YoyoOnHitNPC(owner, target, damage, knockback, crit);
+        }
+
+        public sealed override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(this.YoyoGloveActivated);
+            this.YoyoSendExtraAI(writer);
+        }
+
+        public sealed override void ReceiveExtraAI(BinaryReader reader)
+        {
+            this.YoyoGloveActivated = reader.ReadBoolean();
+            this.YoyoReceiveExtraAI(reader);
+        }
+
         public virtual void YoyoSetStaticDefaults() { }
         public virtual void YoyoSetDefaults() { }
+        public virtual void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit) { }
+        public virtual void YoyoSendExtraAI(BinaryWriter writer) { }
+        public virtual void YoyoReceiveExtraAI(BinaryReader reader) { }
+
+        public virtual bool IsSoloYoyo() => false;
         public virtual void ModifyYoyo(ref float lifeTime, ref float maxRange, ref float topSpeed) { }
+
     }
 }

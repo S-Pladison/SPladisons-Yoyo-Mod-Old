@@ -12,14 +12,16 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using System.Reflection;
 using MonoMod.RuntimeDetour.HookGen;
+using SPladisonsYoyoMod.Content.Items;
 
-namespace SPladisonsYoyoMod.Common
+namespace SPladisonsYoyoMod.Common.Hooks
 {
     public partial class PladHooks : ILoadable
     {
         public void Load(Mod mod)
         {
             IL.Terraria.Main.DrawProj += ModifyYoyoStringPosition;
+            IL.Terraria.Player.Counterweight += ModifyCounterweight;
 
             On.Terraria.Projectile.AI_099_2 += (orig, projectile) =>
             {
@@ -38,7 +40,7 @@ namespace SPladisonsYoyoMod.Common
 
                 float lifeTime = oldLifeTime, maxRange = oldMaxRange, topSpeed = oldTopSpeed;
 
-                var globalProjectile = projectile.GetPladGlobalProjectile();
+                var globalProjectile = projectile.GetYoyoGlobalProjectile();
                 globalProjectile.ModifyYoyo(projectile, ref lifeTime, ref maxRange, ref topSpeed);
 
                 SetYoyoData(lifeTime, maxRange, topSpeed);
@@ -68,14 +70,15 @@ namespace SPladisonsYoyoMod.Common
                 orig(self);
             };
 
-            LoadThorium(ModLoader.GetMod("ThoriumMod"));
+            // LoadThorium(ModLoader.GetMod("ThoriumMod"));
         }
 
         public void Unload()
         {
             IL.Terraria.Main.DrawProj -= ModifyYoyoStringPosition;
+            IL.Terraria.Player.Counterweight -= ModifyCounterweight;
 
-            UnloadThorium();
+            // UnloadThorium();
         }
 
         private void ModifyYoyoStringPosition(ILContext il)
@@ -130,10 +133,48 @@ namespace SPladisonsYoyoMod.Common
                 {
                     Vector2 offset = (player.gravDir >= 0 ? new Vector2(0, -8) : new Vector2(0, -4));
                     offset += new Vector2(-3, 0) * player.direction;
-                    return player.MountedCenter + offset;
+                    return player.MountedCenter + offset; // Нужно пофиксить ****** нити
                 }
             });
             c.Emit(Stloc, vectorIndex);
+        }
+
+        private void ModifyCounterweight(ILContext il)
+        {
+            ILCursor c = new ILCursor(il);
+
+            // IL_0052: ldsfld    class Terraria.Projectile[] Terraria.Main::projectile
+            // IL_0057: ldloc.3
+            // IL_0058: ldelem.ref
+            // IL_0059: ldfld int32 Terraria.Projectile::aiStyle
+            // IL_005E: ldc.i4.s  99
+            // IL_0060: bne.un.s IL_0068
+
+            int index = -1;
+            if (!c.TryGotoNext(MoveType.After,
+                i => i.MatchLdsfld<Main>("projectile"),
+                i => i.MatchLdloc(out index),
+                i => i.MatchLdelemRef(),
+                i => i.MatchLdfld<Projectile>("aiStyle"),
+                i => i.MatchLdcI4(99),
+                i => i.MatchBneUn(out _))) return;
+
+            // IL_0068: ldloc.3
+            // IL_0069: ldc.i4.1
+            // IL_006A: add
+            // IL_006B: stloc.3
+
+            if (!c.TryGotoNext(MoveType.Before,
+                i => i.MatchLdloc(index),
+                i => i.MatchLdcI4(1),
+                i => i.MatchAdd(),
+                i => i.MatchStloc(out _))) return;
+
+            c.Emit(Ldloc, index);
+            c.EmitDelegate<Func<int, int>>((i) => (Main.projectile[i].ModProjectile is YoyoProjectile yoyo && yoyo.IsSoloYoyo()).ToInt());
+            c.Emit(Ldloc, 1);
+            c.Emit(Add);
+            c.Emit(Stloc, 1);
         }
     }
 }
