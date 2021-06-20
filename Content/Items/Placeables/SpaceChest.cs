@@ -261,7 +261,7 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
             Tile tile = Main.tile[i, j];
             var player = Main.LocalPlayer;
 
-            if (player != null && tile != null && (tile.frameX == 0 || tile.frameX == 18 * 2) && tile.frameY == 0)
+            if (player != null && tile != null && (tile.frameX == 18 || tile.frameX == 18 * 3) && tile.frameY == 18)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
@@ -269,20 +269,17 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
                 int chest = this.FindSpaceChest(i, j);
                 if (chest > 0)
                 {
-                    var shader = GameShaders.Armor.GetShaderFromItemId(ItemID.TwilightDye);
                     Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
-
                     if (Main.drawToScreen) zero = Vector2.Zero;
 
-                    Texture2D texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Tiles/SpaceChestTile_Effect").Value;
-                    int height = tile.frameY == 36 ? 18 : 16;
+                    var texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Tiles/SpaceChestTile_Effect").Value;
+                    var position = new Vector2(i * 32 + player.Center.X * 0.2f, j * 32 + player.Center.Y * 0.2f) + zero;
+                    var rectangle = new Rectangle((tile.frameX / 18 - 1) * 16, Main.chest[chest].frame * 34, 32, 32);
 
-                    var position = new Vector2(i * 16 + player.position.X * 0.1f - Main.screenPosition.X, j * 16 + player.position.Y * 0.1f - Main.screenPosition.Y) + zero;
-                    var rectangle = new Rectangle((int)(tile.frameX / 36) * 36, Main.chest[chest].frame * 38, 18, 18);
+                    var shader = GameShaders.Armor.GetShaderFromItemId(ItemID.TwilightDye);
                     shader.Apply(null, new DrawData(texture, position, rectangle, Color.White));
 
-                    position = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero;
-                    rectangle = new Rectangle(tile.frameX, tile.frameY + Main.chest[chest].frame * 38, 16, height);
+                    position = new Vector2(i * 16 - 16 - (int)Main.screenPosition.X, j * 16 - 16 - (int)Main.screenPosition.Y) + zero;
                     spriteBatch.Draw(texture, position, rectangle, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
                 }
 

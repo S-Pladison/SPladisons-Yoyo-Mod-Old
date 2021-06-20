@@ -22,7 +22,6 @@ namespace SPladisonsYoyoMod
         public override void Load()
         {
             Primitives = new PrimitiveSystem(Main.graphics.GraphicsDevice);
-
             _yoyos = new List<int>();
         }
 

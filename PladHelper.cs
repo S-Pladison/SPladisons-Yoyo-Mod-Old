@@ -26,13 +26,5 @@ namespace SPladisonsYoyoMod
 
         public static bool IsYoyo(this Projectile projectile) => projectile.aiStyle == YoyoGlobalProjectile.YoyoAIStyle;
         public static bool IsYoyo(this Item item) => SPladisonsYoyoMod.GetYoyos.Contains(item.type);
-
-        public static void AddModTranslation(this Mod mod, string key, string eng, string rus = "")
-        {
-            ModTranslation text = mod.CreateTranslation(key);
-            text.SetDefault(eng);
-            if (rus != "") text.AddTranslation(GameCulture.FromCultureName(GameCulture.CultureName.Russian), rus);
-            mod.AddTranslation(text);
-        }
     }
 }

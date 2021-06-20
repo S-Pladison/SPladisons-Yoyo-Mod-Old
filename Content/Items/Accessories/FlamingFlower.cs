@@ -45,11 +45,6 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
     public class FlamingFlowerTile : PladTile
     {
-        public override void Load()
-        {
-            Mod.AddModTranslation(key: "GameUI.FlamingFlowerMapIcon", eng: "Strange Flower", rus: "Странный цветок");
-        }
-
         public override void SetDefaults()
         {
             Main.tileLighted[Type] = true;
@@ -72,7 +67,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         {
             Item.NewItem(i * 16, j * 16, 32, 48, ModContent.ItemType<FlamingFlower>());
 
-            PladWorld.flamingFlowerPosition = Point.Zero;
+            PladSystem.flamingFlowerPosition = Point.Zero;
         }
 
         public override void NearbyEffects(int i, int j, bool closer)
@@ -102,24 +97,24 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             color = new Color(1f, 0.4f, 0.12f) * progress;
         }
 
-        public override void DrawEffects(int i, int j)
+        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
         {
             /*if (!Main.gamePaused && Main.instance.IsActive && (!Lighting.UpdateEveryFrame || Main.rand.NextBool(4)))
-            {
-                if (Main.rand.NextBool(7))
-                {
-                    int dust = Dust.NewDust(new Vector2(i * 16 + 2, j * 16 + 2), 12, 12, ModContent.DustType<Dusts.VaporDust>(), Scale: Main.rand.NextFloat(2f, 4f));
-                    Main.dust[dust].velocity = new Vector2(0, Main.rand.NextFloat(-1.5f, -0.5f)).RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f));
-                    Main.dust[dust].rotation = Main.rand.NextFloat(-(float)Math.PI, (float)Math.PI);
-                }
+           {
+               if (Main.rand.NextBool(7))
+               {
+                   int dust = Dust.NewDust(new Vector2(i * 16 + 2, j * 16 + 2), 12, 12, ModContent.DustType<Dusts.VaporDust>(), Scale: Main.rand.NextFloat(2f, 4f));
+                   Main.dust[dust].velocity = new Vector2(0, Main.rand.NextFloat(-1.5f, -0.5f)).RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f));
+                   Main.dust[dust].rotation = Main.rand.NextFloat(-(float)Math.PI, (float)Math.PI);
+               }
 
-                if (Main.rand.NextBool(10))
-                {
-                    int dust = Dust.NewDust(new Vector2(i * 16 + 2, j * 16 + 2), 12, 12, ModContent.DustType<Dusts.FlamingFlowerDust>(), Scale: Main.rand.NextFloat(0.7f, 1f));
-                    Main.dust[dust].velocity = new Vector2(0, Main.rand.NextFloat(-1f, -0.3f)).RotatedBy(Main.rand.NextFloat(-0.10f, 0.10f));
-                    Main.dust[dust].rotation = Main.rand.NextFloat(-(float)Math.PI, (float)Math.PI);
-                }
-            }*/
+               if (Main.rand.NextBool(10))
+               {
+                   int dust = Dust.NewDust(new Vector2(i * 16 + 2, j * 16 + 2), 12, 12, ModContent.DustType<Dusts.FlamingFlowerDust>(), Scale: Main.rand.NextFloat(0.7f, 1f));
+                   Main.dust[dust].velocity = new Vector2(0, Main.rand.NextFloat(-1f, -0.3f)).RotatedBy(Main.rand.NextFloat(-0.10f, 0.10f));
+                   Main.dust[dust].rotation = Main.rand.NextFloat(-(float)Math.PI, (float)Math.PI);
+               }
+           }*/
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
@@ -138,9 +133,9 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public static void DrawMapIcon(SpriteBatch spriteBatch, Vector2 mapTopLeft, Vector2 mapX2Y2AndOff, Rectangle? mapRect, float mapScale, float drawScale, ref string mouseTextString)
         {
-            if (Main.LocalPlayer != null && Common.PladWorld.flamingFlowerPosition == null || Common.PladWorld.flamingFlowerPosition == Point.Zero) return;
+            if (Main.LocalPlayer == null || PladSystem.flamingFlowerPosition == Point.Zero) return;
 
-            Vector2 position = Common.PladWorld.flamingFlowerPosition.ToVector2() * 16 + new Vector2(16, 16);
+            Vector2 position = Common.PladSystem.flamingFlowerPosition.ToVector2() * 16 + new Vector2(16, 16);
             float dist = (position - Main.LocalPlayer.Center).Length();
 
             const float maxDist = 16 * 90;

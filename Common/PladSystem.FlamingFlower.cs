@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common
 {
-    public partial class PladWorld : ModSystem
+    public partial class PladSystem : ModSystem
     {
         public static Point flamingFlowerPosition;
 

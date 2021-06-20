@@ -20,12 +20,6 @@ namespace SPladisonsYoyoMod.Common.Global
         public float maxRangeMult = 1;
         public float topSpeedMult = 1;
 
-        public override void Load()
-        {
-            Mod.AddModTranslation(key: "Tooltip.PrefixYoyoLifeTime", eng: "% life time", rus: "% время полета");
-            Mod.AddModTranslation(key: "Tooltip.PrefixYoyoMaxRange", eng: "% maximum range", rus: "% максимальная дальность");
-        }
-
         public override bool AppliesToEntity(Item item, bool lateInstantiation) => item.IsYoyo();
         public override bool InstancePerEntity => true;
 
@@ -60,7 +54,7 @@ namespace SPladisonsYoyoMod.Common.Global
             {
                 if (lifeTimeMult != 1)
                 {
-                    string text = (lifeTimeMult < 1 ? "-" : "+") + ((Math.Abs(lifeTimeMult - 1)) * 100) + Language.GetTextValue("Mods.SPladisonsYoyoMod.Tooltip.PrefixYoyoLifeTime");
+                    string text = (lifeTimeMult < 1 ? "-" : "+") + ((Math.Abs(lifeTimeMult - 1)) * 100) + Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.PrefixYoyoLifeTime");
                     tooltips.Insert(index, new TooltipLine(Mod, "PrefixYoyoLifeTime", text)
                     {
                         isModifier = true,
@@ -70,7 +64,7 @@ namespace SPladisonsYoyoMod.Common.Global
 
                 if (maxRangeMult != 1)
                 {
-                    string text = (maxRangeMult < 1 ? "-" : "+") + ((Math.Abs(maxRangeMult - 1)) * 100) + Language.GetTextValue("Mods.SPladisonsYoyoMod.Tooltip.PrefixYoyoMaxRange");
+                    string text = (maxRangeMult < 1 ? "-" : "+") + ((Math.Abs(maxRangeMult - 1)) * 100) + Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.PrefixYoyoMaxRange");
                     tooltips.Insert(index, new TooltipLine(Mod, "PrefixYoyoMaxRange", text)
                     {
                         isModifier = true,

@@ -12,11 +12,13 @@ namespace SPladisonsYoyoMod.Common
 {
     public class PladPlayer : ModPlayer
     {
+        public bool bearingEquipped;
         public bool desecratedDiceEquipped;
         public bool flamingFlowerEquipped;
 
         public override void ResetEffects()
         {
+            bearingEquipped = false;
             desecratedDiceEquipped = false;
             flamingFlowerEquipped = false;
         }

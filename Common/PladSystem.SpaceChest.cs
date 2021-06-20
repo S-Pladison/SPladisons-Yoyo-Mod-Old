@@ -13,7 +13,7 @@ using Terraria.WorldBuilding;
 
 namespace SPladisonsYoyoMod.Common
 {
-    public partial class PladWorld : ModSystem
+    public partial class PladSystem : ModSystem
     {
         public void GenerateSpaceChest(GenerationProgress progress, GameConfiguration configuration)
         {

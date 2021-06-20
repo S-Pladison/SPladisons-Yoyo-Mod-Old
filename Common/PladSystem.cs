@@ -15,14 +15,8 @@ using Terraria.WorldBuilding;
 
 namespace SPladisonsYoyoMod.Common
 {
-    public partial class PladWorld : ModSystem
+    public partial class PladSystem : ModSystem
     {
-        public override void Load()
-        {
-            Mod.AddModTranslation(key: "WorldGen.SpaceChest", eng: "S-Pladison's Yoyo Mod: Space Chest", rus: "S-Pladison's Yoyo Mod: Космический сундук");
-            Mod.AddModTranslation(key: "WorldGen.SpaceChest_0", eng: "Adding a piece of space to the dungeon...", rus: "Добавление кусочка космоса в подземелье...");
-        }
-
         public override void PostUpdateWorld()
         {
             this.UpdateFlamingFlower();

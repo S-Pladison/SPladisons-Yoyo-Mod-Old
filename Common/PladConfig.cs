@@ -10,13 +10,6 @@ namespace SPladisonsYoyoMod.Common
 {
     public class PladConfig : ModConfig
     {
-        public override void OnLoaded()
-        {
-            Mod.AddModTranslation(key: "Config.YoyoCustomUseStyle",
-                                  eng: "Custom style of using yoyo",
-                                  rus: "Пользовательский стиль использования йо-йо");
-        }
-
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [DefaultValue(true)]
