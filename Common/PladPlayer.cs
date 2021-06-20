@@ -12,6 +12,8 @@ namespace SPladisonsYoyoMod.Common
 {
     public class PladPlayer : ModPlayer
     {
+        public bool ZoneFlamingFlower { get; set; }
+
         public bool bearingEquipped;
         public bool desecratedDiceEquipped;
         public bool flamingFlowerEquipped;
@@ -21,6 +23,11 @@ namespace SPladisonsYoyoMod.Common
             bearingEquipped = false;
             desecratedDiceEquipped = false;
             flamingFlowerEquipped = false;
+        }
+
+        public override void PostUpdate()
+        {
+            this.UpdateFlamingFlowerZoneEffect();
         }
 
         public override void UpdateEquips()
@@ -36,6 +43,19 @@ namespace SPladisonsYoyoMod.Common
             {
                 this.counterWeight = 556 + currentItem.type - 3309;
             }*/
+        }
+
+        public void UpdateFlamingFlowerZoneEffect()
+        {
+            bool flag = Main.UseHeatDistortion && ZoneFlamingFlower;
+            if (flag)
+            {
+                Player.ManageSpecialBiomeVisuals("HeatDistortion", flag);
+                if (!Player.ZoneDesert && !Player.ZoneUndergroundDesert && !Player.ZoneUnderworldHeight)
+                {
+                    Terraria.Graphics.Effects.Filters.Scene["HeatDistortion"].GetShader().UseIntensity(0.85f);
+                }
+            }
         }
     }
 }

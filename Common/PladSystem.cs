@@ -17,6 +17,11 @@ namespace SPladisonsYoyoMod.Common
 {
     public partial class PladSystem : ModSystem
     {
+        public override void ResetNearbyTileEffects()
+        {
+            Main.LocalPlayer.GetPladPlayer().ZoneFlamingFlower = false;
+        }
+
         public override void PostUpdateWorld()
         {
             this.UpdateFlamingFlower();

@@ -59,7 +59,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
             this.CreateMapEntry(color: new Color(238, 145, 105), eng: "Flaming Flower", rus: "Пылающий цветок");
 
-            //this.DustType = ModContent.DustType<Dusts.VaporDust>();
+            this.DustType = ModContent.DustType<Dusts.VaporDust>();
             this.SoundType = SoundID.Grass;
         }
 
@@ -77,8 +77,8 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
             if ((tilePosition - playerCenter).Length() < 16 * 17)
             {
-                /*var modPlayer = Main.LocalPlayer.GetPladPlayer();
-                modPlayer.ZoneFlamingFlower = true;*/
+                var modPlayer = Main.LocalPlayer.GetPladPlayer();
+                modPlayer.ZoneFlamingFlower = true;
             }
         }
 
@@ -99,22 +99,21 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
         {
-            /*if (!Main.gamePaused && Main.instance.IsActive && (!Lighting.UpdateEveryFrame || Main.rand.NextBool(4)))
-           {
-               if (Main.rand.NextBool(7))
-               {
-                   int dust = Dust.NewDust(new Vector2(i * 16 + 2, j * 16 + 2), 12, 12, ModContent.DustType<Dusts.VaporDust>(), Scale: Main.rand.NextFloat(2f, 4f));
-                   Main.dust[dust].velocity = new Vector2(0, Main.rand.NextFloat(-1.5f, -0.5f)).RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f));
-                   Main.dust[dust].rotation = Main.rand.NextFloat(-(float)Math.PI, (float)Math.PI);
-               }
+            if (Main.gamePaused || !Main.instance.IsActive || Lighting.UpdateEveryFrame && !Main.rand.NextBool(4)) return;
 
-               if (Main.rand.NextBool(10))
-               {
-                   int dust = Dust.NewDust(new Vector2(i * 16 + 2, j * 16 + 2), 12, 12, ModContent.DustType<Dusts.FlamingFlowerDust>(), Scale: Main.rand.NextFloat(0.7f, 1f));
-                   Main.dust[dust].velocity = new Vector2(0, Main.rand.NextFloat(-1f, -0.3f)).RotatedBy(Main.rand.NextFloat(-0.10f, 0.10f));
-                   Main.dust[dust].rotation = Main.rand.NextFloat(-(float)Math.PI, (float)Math.PI);
-               }
-           }*/
+            if (Main.rand.NextBool(7))
+            {
+                int dust = Dust.NewDust(new Vector2(i * 16 + 2, j * 16 + 2), 12, 12, ModContent.DustType<Dusts.VaporDust>(), Scale: Main.rand.NextFloat(2f, 4f));
+                Main.dust[dust].velocity = new Vector2(0, Main.rand.NextFloat(-1.5f, -0.5f)).RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f));
+                Main.dust[dust].rotation = Main.rand.NextFloat(-(float)Math.PI, (float)Math.PI);
+            }
+
+            if (Main.rand.NextBool(10))
+            {
+                int dust = Dust.NewDust(new Vector2(i * 16 + 2, j * 16 + 2), 12, 12, ModContent.DustType<Dusts.FlamingFlowerDust>(), Scale: Main.rand.NextFloat(0.7f, 1f));
+                Main.dust[dust].velocity = new Vector2(0, Main.rand.NextFloat(-1f, -0.3f)).RotatedBy(Main.rand.NextFloat(-0.10f, 0.10f));
+                Main.dust[dust].rotation = Main.rand.NextFloat(-(float)Math.PI, (float)Math.PI);
+            }
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
@@ -124,7 +123,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
             if (Main.drawToScreen) zero = Vector2.Zero;
 
-            Texture2D texture = Mod.GetTexture($"Assets/Textures/Tiles/{this.Name}_Glow").Value;
+            Texture2D texture = ModContent.GetTexture(this.Texture + "_Glow").Value;
             int height = tile.frameY == 36 ? 18 : 16;
             float progress = MathHelper.Lerp(0.4f, 0.9f, (float)Math.Abs(Math.Pow(Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), 4f)));
 

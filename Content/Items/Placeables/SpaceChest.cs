@@ -87,15 +87,17 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
             TileID.Sets.AvoidedByNPCs[Type] = true;
             TileID.Sets.InteractibleByNPCs[Type] = true;
 
-            //this.DustType = ModContent.DustType<Sparkle>();
+            this.DustType = ModContent.DustType<Dusts.SpaceChestDust>();
             this.AdjTiles = new int[] { TileID.Containers };
             this.ChestDrop = ModContent.ItemType<SpaceChest>();
 
             this.ContainerName.SetDefault("Space Chest");
             this.ContainerName.AddTranslation(GameCulture.FromCultureName(GameCulture.CultureName.Russian), "Космический сундук");
 
-            this.CreateMapEntry(color: new Color(200, 200, 200), eng: "Space Chest", rus: "Космический сундук", nameFunc: MapChestName);
-            this.CreateMapEntry(color: new Color(0, 141, 63), key: this.Name + "_Locked", eng: "Locked Space Chest", rus: "Запертый космический сундук", nameFunc: MapChestName);
+            Color mapColor = new Color(174, 129, 92);
+
+            this.CreateMapEntry(color: mapColor, eng: "Space Chest", rus: "Космический сундук", nameFunc: MapChestName);
+            this.CreateMapEntry(color: mapColor, key: this.Name + "_Locked", eng: "Locked Space Chest", rus: "Запертый космический сундук", nameFunc: MapChestName);
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Origin = new Point16(0, 1);
@@ -123,6 +125,7 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
         {
             if (!NPC.downedPlantBoss) return false;
 
+            dustType = this.DustType;
             AchievementsHelper.NotifyProgressionEvent(AchievementHelperID.Events.UnlockedBiomeChest);
             return true;
         }
@@ -272,7 +275,7 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
                     Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
                     if (Main.drawToScreen) zero = Vector2.Zero;
 
-                    var texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Tiles/SpaceChestTile_Effect").Value;
+                    var texture = ModContent.GetTexture(this.Texture + "_Effect").Value;
                     var position = new Vector2(i * 32 + player.Center.X * 0.2f, j * 32 + player.Center.Y * 0.2f) + zero;
                     var rectangle = new Rectangle((tile.frameX / 18 - 1) * 16, Main.chest[chest].frame * 34, 32, 32);
 

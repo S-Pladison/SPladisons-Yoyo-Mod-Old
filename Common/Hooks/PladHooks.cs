@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System.Reflection;
-using MonoMod.RuntimeDetour.HookGen;
 using SPladisonsYoyoMod.Content.Items;
 
 namespace SPladisonsYoyoMod.Common.Hooks
