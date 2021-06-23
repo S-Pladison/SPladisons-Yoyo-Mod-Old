@@ -128,8 +128,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Main.spriteBatch.Draw(texture, drawPosition, null, new Color(35, 0, 100) * 0.5f, 0f, texture.Size() * 0.5f, radiusProgress * 0.35f - pulse, SpriteEffects.None, 0);
             Main.spriteBatch.Draw(texture, drawPosition, null, Color.Black, 0f, texture.Size() * 0.5f, radiusProgress * 0.2f - pulse, SpriteEffects.None, 0);
             */
-            this.SetSpriteBatch();
 
+            this.SetSpriteBatch();
             return true;
         }
 

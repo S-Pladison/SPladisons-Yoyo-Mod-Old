@@ -10,33 +10,6 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Prefixes
 {
-    public class YoyoPrefixes : ILoadable
-    {
-        private static List<byte> _prefixes;
-
-        public static IReadOnlyList<byte> GetPrefixes() => _prefixes;
-
-        public void Load(Mod mod)
-        {
-            _prefixes = new List<byte>();
-
-            this.AddPrefix(mod, name: "Test1", eng: "Test #1", rus: "Тестовый #1", lifeTime: 0f, maxRange: 0.1f, topSpeed: 0f);
-            this.AddPrefix(mod, name: "Test2", eng: "Test #2", rus: "Тестовый #2", lifeTime: 0.1f, maxRange: 0f, topSpeed: 0f);
-        }
-
-        public void Unload()
-        {
-            _prefixes?.Clear();
-            _prefixes = null;
-        }
-
-        private void AddPrefix(Mod mod, string name, string eng, string rus, float lifeTime, float maxRange, float topSpeed)
-        {
-            mod.AddContent(new YoyoPrefix(name, eng, rus, lifeTime, maxRange, topSpeed));
-            if (mod.TryFind(name, out ModPrefix prefix)) _prefixes.Add(prefix.Type);
-        }
-    }
-
     [Autoload(false)]
     public class YoyoPrefix : ModPrefix
     {

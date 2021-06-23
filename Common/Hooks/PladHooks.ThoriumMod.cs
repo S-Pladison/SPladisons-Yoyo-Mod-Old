@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿/*
+using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour.HookGen;
 using System;
 using System.Collections.Generic;
@@ -100,3 +101,4 @@ namespace SPladisonsYoyoMod.Common.Hooks
         }
     }
 }
+*/

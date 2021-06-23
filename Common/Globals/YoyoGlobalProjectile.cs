@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Common.Global
+namespace SPladisonsYoyoMod.Common.Globals
 {
     public class YoyoGlobalProjectile : GlobalProjectile
     {
@@ -17,34 +17,36 @@ namespace SPladisonsYoyoMod.Common.Global
 
         public void ModifyYoyo(Projectile projectile, ref float lifeTime, ref float maxRange, ref float topSpeed)
         {
-            // It's worth rewriting this
-
-            bool inf = lifeTime == -1;
             Player owner = Main.player[projectile.owner];
-
             float lifeTimeMult = 1f, maxRangeMult = 1f, topSpeedMult = 1f;
 
+            // Mod Yoyo Projectile
             if (projectile.ModProjectile is YoyoProjectile yoyo) yoyo.ModifyYoyo(ref lifeTimeMult, ref maxRangeMult, ref topSpeedMult);
 
-            var globalYoyo = owner.HeldItem?.GetYoyoGlobalItem();
-            if (globalYoyo != null)
+            // Item Prefixes
             {
-                lifeTimeMult += globalYoyo.lifeTimeMult - 1;
-                maxRangeMult += globalYoyo.maxRangeMult - 1;
-                topSpeedMult += globalYoyo.topSpeedMult - 1;
+                var globalYoyo = owner.HeldItem?.GetYoyoGlobalItem();
+                if (globalYoyo != null)
+                {
+                    lifeTimeMult += globalYoyo.lifeTimeMult - 1;
+                    maxRangeMult += globalYoyo.maxRangeMult - 1;
+                    topSpeedMult += globalYoyo.topSpeedMult - 1;
+                }
             }
 
+            // Accessories
             if (owner.GetPladPlayer().bearingEquipped) lifeTimeMult += 0.12f;
 
-            if (lifeTimeMult < 0) lifeTimeMult = 0;
-            if (maxRangeMult < 0) maxRangeMult = 0;
-            if (topSpeedMult < 0) topSpeedMult = 0;
+            // Final mult calculations
+            {
+                if (lifeTimeMult < 0) lifeTimeMult = 0;
+                if (maxRangeMult < 0) maxRangeMult = 0;
+                if (topSpeedMult < 0) topSpeedMult = 0;
 
-            lifeTime *= lifeTimeMult;
-            maxRange *= maxRangeMult;
-            topSpeed *= topSpeedMult;
-
-            if (inf) lifeTime = -1;
+                lifeTime *= lifeTimeMult;
+                maxRange *= maxRangeMult;
+                topSpeed *= topSpeedMult;
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 
-namespace SPladisonsYoyoMod.Common.Global
+namespace SPladisonsYoyoMod.Common.Globals
 {
     public class YoyoGlobalItem : GlobalItem
     {
@@ -86,6 +86,6 @@ namespace SPladisonsYoyoMod.Common.Global
             }
         }
 
-        public override int ChoosePrefix(Item item, UnifiedRandom rand) => rand.Next(YoyoPrefixes.GetPrefixes().ToList());
+        public override int ChoosePrefix(Item item, UnifiedRandom rand) => rand.Next(ModPrefixLoader.GetYoyoPrefixes().ToList());
     }
 }

@@ -85,7 +85,7 @@ namespace SPladisonsYoyoMod.Content.Items
 
     public abstract class YoyoProjectile : PladProjectile
     {
-        public bool YoyoGloveActivated { get; set; }
+        public bool YoyoGloveActivated { get; private set; }
 
         private readonly float _lifeTime;
         private readonly float _maxRange;
@@ -116,7 +116,7 @@ namespace SPladisonsYoyoMod.Content.Items
             Projectile.width = 16;
             Projectile.height = 16;
 
-            Projectile.aiStyle = Common.Global.YoyoGlobalProjectile.YoyoAIStyle;
+            Projectile.aiStyle = Common.Globals.YoyoGlobalProjectile.YoyoAIStyle;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
 
@@ -126,7 +126,11 @@ namespace SPladisonsYoyoMod.Content.Items
         public sealed override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             var owner = Main.player[Projectile.owner];
-            if (owner.yoyoGlove) YoyoGloveActivated = true;
+            if (owner.yoyoGlove && !this.YoyoGloveActivated)
+            {
+                this.YoyoGloveActivated = true;
+                this.OnActivateYoyoGlove();
+            }
 
             this.YoyoOnHitNPC(owner, target, damage, knockback, crit);
         }
@@ -150,6 +154,7 @@ namespace SPladisonsYoyoMod.Content.Items
         public virtual void YoyoReceiveExtraAI(BinaryReader reader) { }
 
         public virtual bool IsSoloYoyo() => false;
+        public virtual void OnActivateYoyoGlove() { }
         public virtual void ModifyYoyo(ref float lifeTime, ref float maxRange, ref float topSpeed) { }
 
     }

@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Common.Global
+namespace SPladisonsYoyoMod.Common.Globals
 {
     public class PladGlobalItem : GlobalItem
     {
