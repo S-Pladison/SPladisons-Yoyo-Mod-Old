@@ -15,7 +15,7 @@ namespace SPladisonsYoyoMod.Common.Globals
 
         public override bool AppliesToEntity(Projectile entity, bool lateInstantiation) => entity.IsYoyo();
 
-        public void ModifyYoyo(Projectile projectile, ref float lifeTime, ref float maxRange, ref float topSpeed)
+        public static void ModifyYoyo(Projectile projectile, ref float lifeTime, ref float maxRange, ref float topSpeed)
         {
             Player owner = Main.player[projectile.owner];
             float lifeTimeMult = 1f, maxRangeMult = 1f, topSpeedMult = 1f;

@@ -42,8 +42,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class BlackholeProjectile : YoyoProjectile
     {
-        public static Effect Effect { get; private set; }
-
         public readonly float radius = 16 * 9;
         public float radiusProgress = 0;
         public float pulse = 0;
@@ -52,11 +50,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void Load()
         {
-            Effect = Mod.GetEffect("Assets/Effects/Blackhole").Value;
-            Effect.Parameters["perlinTexture"].SetValue(ModContent.GetTexture("Terraria/Images/Misc/Perlin").Value);
+            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"] = new MiscShaderData(new Ref<Effect>(Mod.GetEffect("Assets/Effects/Blackhole").Value), "Blackhole").UseImage1("Images/Misc/Perlin");
         }
 
-        public override void Unload() => Effect = null;
         public override bool IsSoloYoyo() => true;
 
         public override void YoyoSetStaticDefaults()
@@ -118,24 +114,25 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             var texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_2").Value;
 
-            Effect.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
-            Effect.Parameters["width"].SetValue(texture.Width / 4);
+            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"].Shader.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
+            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"].Shader.Parameters["width"].SetValue(texture.Width / 4);
 
-            this.SetSpriteBatch(SpriteSortMode.Immediate, BlendState.Additive, Effect);
+            SetSpriteBatch(SpriteSortMode.Immediate, BlendState.Additive);
+            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"].Apply();
             Main.spriteBatch.Draw(texture, drawPosition, null, new Color(95, 65, 255) * 0.75f, 0f, texture.Size() * 0.5f, radiusProgress * 0.5f - pulse, SpriteEffects.None, 0);
 
-            /*this.SetSpriteBatch(SpriteSortMode.Immediate, BlendState.AlphaBlend, Effect);
+            SetSpriteBatch(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"].Apply();
             Main.spriteBatch.Draw(texture, drawPosition, null, new Color(35, 0, 100) * 0.5f, 0f, texture.Size() * 0.5f, radiusProgress * 0.35f - pulse, SpriteEffects.None, 0);
             Main.spriteBatch.Draw(texture, drawPosition, null, Color.Black, 0f, texture.Size() * 0.5f, radiusProgress * 0.2f - pulse, SpriteEffects.None, 0);
-            */
 
-            this.SetSpriteBatch();
+            SetSpriteBatch();
             return true;
         }
 
         public override void PostDraw(Color lightColor)
         {
-            this.SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
+            SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
 
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             var texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_3").Value;
@@ -144,7 +141,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_4").Value;
             Main.spriteBatch.Draw(texture, drawPosition, null, Color.White, Projectile.rotation * 0.33f, texture.Size() * 0.5f, radiusProgress * 0.3f, SpriteEffects.None, 0);
 
-            this.SetSpriteBatch();
+            SetSpriteBatch();
 
             texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_5").Value;
             Main.spriteBatch.Draw(texture, drawPosition, null, Color.White, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * radiusProgress, SpriteEffects.None, 0);

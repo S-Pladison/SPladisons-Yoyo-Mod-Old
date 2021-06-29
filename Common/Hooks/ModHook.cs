@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Common.Globals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,41 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    internal sealed class ModOnHooks : ILoadable
+    public abstract class ModHook : ILoadable
     {
+        public static IReadOnlyDictionary<ModHook, bool> GetHooks => _modHooks;
+
+        public Mod Mod { get; private set; }
+        public bool IsLoaded { get; protected set; } = false;
+
         public void Load(Mod mod)
+        {
+            if (_modHooks == null)
+            {
+                _modHooks = new Dictionary<ModHook, bool>();
+                LoadOnHooks();
+            }
+
+            this.Mod = mod;
+            this.OnLoad();
+
+            _modHooks.Add(this, this.IsLoaded);
+        }
+
+        public void Unload()
+        {
+            this.OnUnload();
+
+            _modHooks.Remove(this);
+            if (_modHooks.Count <= 0) _modHooks = null;
+        }
+
+        public virtual void OnLoad() { }
+        public virtual void OnUnload() { }
+
+        private static Dictionary<ModHook, bool> _modHooks;
+
+        private static void LoadOnHooks()
         {
             // Percentages will not work correctly if someone does exactly the same :(
             On.Terraria.Projectile.AI_099_2 += (orig, projectile) =>
@@ -31,7 +64,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 
                 float lifeTime = oldLifeTime, maxRange = oldMaxRange, topSpeed = oldTopSpeed;
 
-                projectile.GetYoyoGlobalProjectile().ModifyYoyo(projectile, ref lifeTime, ref maxRange, ref topSpeed);
+                YoyoGlobalProjectile.ModifyYoyo(projectile, ref lifeTime, ref maxRange, ref topSpeed);
 
                 if (oldLifeTime == -1f) lifeTime = -1f;
 
@@ -62,38 +95,5 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 orig(self);
             };
         }
-
-        public void Unload() { }
-    }
-
-    public abstract class ModHook : ILoadable
-    {
-        public static IReadOnlyDictionary<ModHook, bool> GetHooks => _modHooks;
-
-        public Mod Mod { get; private set; }
-        public bool IsLoaded { get; protected set; } = false;
-
-        public void Load(Mod mod)
-        {
-            _modHooks ??= new Dictionary<ModHook, bool>();
-
-            this.Mod = mod;
-            this.OnLoad();
-
-            _modHooks.Add(this, this.IsLoaded);
-        }
-
-        public void Unload()
-        {
-            this.OnUnload();
-
-            _modHooks.Remove(this);
-            if (_modHooks.Count <= 0) _modHooks = null;
-        }
-
-        public virtual void OnLoad() { }
-        public virtual void OnUnload() { }
-
-        private static Dictionary<ModHook, bool> _modHooks;
     }
 }

@@ -24,7 +24,7 @@ namespace SPladisonsYoyoMod.Common
 
         public override void PostUpdateWorld()
         {
-            this.UpdateFlamingFlower();
+            UpdateFlamingFlower();
         }
 
         public override void PostUpdateEverything()
@@ -45,23 +45,23 @@ namespace SPladisonsYoyoMod.Common
         {
             return new TagCompound
             {
-                { "flamingFlowerPosition", flamingFlowerPosition.ToVector2() }
+                { "flamingFlowerPosition", FlamingFlowerPosition.ToVector2() }
             };
         }
 
         public override void LoadWorldData(TagCompound tag)
         {
-            flamingFlowerPosition = tag.Get<Vector2>("flamingFlowerPosition").ToPoint();
+            FlamingFlowerPosition = tag.Get<Vector2>("flamingFlowerPosition").ToPoint();
         }
 
         public override void NetSend(BinaryWriter writer)
         {
-            writer.WriteVector2(flamingFlowerPosition.ToVector2());
+            writer.WriteVector2(FlamingFlowerPosition.ToVector2());
         }
 
         public override void NetReceive(BinaryReader reader)
         {
-            flamingFlowerPosition = reader.ReadVector2().ToPoint();
+            FlamingFlowerPosition = reader.ReadVector2().ToPoint();
         }
     }
 }

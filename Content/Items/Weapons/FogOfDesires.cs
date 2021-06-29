@@ -49,8 +49,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             SPladisonsYoyoMod.Primitives.CreateTrail(
                 target: Projectile,
                 length: 16 * 5,
-                widthFunc: (progress) => 16 * (1 - progress),
-                colorFunc: (progress) => Color.White
+                width: (progress) => 16 * (1 - progress),
+                color: (progress) => Color.White
             );
         }
     }

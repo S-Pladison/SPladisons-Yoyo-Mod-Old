@@ -14,7 +14,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
         public override void OnLoad() => IL.Terraria.Projectile.AI_099_2 += ModifyYoyoStatsMethod;
         public override void OnUnload() => IL.Terraria.Projectile.AI_099_2 -= ModifyYoyoStatsMethod;
 
-        public void ModifyYoyoStatsMethod(ILContext il)
+        public static void ModifyYoyoStatsMethod(ILContext il)
         {
             ILCursor c = new ILCursor(il);
 

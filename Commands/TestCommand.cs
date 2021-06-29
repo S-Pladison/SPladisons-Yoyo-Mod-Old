@@ -27,7 +27,7 @@ namespace SPladisonsYoyoMod.Commands
             switch (type)
             {
                 case 1:
-                    if (PladSystem.flamingFlowerPosition != Point.Zero) Main.LocalPlayer.Teleport(PladSystem.flamingFlowerPosition.ToVector2() * 16);
+                    if (PladSystem.FlamingFlowerPosition != Point.Zero) Main.LocalPlayer.Teleport(PladSystem.FlamingFlowerPosition.ToVector2() * 16);
                     break;
                 case 2:
                     Main.LocalPlayer.QuickSpawnItem(ItemID.FrozenChest, 99);

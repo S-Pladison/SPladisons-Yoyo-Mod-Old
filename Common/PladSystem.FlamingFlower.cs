@@ -15,20 +15,20 @@ namespace SPladisonsYoyoMod.Common
 {
     public partial class PladSystem : ModSystem
     {
-        public static Point flamingFlowerPosition;
+        public static Point FlamingFlowerPosition;
 
-        public void UpdateFlamingFlower()
+        public static void UpdateFlamingFlower()
         {
-            if (flamingFlowerPosition != Point.Zero)
+            if (FlamingFlowerPosition != Point.Zero)
             {
-                var tile = Main.tile[flamingFlowerPosition.X, flamingFlowerPosition.Y];
-                if (tile == null || tile.type != ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>()) flamingFlowerPosition = Point.Zero;
+                var tile = Main.tile[FlamingFlowerPosition.X, FlamingFlowerPosition.Y];
+                if (tile == null || tile.type != ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>()) FlamingFlowerPosition = Point.Zero;
             }
 
-            if (flamingFlowerPosition == Point.Zero && Main.time == 0) this.GenerateFlamingFlower();
+            if (FlamingFlowerPosition == Point.Zero && Main.time == 0) GenerateFlamingFlower();
         }
 
-        public void GenerateFlamingFlower()
+        public static void GenerateFlamingFlower()
         {
             bool flag = false;
 
@@ -48,7 +48,7 @@ namespace SPladisonsYoyoMod.Common
                 // Если цветок найден, то...
                 if (flag)
                 {
-                    flamingFlowerPosition = new Point(i, j);
+                    FlamingFlowerPosition = new Point(i, j);
                     break;
                 }
             }
@@ -71,7 +71,7 @@ namespace SPladisonsYoyoMod.Common
                         if (!WorldGen.SolidOrSlopedTile(x - 1, y) || Main.tile[x - 1, y].type != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 2, y) || Main.tile[x + 2, y].type != TileID.Stone) continue;
 
                         WorldGen.PlaceTile(x, y - 1, (ushort)ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>());
-                        flamingFlowerPosition = new Point(x, y - 1);
+                        FlamingFlowerPosition = new Point(x, y - 1);
                         flag = true;
                     }
                 }
