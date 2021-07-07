@@ -8,45 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public abstract class ModHook : ILoadable
+    public partial class Hooks
     {
-        public static IReadOnlyDictionary<ModHook, bool> GetHooks => _modHooks;
-
-        public Mod Mod { get; private set; }
-        public bool IsLoaded { get; protected set; } = false;
-
-        public void Load(Mod mod)
-        {
-            if (_modHooks == null)
-            {
-                _modHooks = new Dictionary<ModHook, bool>();
-                LoadOnHooks();
-            }
-
-            this.Mod = mod;
-            this.OnLoad();
-
-            _modHooks.Add(this, this.IsLoaded);
-        }
-
-        public void Unload()
-        {
-            this.OnUnload();
-
-            _modHooks.Remove(this);
-            if (_modHooks.Count <= 0) _modHooks = null;
-        }
-
-        public virtual void OnLoad() { }
-        public virtual void OnUnload() { }
-
-        private static Dictionary<ModHook, bool> _modHooks;
-
-        private static void LoadOnHooks()
+        public static void LoadOn()
         {
             // Percentages will not work correctly if someone does exactly the same :(
             On.Terraria.Projectile.AI_099_2 += (orig, projectile) =>

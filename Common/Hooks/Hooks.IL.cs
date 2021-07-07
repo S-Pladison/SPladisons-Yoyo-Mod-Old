@@ -10,12 +10,19 @@ using SPladisonsYoyoMod.Content.Items;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public class SoloYoyo : ModHook
+    public partial class Hooks
     {
-        public override void OnLoad() => IL.Terraria.Player.Counterweight += SoloYoyoMethod;
-        public override void OnUnload() => IL.Terraria.Player.Counterweight -= SoloYoyoMethod;
+        public static void LoadIL()
+        {
+            IL.Terraria.Projectile.AI_099_2 += SoloYoyoMethod;
+        }
 
-        public void SoloYoyoMethod(ILContext il)
+        public static void UnloadIL()
+        {
+            IL.Terraria.Projectile.AI_099_2 -= SoloYoyoMethod;
+        }
+
+        private static void SoloYoyoMethod(ILContext il)
         {
             //  bool flag3 = Main.projectile[i].aiStyle == 99;
             //  if (flag3)
@@ -51,8 +58,6 @@ namespace SPladisonsYoyoMod.Common.Hooks
             c.Emit(Ldloc, num2Index);
             c.Emit(Add);
             c.Emit(Stloc, num2Index);
-
-            this.IsLoaded = true;
         }
     }
 }

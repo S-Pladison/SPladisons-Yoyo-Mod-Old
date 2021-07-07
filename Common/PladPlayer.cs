@@ -15,12 +15,14 @@ namespace SPladisonsYoyoMod.Common
         public bool ZoneFlamingFlower { get; set; }
 
         public bool bearingEquipped;
+        public bool candyCaneEquipped;
         public bool desecratedDiceEquipped;
         public bool flamingFlowerEquipped;
 
         public override void ResetEffects()
         {
             bearingEquipped = false;
+            candyCaneEquipped = false;
             desecratedDiceEquipped = false;
             flamingFlowerEquipped = false;
         }

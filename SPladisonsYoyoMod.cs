@@ -14,21 +14,13 @@ namespace SPladisonsYoyoMod
         public static Primitives Primitives { get; private set; }
         public static IReadOnlyList<int> GetYoyos { get { return _yoyos; } }
 
-        public SPladisonsYoyoMod()
-        {
-            Instance = this;
-        }
+        public SPladisonsYoyoMod() => Instance = this;
 
         public override void Load()
         {
-            Primitives = new Primitives(Main.graphics.GraphicsDevice);
+            Primitives = new Primitives();
 
             _yoyos = new List<int>();
-        }
-
-        public override void PostSetupContent()
-        {
-            LoadYoyos();
         }
 
         public override void Unload()
@@ -37,6 +29,11 @@ namespace SPladisonsYoyoMod
 
             Primitives = null;
             Instance = null;
+        }
+
+        public override void PostSetupContent()
+        {
+            LoadYoyos();
         }
 
         private static void LoadYoyos()

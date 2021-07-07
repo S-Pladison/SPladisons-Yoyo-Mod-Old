@@ -9,102 +9,31 @@ using Terraria;
 
 namespace SPladisonsYoyoMod.Common
 {
-    public class Primitives
+    public partial class Primitives
     {
-        public GraphicsDevice GraphicsDevice { get; }
-
-        public Primitives(GraphicsDevice graphicsDevice)
-        {
-            this.GraphicsDevice = graphicsDevice;
-
-            _trails = new List<Trail>();
-        }
+        private readonly List<Trail> _trails = new List<Trail>();
 
         public void DrawTrails(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (var trail in _trails) trail.Draw();
+            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.AlphaBlend)) trail.Draw();
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.Additive)) trail.Draw();
             spriteBatch.End();
         }
 
         public void UpdateTrails()
         {
-            foreach (var trail in _trails) trail.Update();
+            foreach (var trail in _trails.ToList()) trail.Update();
         }
 
-        private readonly List<Trail> _trails;
-
-        public class Trail
+        public static Matrix GetTransformMatrix() // Taken from tModLoader Discord Server // Oli#5095
         {
-            public Entity Target { get; private set; }
-            public bool Pixelated { get; private set; }
-
-            public bool active = true;
-
-            private Vector2? _customPosition;
-
-            private readonly float _maxLength;
-            private readonly Effect _effect;
-            private readonly List<Vector2> _points;
-
-            private readonly TrailWidthDelegate _width;
-            private readonly TrailColorDelegate _color;
-
-            public Trail(Entity target, float length, TrailWidthDelegate width, TrailColorDelegate color, Effect effect = null, bool pixelated = false)
-            {
-                this.Target = target;
-
-                _maxLength = length;
-                _effect = effect;
-                _width = width;
-                _color = color;
-
-                _points = new List<Vector2>();
-            }
-
-            public void Draw()
-            {
-                if (!active || _points.Count <= 1) return;
-
-                // ...
-            }
-
-            public void Update()
-            {
-                if (this.Target == null || !this.Target.active || !active)
-                {
-                    this.Kill();
-                    return;
-                }
-
-                // ...
-            }
-
-            public void Kill()
-            {
-                SPladisonsYoyoMod.Primitives?._trails.Remove(this);
-            }
-
-            public void SetCustomPosition(Vector2? position) => _customPosition = position;
-        }
-
-        public delegate float TrailWidthDelegate(float progress);
-        public delegate Color TrailColorDelegate(float progress);
-
-        public Trail CreateTrail(Entity target, float length, TrailWidthDelegate width, TrailColorDelegate color) => this.CreateTrail(target, length, width, color, null);
-        public Trail CreateTrail(Entity target, float length, TrailWidthDelegate width, TrailColorDelegate color, Effect effect)
-        {
-            Trail trail = new (target, length, width, color, effect, false);
-            _trails.Add(trail);
-            return trail;
-        }
-
-        public Trail CreatePixelatedTrail(Entity target, float length, TrailWidthDelegate width, TrailColorDelegate color) => this.CreatePixelatedTrail(target, length, width, color, null);
-        public Trail CreatePixelatedTrail(Entity target, float length, TrailWidthDelegate width, TrailColorDelegate color, Effect effect)
-        {
-            Trail trail = new(target, length, width, color, effect, true);
-            _trails.Add(trail);
-            return trail;
+            Matrix view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) * Matrix.CreateTranslation(Main.screenWidth / 2, -Main.screenHeight / 2, 0) * Matrix.CreateRotationZ(MathHelper.Pi);
+            Matrix projection = Matrix.CreateOrthographic(Main.screenWidth, Main.screenHeight, 0, 1000);
+            return view * Matrix.CreateScale(Main.GameViewMatrix.Zoom.X, Main.GameViewMatrix.Zoom.Y, 1) * projection;
         }
     }
 }

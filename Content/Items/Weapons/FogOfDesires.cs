@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Content.Trails;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,12 +47,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn()
         {
-            SPladisonsYoyoMod.Primitives.CreateTrail(
-                target: Projectile,
-                length: 16 * 5,
-                width: (progress) => 16 * (1 - progress),
-                color: (progress) => Color.White
-            );
+            SimpleTrail trail = new (length: 16 * 10, width: (progress) => 20, color: (progress) => Color.White);
+            trail.SetEffectTexture(ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_8").Value);
+            SPladisonsYoyoMod.Primitives.CreateTrail(target: Projectile, trail: trail);
         }
     }
 }

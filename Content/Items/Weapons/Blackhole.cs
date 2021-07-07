@@ -42,7 +42,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class BlackholeProjectile : YoyoProjectile
     {
-        public readonly float radius = 16 * 9;
+        public readonly float Radius = 16 * 9;
+
         public float radiusProgress = 0;
         public float pulse = 0;
 
@@ -75,7 +76,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 float numX = Projectile.position.X - target.position.X - (float)(target.width / 2);
                 float numY = Projectile.position.Y - target.position.Y - (float)(target.height / 2);
                 float distance = (float)Math.Sqrt((double)(numX * numX + numY * numY));
-                float currentRadius = radius * radiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f);
+                float currentRadius = Radius * radiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f);
 
                 if (distance < currentRadius)
                 {
@@ -132,19 +133,20 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void PostDraw(Color lightColor)
         {
-            SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
-
-            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             var texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_3").Value;
-            Main.spriteBatch.Draw(texture, drawPosition, null, Color.White, (float)Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), texture.Size() * 0.5f, radiusProgress - pulse * 5f, SpriteEffects.None, 0);
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
 
-            texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_4").Value;
-            Main.spriteBatch.Draw(texture, drawPosition, null, Color.White, Projectile.rotation * 0.33f, texture.Size() * 0.5f, radiusProgress * 0.3f, SpriteEffects.None, 0);
-
+            SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
+            {
+                Main.spriteBatch.Draw(texture, drawPosition, null, Color.White, (float)Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), texture.Size() * 0.5f, radiusProgress - pulse * 5f, SpriteEffects.None, 0);
+                texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_4").Value;
+                Main.spriteBatch.Draw(texture, drawPosition, null, Color.White, Projectile.rotation * 0.33f, texture.Size() * 0.5f, radiusProgress * 0.3f, SpriteEffects.None, 0);
+            }
             SetSpriteBatch();
-
-            texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_5").Value;
-            Main.spriteBatch.Draw(texture, drawPosition, null, Color.White, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * radiusProgress, SpriteEffects.None, 0);
+            {
+                texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_5").Value;
+                Main.spriteBatch.Draw(texture, drawPosition, null, Color.Black, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * radiusProgress, SpriteEffects.None, 0);
+            }
         }
     }
 }

@@ -156,6 +156,5 @@ namespace SPladisonsYoyoMod.Content.Items
         public virtual bool IsSoloYoyo() => false;
         public virtual void OnActivateYoyoGlove() { }
         public virtual void ModifyYoyo(ref float lifeTime, ref float maxRange, ref float topSpeed) { }
-
     }
 }
