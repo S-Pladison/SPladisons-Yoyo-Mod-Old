@@ -1,14 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.GameContent;
-using Terraria.Graphics;
 using static SPladisonsYoyoMod.Common.Primitives;
 
 namespace SPladisonsYoyoMod.Content.Trails
@@ -24,12 +17,13 @@ namespace SPladisonsYoyoMod.Content.Trails
             _color = color;
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
             if (_points.Count <= 1) return;
 
-            float progress = 0f;
+            this.PreDraw(spriteBatch);
 
+            float progress = 0f;
             float currentWidth = _width?.Invoke(progress) ?? 0;
             Color currentColor = _color?.Invoke(progress) ?? Color.White;
             Vector2 normal = (_points[1] - _points[0]).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * currentWidth / 2f;
@@ -57,7 +51,12 @@ namespace SPladisonsYoyoMod.Content.Trails
                 pass.Apply();
                 graphics.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, _vertices.ToArray(), 0, (_points.Count - 1) * 2);
             }
+
+            this.PostDraw(spriteBatch);
         }
+
+        public virtual void PreDraw(SpriteBatch spriteBatch) { }
+        public virtual void PostDraw(SpriteBatch spriteBatch) { }
 
         public delegate float WidthDelegate(float progress);
         public delegate Color ColorDelegate(float progress);

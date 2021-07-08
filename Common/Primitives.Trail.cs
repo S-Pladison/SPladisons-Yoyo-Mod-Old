@@ -94,23 +94,13 @@ namespace SPladisonsYoyoMod.Common
                 _vertices.Add(new VertexPositionColorTexture(pos, color, uv));
             }
 
-            public virtual BlendState BlendState => BlendState.AlphaBlend;
-
-            public virtual void Draw() { }
+            public virtual void Draw(SpriteBatch spriteBatch) { }
 
             protected virtual int MaxPoints => 25;
 
             protected virtual void PostUpdate() { }
             protected virtual void BeforeDeletion() { }
             protected virtual bool PreUpdate() { return true; }
-        }
-
-        public void CreateTrail(Entity target, Trail trail)
-        {
-            if (Main.dedServ) return;
-
-            trail.Target = target;
-            _trails.Add(trail);
         }
     }
 }

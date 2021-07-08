@@ -13,14 +13,18 @@ namespace SPladisonsYoyoMod.Common
     {
         private readonly List<Trail> _trails = new List<Trail>();
 
+        public void CreateTrail(Entity target, Trail trail)
+        {
+            if (Main.dedServ) return;
+
+            trail.Target = target;
+            _trails.Add(trail);
+        }
+
         public void DrawTrails(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.AlphaBlend)) trail.Draw();
-            spriteBatch.End();
-
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.Additive)) trail.Draw();
+            foreach (var trail in _trails.FindAll(i => i.Active)) trail.Draw(spriteBatch);
             spriteBatch.End();
         }
 

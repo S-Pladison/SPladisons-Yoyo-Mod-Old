@@ -49,7 +49,7 @@ namespace SPladisonsYoyoMod.Common
 
         public void UpdateFlamingFlowerZoneEffect()
         {
-            bool flag = Main.UseHeatDistortion && ZoneFlamingFlower;
+            bool flag = Main.UseHeatDistortion && this.ZoneFlamingFlower;
             if (flag)
             {
                 Player.ManageSpecialBiomeVisuals("HeatDistortion", flag);
