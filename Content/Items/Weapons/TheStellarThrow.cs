@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static SPladisonsYoyoMod.Common.Primitives;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
 {
@@ -54,8 +55,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 return ret * (1 - p);
             }
 
-            SimpleTrail trail = new(length: 16 * 10, width: (p) => 21 * (1 - p * 0.33f), color: Gradient);
+            TriangularTrail trail = new(length: 16 * 10, width: (p) => 21 * (1 - p * 0.44f), color: Gradient);
             trail.SetEffectTexture(ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_7").Value);
+            trail.SetDissolveSpeed(0.15f);
             SPladisonsYoyoMod.Primitives.CreateTrail(target: Projectile, trail: trail);
         }
 
@@ -92,6 +94,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             SetSpriteBatch();
             texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_5").Value;
             Main.spriteBatch.Draw(texture, drawPosition, null, Color.White, Projectile.rotation, texture.Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
+
             return true;
         }
     }

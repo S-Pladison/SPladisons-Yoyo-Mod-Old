@@ -111,9 +111,11 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
             TileObjectData.addTile(Type);
         }
 
-        public override void PladModifyLight(int i, int j, ref Color color)
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            color = new Color(53 / 255f, 43 / 255f, 59 / 255f) * 0.3f;
+            r = 0.2f * 0.3f;
+            g = 0.17f * 0.3f;
+            b = 0.23f * 0.3f;
         }
 
         public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].frameX / 36);

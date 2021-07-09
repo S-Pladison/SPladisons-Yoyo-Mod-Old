@@ -13,15 +13,6 @@ namespace SPladisonsYoyoMod.Content
     {
         public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Tiles/" + this.Name;
 
-        public sealed override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
-        {
-            Color color = new Color(r, g, b);
-
-            this.PladModifyLight(i, j, ref color);
-
-            r = color.R / 255f; g = color.G / 255f; b = color.B / 255f;
-        }
-
         public void CreateMapEntry(Color color, string eng, string rus = "", Func<string, int, int, string> nameFunc = null)
         {
             this.CreateMapEntry(color, null, eng, rus, nameFunc);
@@ -36,7 +27,5 @@ namespace SPladisonsYoyoMod.Content
             if (nameFunc == null) AddMapEntry(color, name);
             else AddMapEntry(color, name, nameFunc);
         }
-
-        public virtual void PladModifyLight(int i, int j, ref Color color) { }
     }
 }

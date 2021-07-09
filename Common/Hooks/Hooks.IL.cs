@@ -14,12 +14,12 @@ namespace SPladisonsYoyoMod.Common.Hooks
     {
         public static void LoadIL()
         {
-            IL.Terraria.Projectile.AI_099_2 += SoloYoyoMethod;
+            IL.Terraria.Player.Counterweight += SoloYoyoMethod;
         }
 
         public static void UnloadIL()
         {
-            IL.Terraria.Projectile.AI_099_2 -= SoloYoyoMethod;
+            IL.Terraria.Player.Counterweight -= SoloYoyoMethod;
         }
 
         private static void SoloYoyoMethod(ILContext il)

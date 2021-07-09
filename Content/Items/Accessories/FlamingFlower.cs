@@ -90,11 +90,13 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             player.cursorItemIconID = ModContent.ItemType<FlamingFlower>();
         }
 
-        public override void PladModifyLight(int i, int j, ref Color color)
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             float progress = MathHelper.Lerp(0.3f, 0.5f, (float)Math.Abs(Math.Pow(Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), 4f)));
 
-            color = new Color(1f, 0.4f, 0.12f) * progress;
+            r = 1f * progress;
+            g = 0.4f * progress;
+            b = 0.12f * progress;
         }
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
