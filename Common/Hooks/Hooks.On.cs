@@ -1,13 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoMod.RuntimeDetour.HookGen;
 using SPladisonsYoyoMod.Common.Globals;
+using SPladisonsYoyoMod.Content.Items.Weapons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
@@ -61,6 +65,33 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 SPladisonsYoyoMod.Primitives?.DrawTrails(Main.spriteBatch);
                 orig(self);
             };
+
+            // On.Terraria.Main.DrawProj_DrawYoyoString += ...
+            OnDrawYoyoStringInfo += (orig, self, projectile, mountedCenter) =>
+            {
+                /*if (!projectile.counterweight)
+                {
+                    mountedCenter += new Vector2(0, -100);
+                }*/
+                if (projectile.type == ModContent.ProjectileType<BloomingDeathProjectile>())
+                {
+                    BloomingDeathProjectile.DrawCustomString(projectile, mountedCenter, (projectile.ModProjectile as BloomingDeathProjectile).key);
+                    return;
+                }
+                orig(self, projectile, mountedCenter);
+            };
+        }
+
+        private static readonly MethodInfo DrawYoyoStringInfo = typeof(Main).GetMethod("DrawProj_DrawYoyoString", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        private delegate void OrigDrawYoyoString(Main self, Projectile projectile, Vector2 mountedCenter);
+        private delegate void HookDrawYoyoString(OrigDrawYoyoString orig, Main self, Projectile projectile, Vector2 mountedCenter);
+
+        private static event HookDrawYoyoString OnDrawYoyoStringInfo
+        {
+            add => HookEndpointManager.Add(DrawYoyoStringInfo, value);
+
+            remove => HookEndpointManager.Remove(DrawYoyoStringInfo, value);
         }
     }
 }

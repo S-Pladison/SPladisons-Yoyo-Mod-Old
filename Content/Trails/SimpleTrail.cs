@@ -27,12 +27,10 @@ namespace SPladisonsYoyoMod.Content.Trails
             float currentWidth = _width?.Invoke(progress) ?? 0;
             Color currentColor = (_color?.Invoke(progress) ?? Color.White) * _dissolveProgress;
 
-            Vector2 normal = (_points[1] - _points[0]).SafeNormalize(Vector2.Zero) * currentWidth / 2f;
-            this.DrawHead(width: currentWidth, color: currentColor, normal: -normal);
-            normal = normal.RotatedBy(MathHelper.PiOver2);
+            Vector2 normal = (_points[1] - _points[0]).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * currentWidth / 2f;
 
-            this.AddVertex(_points[0] - normal, currentColor, new Vector2(progress, 1));
             this.AddVertex(_points[0] + normal, currentColor, new Vector2(progress, 0));
+            this.AddVertex(_points[0] - normal, currentColor, new Vector2(progress, 1));
 
             for (int i = 1; i < _points.Count; i++)
             {
@@ -42,8 +40,8 @@ namespace SPladisonsYoyoMod.Content.Trails
                 currentColor = (_color?.Invoke(progress) ?? Color.White) * _dissolveProgress;
                 normal = (_points[i] - _points[i - 1]).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * currentWidth / 2f;
 
-                this.AddVertex(_points[i] - normal, currentColor, new Vector2(progress, 1));
                 this.AddVertex(_points[i] + normal, currentColor, new Vector2(progress, 0));
+                this.AddVertex(_points[i] - normal, currentColor, new Vector2(progress, 1));
             }
 
             _effect.Parameters["transformMatrix"].SetValue(Primitives.GetTransformMatrix());
@@ -52,7 +50,7 @@ namespace SPladisonsYoyoMod.Content.Trails
             foreach (var pass in _effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                graphics.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, _vertices.ToArray(), 0, (_points.Count - 1) * 2 + this.ExtraTriangleCount);
+                graphics.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, _vertices.ToArray(), 0, (_points.Count - 1) * 2);
             }
 
             this.PostDraw(spriteBatch);
@@ -60,8 +58,6 @@ namespace SPladisonsYoyoMod.Content.Trails
 
         protected virtual void PreDraw(SpriteBatch spriteBatch) { }
         protected virtual void PostDraw(SpriteBatch spriteBatch) { }
-        protected virtual void DrawHead(float width, Color color, Vector2 normal) { }
-        protected virtual int ExtraTriangleCount => 0;
 
         public delegate float WidthDelegate(float progress);
         public delegate Color ColorDelegate(float progress);
