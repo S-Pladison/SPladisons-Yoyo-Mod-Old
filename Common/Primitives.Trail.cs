@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace SPladisonsYoyoMod.Common
             public int MaxPoints { get; set; } = 25;
 
             protected readonly int _maxLength;
-            protected readonly Effect _effect;
+            protected readonly Asset<Effect> _effect;
             protected readonly List<Vector2> _points = new();
             protected readonly List<VertexPositionColorTexture> _vertices = new();
 
@@ -28,11 +29,15 @@ namespace SPladisonsYoyoMod.Common
             protected float _dissolveSpeed = 0.1f;
             protected float _dissolveProgress = 1f;
 
-            public Trail(int length, Effect effect = null)
+            public Trail(int length, Asset<Effect> effect = null)
             {
                 _maxLength = length;
-                _effect = effect ?? SPladisonsYoyoMod.Instance.GetEffect("Assets/Effects/Primitive").Value;
-                _effect.Parameters["texture0"].SetValue(ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_6").Value);
+
+                if (effect == null)
+                {
+                    _effect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Primitive");
+                    _effect.Value.Parameters["texture0"].SetValue(SPladisonsYoyoMod.ExtraTextures[6].Value);
+                }
             }
 
             public void Update()
@@ -54,7 +59,6 @@ namespace SPladisonsYoyoMod.Common
 
                 if (this.PreUpdate())
                 {
-                    _vertices.Clear();
                     this.UpdatePoints(maxLength: length);
                 }
                 this.PostUpdate();
@@ -66,11 +70,13 @@ namespace SPladisonsYoyoMod.Common
             {
                 this.Active = false;
                 this.PreKill();
+
                 SPladisonsYoyoMod.Primitives?._trails.Remove(this);
             }
 
-            public void SetEffectTexture(Texture2D texture, int index = 0) => _effect.Parameters["texture" + index].SetValue(texture);
+            public void SetEffectTexture(Texture2D texture, int index = 0) => _effect.Value.Parameters["texture" + index].SetValue(texture);
             public void SetDissolveSpeed(float speed = 0.1f) => _dissolveSpeed = speed;
+            public void StartDissolving() => _dissolving = true;
 
             protected void UpdatePoints(int maxLength)
             {
@@ -103,9 +109,9 @@ namespace SPladisonsYoyoMod.Common
 
             protected void UpdateEffectParameters()
             {
-                foreach (var param in _effect.Parameters)
+                foreach (var param in _effect.Value.Parameters)
                 {
-                    if (param.Name == "time") _effect.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
+                    if (param.Name == "time") _effect.Value.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
                 }
             }
 

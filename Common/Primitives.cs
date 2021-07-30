@@ -13,7 +13,7 @@ namespace SPladisonsYoyoMod.Common
     {
         private readonly List<Trail> _trails = new List<Trail>();
 
-        public int TrailCount => _trails.Count();
+        public int TrailCount => _trails.Count;
 
         public void CreateTrail(Entity target, Trail trail)
         {

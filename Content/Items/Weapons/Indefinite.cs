@@ -16,15 +16,15 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
 {
-    public class BloomingDeath : YoyoItem
+    public class Indefinite : YoyoItem
     {
-        public BloomingDeath() : base(gamepadExtraRange: 15) { }
+        public Indefinite() : base(gamepadExtraRange: 15) { }
 
         public override void YoyoSetStaticDefaults()
         {
-            this.SetDisplayName(eng: "Blooming Death", rus: "Цветущая смерть");
-            this.SetTooltip(eng: "Yoyo and its string poison enemies",
-                            rus: "Йо-йо и его нить отравляют врагов");
+            this.SetDisplayName(eng: "Indefinite", rus: "Неопределенный");
+            this.SetTooltip(eng: "...",
+                            rus: "...");
         }
 
         public override void YoyoSetDefaults()
@@ -32,38 +32,35 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Item.damage = 43;
             Item.knockBack = 2.5f;
 
-            Item.shoot = ModContent.ProjectileType<BloomingDeathProjectile>();
+            Item.shoot = ModContent.ProjectileType<IndefiniteProjectile>();
 
             Item.rare = ItemRarityID.Lime;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
         }
     }
 
-    public class BloomingDeathProjectile : YoyoProjectile, IDrawCustomString
+    public class IndefiniteProjectile : YoyoProjectile, IDrawCustomString
     {
-        public static MethodInfo StringColorMethodInfo { get; private set; }
         public static Asset<Texture2D> StringTexture { get; private set; }
         public static Asset<Texture2D> LeafTexture { get; private set; }
 
         private int _key;
 
-        public BloomingDeathProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
+        public IndefiniteProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
 
         public override void YoyoSetStaticDefaults()
         {
-            this.SetDisplayName(eng: "Blooming Death", rus: "Цветущая смерть");
+            this.SetDisplayName(eng: "Indefinite", rus: "Неопределенный");
         }
 
         /*public override void Load()
         {
-            StringColorMethodInfo = null; // typeof(Main).GetMethod("TryApplyingPlayerStringColor", BindingFlags.NonPublic | BindingFlags.Static);
-            StringTexture = SPladisonsYoyoMod.ExtraTextures[9];
-            LeafTexture = SPladisonsYoyoMod.ExtraTextures[10];
+            StringTexture = SPladisonsYoyoMod.ExtraTextures[20];
+            LeafTexture = SPladisonsYoyoMod.ExtraTextures[18];
         }*/
 
         public override void Unload()
         {
-            StringColorMethodInfo = null;
             StringTexture = null;
             LeafTexture = null;
         }
@@ -71,13 +68,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override void OnSpawn()
         {
             _key = Main.rand.Next(1337);
-
-            // As some have said, trail is superfluous
-
-            /*TriangularTrail trail = new(length: 16 * 6, width: (p) => 16 * (1 - p), color: (p) => Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), new Color(230, 163, 68)) * 0.5f);
-            trail.SetEffectTexture(ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_11").Value);
-            trail.SetDissolveSpeed(0.15f);
-            SPladisonsYoyoMod.Primitives.CreateTrail(target: Projectile, trail: trail);*/
         }
 
         public override void AI()
@@ -101,11 +91,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             Vector2 drawPosition = Projectile.position + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
 
-            var texture = SPladisonsYoyoMod.ExtraTextures[12];
-            var color = Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), Color.White);
+            var texture = SPladisonsYoyoMod.ExtraTextures[17];
 
-            for (int i = 0; i < 5; i++) Main.EntitySpriteDraw(texture.Value, drawPosition, null, color * 0.22f, Projectile.rotation * 0.05f + MathHelper.Pi + (MathHelper.TwoPi / 5 * i), new Vector2(9, 20), 1.22f, SpriteEffects.None, 0);
-            for (int i = 0; i < 5; i++) Main.EntitySpriteDraw(texture.Value, drawPosition, null, color * 0.88f, Projectile.rotation * 0.05f + (MathHelper.TwoPi / 5 * i), new Vector2(9, 20), 1f, SpriteEffects.None, 0);
+            for (int i = 0; i < 5; i++)
+            {
+                float rot = Projectile.rotation * 0.05f + MathHelper.Pi + (MathHelper.TwoPi / 5 * i);
+                Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White * 0.22f, rot, new Vector2(9, 36), 1.22f, SpriteEffects.None, 0);
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                float rot = Projectile.rotation * 0.05f + (MathHelper.TwoPi / 5 * i);
+                Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White * 0.5f, rot, new Vector2(9, 36), 1f, SpriteEffects.None, 0);
+            }
 
             return true;
         }
@@ -218,7 +215,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     try
                     {
                         // ...
-                        if (frame == 0) color = (Color)(StringColorMethodInfo?.Invoke(null, new object[] { player.stringColor, Color.White }) ?? Color.White);
+                        if (frame == 0) color = (Color)(BloomingDeathProjectile.StringColorMethodInfo?.Invoke(null, new object[] { player.stringColor, Color.White }) ?? Color.White);
                     }
                     catch { }
 
@@ -232,6 +229,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
                 Main.EntitySpriteDraw(color: color, texture: StringTexture.Value, position: position, sourceRectangle: sourceRectangle, rotation: num4, origin: new Vector2(6, 0f), scale: 1f, effects: SpriteEffects.None, worthless: 0);
 
+                Asset<Texture2D> other = ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_19");
+
                 // Leafs
                 {
                     num4 += (float)Math.Sin(Main.GlobalTimeWrappedHourly) * 0.25f;
@@ -240,18 +239,24 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     if (frame != 2 || !flag) continue;
 
                     int flip = counter % 2 == 0 ? 1 : -1;
-                    if (counter % 3 == 0 || counter % 4 == 0)
+                    if (counter % 3 == 0)
                     {
                         SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.75f, texture: LeafTexture.Value, position: position, sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, worthless: 0);
+
+                        Main.spriteBatch.Draw(color: new Color(0, 120, 255) * 0.75f, texture: other.Value, position: position + new Vector2(1, 0).RotatedBy(Main.GlobalTimeWrappedHourly * 5f), sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, layerDepth: 0f);
+                        Main.spriteBatch.Draw(color: new Color(250, 0, 60) * 0.75f, texture: other.Value, position: position + new Vector2(1, 0).RotatedBy(Main.GlobalTimeWrappedHourly * 5f + Math.PI), sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, layerDepth: 0f);
+                        Main.spriteBatch.Draw(color: Color.White, texture: LeafTexture.Value, position: position, sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, layerDepth: 0f);
                     }
 
                     flip = -flip;
-                    if (counter % 5 == 0 || counter % 7 == 0)
+                    if (counter % 7 == 0)
                     {
-                        color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f), Color.Gray);
+                        color = Color.White;
                         SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.3f, texture: LeafTexture.Value, position: position, sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, worthless: 0);
+
+                        Main.spriteBatch.Draw(color: new Color(250, 0, 60) * 0.3f, texture: other.Value, position: position + new Vector2(1, 0).RotatedBy(Main.GlobalTimeWrappedHourly * 5f), sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, layerDepth: 0f);
+                        Main.spriteBatch.Draw(color: new Color(0, 120, 255) * 0.3f, texture: other.Value, position: position + new Vector2(1, 0).RotatedBy(Main.GlobalTimeWrappedHourly * 5f + Math.PI), sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, layerDepth: 0f);
+                        Main.spriteBatch.Draw(color: Color.White, texture: LeafTexture.Value, position: position, sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, layerDepth: 0f);
                     }
                 }
             }

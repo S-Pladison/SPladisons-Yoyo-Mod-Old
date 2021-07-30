@@ -1,0 +1,18 @@
+Mods: {
+    SPladisonsYoyoMod: {
+        ItemTooltip: {
+            PrefixYoyoLifeTime: % время полета
+            PrefixYoyoMaxRange: % максимальная дальность
+        }
+        GameUI: {
+            FlamingFlowerMapIcon: Странный цветок
+        }
+        Config: {
+            YoyoCustomUseStyle: Пользовательский стиль использования йо-йо
+        }
+        WorldGen: {
+            SpaceChest: S-Pladison's Yoyo Mod: Космический сундук
+            SpaceChest_0: Добавление кусочка космоса в подземелье...
+        }
+    }
+}

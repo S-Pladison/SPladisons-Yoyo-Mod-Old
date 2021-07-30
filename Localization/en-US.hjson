@@ -1,0 +1,18 @@
+Mods: {
+    SPladisonsYoyoMod: {
+        ItemTooltip: {
+            PrefixYoyoLifeTime: % duration
+            PrefixYoyoMaxRange: % maximum range
+        }
+        GameUI: {
+            FlamingFlowerMapIcon: Strange Flower
+        }
+        Config: {
+            YoyoCustomUseStyle: Custom style of using yoyo
+        }
+        WorldGen: {
+            SpaceChest: S-Pladison's Yoyo Mod: Space Chest
+            SpaceChest_0: Adding a piece of space to the dungeon...
+        }
+    }
+}

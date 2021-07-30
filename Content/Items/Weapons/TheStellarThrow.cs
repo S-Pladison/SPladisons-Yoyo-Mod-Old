@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static SPladisonsYoyoMod.Common.Primitives;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
 {
@@ -56,9 +55,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
 
             TriangularTrail trail = new(length: 16 * 10, width: (p) => 21 * (1 - p * 0.44f), color: Gradient);
-            trail.SetEffectTexture(ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_7").Value);
+            trail.SetEffectTexture(SPladisonsYoyoMod.ExtraTextures[7].Value);
             trail.SetDissolveSpeed(0.15f);
-            SPladisonsYoyoMod.Primitives.CreateTrail(target: Projectile, trail: trail);
+            SPladisonsYoyoMod.Primitives?.CreateTrail(target: Projectile, trail: trail);
         }
 
         public readonly Color[] DustColors = new Color[] { new Color(11, 25, 25), new Color(16, 11, 25), new Color(25, 11, 18) };
@@ -88,12 +87,10 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Vector2 drawPosition = Projectile.position + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
 
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
-            var texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_8").Value;
-            Main.spriteBatch.Draw(texture, drawPosition, null, new Color(16, 11, 25, 150), Projectile.rotation * 0.05f, texture.Size() * 0.5f + new Vector2(0, 6), 0.3f, SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(SPladisonsYoyoMod.ExtraTextures[8].Value, drawPosition, null, new Color(16, 11, 25, 150), Projectile.rotation * 0.05f, SPladisonsYoyoMod.ExtraTextures[8].Size() * 0.5f + new Vector2(0, 6), 0.3f, SpriteEffects.None, 0);
 
             SetSpriteBatch();
-            texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_5").Value;
-            Main.spriteBatch.Draw(texture, drawPosition, null, Color.White, Projectile.rotation, texture.Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(SPladisonsYoyoMod.ExtraTextures[5].Value, drawPosition, null, Color.White, Projectile.rotation, SPladisonsYoyoMod.ExtraTextures[5].Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
 
             return true;
         }

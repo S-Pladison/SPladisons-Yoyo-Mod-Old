@@ -9,11 +9,11 @@ namespace SPladisonsYoyoMod.Content.Prefixes
 {
     internal class ModPrefixLoader : ILoadable
     {
-        public static IReadOnlyList<byte> GetYoyoPrefixes() => _yoyoPrefixes;
+        public static IReadOnlyList<int> GetYoyoPrefixes() => _yoyoPrefixes;
 
         public void Load(Mod mod)
         {
-            _yoyoPrefixes = new List<byte>();
+            _yoyoPrefixes = new List<int>();
 
             AddPrefix(mod, name: "Test1", eng: "Test #1", rus: "Тестовый #1", lifeTime: 0f, maxRange: 0.1f, topSpeed: 0f);
             AddPrefix(mod, name: "Test2", eng: "Test #2", rus: "Тестовый #2", lifeTime: 0.1f, maxRange: 0f, topSpeed: 0f);
@@ -31,6 +31,6 @@ namespace SPladisonsYoyoMod.Content.Prefixes
             if (mod.TryFind(name, out ModPrefix prefix)) _yoyoPrefixes.Add(prefix.Type);
         }
 
-        private static List<byte> _yoyoPrefixes;
+        private static List<int> _yoyoPrefixes;
     }
 }

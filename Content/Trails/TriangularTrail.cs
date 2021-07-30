@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace SPladisonsYoyoMod.Content.Trails
     {
         protected int _tipLength;
 
-        public TriangularTrail(int length, WidthDelegate width, ColorDelegate color, Effect effect = null, int? tipLength = null) : base(length, width, color, effect)
+        public TriangularTrail(int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, int? tipLength = null) : base(length, width, color, effect)
         {
             _tipLength = tipLength ?? -1;
         }
@@ -22,8 +23,7 @@ namespace SPladisonsYoyoMod.Content.Trails
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (_points.Count <= 1) return;
-
-            this.PreDraw(spriteBatch);
+            _vertices.Clear();
 
             float progress = 0f;
             float currentWidth = _width?.Invoke(progress) ?? 0;
@@ -48,16 +48,14 @@ namespace SPladisonsYoyoMod.Content.Trails
                 this.AddVertex(_points[i] + normal, currentColor, new Vector2(progress, 0));
             }
 
-            _effect.Parameters["transformMatrix"].SetValue(Primitives.GetTransformMatrix());
+            _effect.Value.Parameters["transformMatrix"].SetValue(Primitives.GetTransformMatrix());
 
             var graphics = Main.instance.GraphicsDevice;
-            foreach (var pass in _effect.CurrentTechnique.Passes)
+            foreach (var pass in _effect.Value.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 graphics.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, _vertices.ToArray(), 0, (_points.Count - 1) * 2 + 1);
             }
-
-            this.PostDraw(spriteBatch);
         }
     }
 }

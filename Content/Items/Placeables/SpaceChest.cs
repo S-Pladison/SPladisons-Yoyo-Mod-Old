@@ -69,7 +69,7 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
 
     public class SpaceChestTile : PladTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileLighted[Type] = true;
             Main.tileSpelunker[Type] = true;
@@ -271,13 +271,13 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
-                int chest = this.FindSpaceChest(i, j);
+                int chest = FindSpaceChest(i, j);
                 if (chest > 0)
                 {
                     Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
                     if (Main.drawToScreen) zero = Vector2.Zero;
 
-                    var texture = ModContent.GetTexture(this.Texture + "_Effect").Value;
+                    var texture = ModContent.Request<Texture2D>(this.Texture + "_Effect").Value;
                     var position = new Vector2(i * 32 + player.Center.X * 0.2f, j * 32 + player.Center.Y * 0.2f) + zero;
                     var rectangle = new Rectangle((tile.frameX / 18 - 1) * 16, Main.chest[chest].frame * 34, 32, 32);
 
@@ -293,7 +293,7 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
             }
         }
 
-        private int FindSpaceChest(int i, int j)
+        private static int FindSpaceChest(int i, int j)
         {
             Tile tile = Main.tile[i, j];
             int left = i;

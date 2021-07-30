@@ -35,7 +35,7 @@ namespace SPladisonsYoyoMod.Content.Prefixes
             this.topSpeedMult = topSpeed;
         }
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault(engName);
             if (rusName != string.Empty) DisplayName.AddTranslation(GameCulture.FromCultureName(GameCulture.CultureName.Russian), rusName);

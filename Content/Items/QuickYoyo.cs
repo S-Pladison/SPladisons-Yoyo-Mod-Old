@@ -51,6 +51,8 @@ namespace SPladisonsYoyoMod.Content.Items
             _gamepadExtraRange = gamepadExtraRange;
         }
 
+        public override string Texture => ModContent.FileExists(base.Texture) ? base.Texture : "SPladisonsYoyoMod/Assets/Textures/Items/UnknownYoyo";
+         
         public sealed override void PladSetStaticDefaults()
         {
             ItemID.Sets.Yoyo[Type] = true;
@@ -99,6 +101,8 @@ namespace SPladisonsYoyoMod.Content.Items
             _maxRange = maxRange;
             _topSpeed = topSpeed;
         }
+
+        public override string Texture => ModContent.FileExists(base.Texture) ? base.Texture : "SPladisonsYoyoMod/Assets/Textures/Projectiles/UnknownYoyoProjectile";
 
         public sealed override void SetStaticDefaults()
         {

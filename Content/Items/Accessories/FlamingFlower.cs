@@ -45,7 +45,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
     public class FlamingFlowerTile : PladTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileLighted[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -125,7 +125,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
             if (Main.drawToScreen) zero = Vector2.Zero;
 
-            Texture2D texture = ModContent.GetTexture(this.Texture + "_Glow").Value;
+            Texture2D texture = ModContent.Request<Texture2D>(this.Texture + "_Glow").Value;
             int height = tile.frameY == 36 ? 18 : 16;
             float progress = MathHelper.Lerp(0.4f, 0.9f, (float)Math.Abs(Math.Pow(Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), 4f)));
 
@@ -150,7 +150,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
             if (mapRect == null || mapRect.Value.Contains(vec.ToPoint()))
             {
-                Texture2D texture = ModContent.GetTexture("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_1").Value;
+                Texture2D texture = SPladisonsYoyoMod.ExtraTextures[1].Value;
                 Rectangle rectangle = texture.Frame(1, 1, 0, 0, 0, 0);
 
                 float progress = 1;

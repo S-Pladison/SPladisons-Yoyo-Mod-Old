@@ -1,17 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Reflection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.RuntimeDetour.HookGen;
-using SPladisonsYoyoMod.Common.Globals;
-using SPladisonsYoyoMod.Content.Items.Weapons;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
+using SPladisonsYoyoMod.Common.Globals;
+using SPladisonsYoyoMod.Common.Misc;
+using SPladisonsYoyoMod.Content.Items;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
@@ -63,6 +58,8 @@ namespace SPladisonsYoyoMod.Common.Hooks
             On.Terraria.Main.DrawProjectiles += (orig, self) =>
             {
                 SPladisonsYoyoMod.Primitives?.DrawTrails(Main.spriteBatch);
+                SoulFilledFlameEffect.Instance?.Draw(Main.spriteBatch);
+
                 orig(self);
             };
 
@@ -73,11 +70,12 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 {
                     mountedCenter += new Vector2(0, -100);
                 }*/
-                if (projectile.type == ModContent.ProjectileType<BloomingDeathProjectile>())
+                if (projectile.ModProjectile is IDrawCustomString yoyo)
                 {
-                    BloomingDeathProjectile.DrawCustomString(projectile, mountedCenter, (projectile.ModProjectile as BloomingDeathProjectile).key);
+                    yoyo.DrawCustomString(mountedCenter);
                     return;
                 }
+
                 orig(self, projectile, mountedCenter);
             };
         }
@@ -90,7 +88,6 @@ namespace SPladisonsYoyoMod.Common.Hooks
         private static event HookDrawYoyoString OnDrawYoyoStringInfo
         {
             add => HookEndpointManager.Add(DrawYoyoStringInfo, value);
-
             remove => HookEndpointManager.Remove(DrawYoyoStringInfo, value);
         }
     }
