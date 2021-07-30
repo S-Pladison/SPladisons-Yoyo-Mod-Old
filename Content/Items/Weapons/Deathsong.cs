@@ -14,13 +14,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public Deathsong() : base(gamepadExtraRange: 15) { }
 
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Deathsong", rus: "Песнь смерти");
-            this.SetTooltip(eng: "...",
-                            rus: "...");
-        }
-
         public override void YoyoSetDefaults()
         {
             Item.damage = 43;

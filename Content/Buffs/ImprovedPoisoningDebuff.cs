@@ -12,8 +12,6 @@ namespace SPladisonsYoyoMod.Content.Buffs
     {
         public override void SetStaticDefaults()
         {
-            this.SetDisplayName(eng: "Improved Poisoning", rus: "Улучшенное отравление");
-
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

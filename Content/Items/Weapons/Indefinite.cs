@@ -20,13 +20,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public Indefinite() : base(gamepadExtraRange: 15) { }
 
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Indefinite", rus: "Неопределенный");
-            this.SetTooltip(eng: "...",
-                            rus: "...");
-        }
-
         public override void YoyoSetDefaults()
         {
             Item.damage = 43;
@@ -107,10 +100,10 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return true;
         }
 
-        public void DrawCustomString(Vector2 mountedCenter)
+        public void DrawCustomString(Vector2 startPosition)
         {
             Vector2 offset = Vector2.Zero; // ...
-            Vector2 vector = mountedCenter;
+            Vector2 vector = startPosition;
             vector.Y += Main.player[Projectile.owner].gfxOffY;
 
             Player player = Main.player[Projectile.owner];

@@ -10,13 +10,6 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
     public class Bearing : PladItem
     {
-        public override void PladSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Bearing", rus: "Подшипник");
-            this.SetTooltip(eng: "12% increased yoyo duration",
-                            rus: "12%-ное увеличение времени полета йо-йо");
-        }
-
         public override void SetDefaults()
         {
             Item.accessory = true;

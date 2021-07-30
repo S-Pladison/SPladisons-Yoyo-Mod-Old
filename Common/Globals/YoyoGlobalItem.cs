@@ -78,11 +78,10 @@ namespace SPladisonsYoyoMod.Common.Globals
                 }
             }
 
-            var tooltip = tooltips.Find(i => i.mod == "Terraria" && i.text.Contains("|?|"));
-            if (tooltip != null)
+            foreach (var line in tooltips.FindAll(i => i.text.StartsWith("|?|") && (i.mod == "Terraria" || i.mod == nameof(SPladisonsYoyoMod))))
             {
-                tooltip.text = tooltip.text.Replace("|?| ", "");
-                tooltip.overrideColor = ItemRarity.GetColor(item.rare);
+                line.text = line.text.Replace("|?|", "");
+                line.overrideColor = ItemRarity.GetColor(item.rare);
             }
         }
 

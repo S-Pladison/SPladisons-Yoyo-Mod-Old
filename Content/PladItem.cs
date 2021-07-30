@@ -23,24 +23,6 @@ namespace SPladisonsYoyoMod.Content
             this.PladSetStaticDefaults();
         }
 
-        public void SetDisplayName(string eng, string rus = "")
-        {
-            DisplayName.SetDefault(eng);
-            if (rus != "")
-            {
-                DisplayName.AddTranslation(GameCulture.FromCultureName(GameCulture.CultureName.Russian), rus);
-            }
-        }
-
-        public void SetTooltip(string eng, string rus = "")
-        {
-            Tooltip.SetDefault(eng);
-            if (rus != "")
-            {
-                Tooltip.AddTranslation(GameCulture.FromCultureName(GameCulture.CultureName.Russian), rus);
-            }
-        }
-
         public virtual int SacrificeCount => 1;
         public virtual void PladSetStaticDefaults() { }
     }

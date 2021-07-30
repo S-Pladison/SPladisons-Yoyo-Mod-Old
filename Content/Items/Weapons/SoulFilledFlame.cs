@@ -18,13 +18,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public SoulFilledFlame() : base(gamepadExtraRange: 15) { }
 
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Soul-Filled Flame", rus: "Наполненное душой пламя");
-            this.SetTooltip(eng: "...",
-                            rus: "...");
-        }
-
         public override void YoyoSetDefaults()
         {
             Item.damage = 43;

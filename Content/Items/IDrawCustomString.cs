@@ -9,6 +9,6 @@ namespace SPladisonsYoyoMod.Content.Items
 {
     public interface IDrawCustomString
     {
-        public void DrawCustomString(Vector2 mountedCenter);
+        public void DrawCustomString(Vector2 startPosition);
     }
 }

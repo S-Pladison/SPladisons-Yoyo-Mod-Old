@@ -18,16 +18,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public Blackhole() : base(gamepadExtraRange: 15) { }
 
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Blackhole", rus: "Черная дыра");
-            this.SetTooltip(eng: "Pulls enemies towards the yoyo\n" +
-                                 "|?| Changes the effect of «Yoyo Glove»:\n" +
-                                 "• Increases pull radius by 25%\n" +
-                                 "• Increases damage by 20%",
-                            rus: "...");
-        }
-
         public override void YoyoSetDefaults()
         {
             Item.damage = 43;

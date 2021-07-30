@@ -12,13 +12,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public Stable() : base(gamepadExtraRange: 15) { }
 
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Stable", rus: "Стабильный");
-            this.SetTooltip(eng: "...",
-                            rus: "...");
-        }
-
         public override void YoyoSetDefaults()
         {
             Item.damage = 43;

@@ -13,13 +13,6 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
     public class DesecratedDice : PladItem
     {
-        public override void PladSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Desecrated Dice", rus: "Оскверненная игральная кость");
-            this.SetTooltip(eng: "...",
-                            rus: "...");
-        }
-
         public override void SetDefaults()
         {
             Item.accessory = true;

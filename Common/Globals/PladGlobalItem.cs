@@ -5,12 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Globals
 {
     public class PladGlobalItem : GlobalItem
     {
+        public override void SetDefaults(Item item)
+        {
+            switch (item.type)
+            {
+                case ItemID.YoYoGlove:
+                    item.rare = ItemRarityID.Orange; // Light Red
+                    item.value = Terraria.Item.buyPrice(gold: 35); // Gold: 50
+                    break;
+                case ItemID.YoyoBag:
+                    item.rare = ItemRarityID.Orange; // Light Red
+                    break;
+            }
+        }
+
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
             switch (item.type)
@@ -19,16 +34,7 @@ namespace SPladisonsYoyoMod.Common.Globals
                     int index = GetTooltipsLastIndex(tooltips);
                     if (index >= 0)
                     {
-                        string text = "Some yoyos have different effect";
-                        tooltips.Insert(index + 1, new TooltipLine(Mod, "ModTooltip", text));
-                    }
-                    break;
-                case ItemID.YoyoBag:
-                    index = GetTooltipsLastIndex(tooltips);
-                    if (index >= 0)
-                    {
-                        string text = "Text";
-                        tooltips.Insert(index + 1, new TooltipLine(Mod, "ModTooltip", text));
+                        tooltips.Insert(index + 1, new TooltipLine(Mod, "ModTooltip", Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoYoGlove")));
                     }
                     break;
             }

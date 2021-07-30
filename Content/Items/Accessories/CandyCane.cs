@@ -10,13 +10,6 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
     public class CandyCane : PladItem
     {
-        public override void PladSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Candy Cane", rus: "Карамельная трость");
-            this.SetTooltip(eng: "...",
-                            rus: "...");
-        }
-
         public override void SetDefaults()
         {
             Item.accessory = true;

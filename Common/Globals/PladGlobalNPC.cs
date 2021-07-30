@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -26,6 +27,18 @@ namespace SPladisonsYoyoMod.Common.Globals
         public override void ModifyGlobalLoot(GlobalLoot globalLoot)
         {
             globalLoot.Add(new ItemDropWithConditionRule(ModContent.ItemType<Content.Items.Placeables.SpaceKey>(), 2500, 1, 1, new SpaceKeyCondition(), 1));
+        }
+
+        public override void SetupShop(int type, Chest shop, ref int nextSlot)
+        {
+            if (type == NPCID.SkeletonMerchant)
+            {
+                int yoyoGloveIndex = shop.item.ToList().FindIndex(i => i.type == ItemID.YoYoGlove);
+                if (yoyoGloveIndex == -1 && NPC.downedBoss3 && Main.rand.NextBool(2))
+                {
+                    shop.item[nextSlot].SetDefaults(ItemID.YoYoGlove);
+                }
+            }
         }
 
         public override void DrawEffects(NPC npc, ref Color drawColor)

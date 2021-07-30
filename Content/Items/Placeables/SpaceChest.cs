@@ -16,11 +16,6 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
 {
     public class SpaceChest : PladItem
     {
-        public override void PladSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Space Chest", rus: "Космический сундук");
-        }
-
         public override void SetDefaults()
         {
             Item.width = 32;
@@ -42,13 +37,6 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
 
     public class SpaceKey : PladItem
     {
-        public override void PladSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Space Key", rus: "Космический ключ");
-            this.SetTooltip(eng: "Unlocks a Space Chest in the dungeon",
-                            rus: "Открывает космический сундук в Темнице");
-        }
-
         public override void SetDefaults()
         {
             Item.width = 14;

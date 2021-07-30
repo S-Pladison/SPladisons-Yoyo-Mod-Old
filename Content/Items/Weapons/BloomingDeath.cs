@@ -20,13 +20,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public BloomingDeath() : base(gamepadExtraRange: 15) { }
 
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Blooming Death", rus: "Цветущая смерть");
-            this.SetTooltip(eng: "Yoyo and its string poison enemies",
-                            rus: "Йо-йо и его нить отравляют врагов");
-        }
-
         public override void YoyoSetDefaults()
         {
             Item.damage = 43;
@@ -110,10 +103,10 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return true;
         }
 
-        public void DrawCustomString(Vector2 mountedCenter)
+        public void DrawCustomString(Vector2 startPosition)
         {
             Vector2 offset = Vector2.Zero; // ...
-            Vector2 vector = mountedCenter;
+            Vector2 vector = startPosition;
             vector.Y += Main.player[Projectile.owner].gfxOffY;
 
             Player player = Main.player[Projectile.owner];

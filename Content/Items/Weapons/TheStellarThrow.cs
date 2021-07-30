@@ -16,13 +16,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public TheStellarThrow() : base(gamepadExtraRange: 15) { }
 
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "The Stellar Throw", rus: "Звездный бросок");
-            this.SetTooltip(eng: "...",
-                            rus: "...");
-        }
-
         public override void YoyoSetDefaults()
         {
             Item.damage = 99;
