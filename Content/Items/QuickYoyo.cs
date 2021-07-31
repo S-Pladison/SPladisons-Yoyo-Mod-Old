@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -51,8 +48,8 @@ namespace SPladisonsYoyoMod.Content.Items
             _gamepadExtraRange = gamepadExtraRange;
         }
 
-        public override string Texture => ModContent.FileExists(base.Texture) ? base.Texture : "SPladisonsYoyoMod/Assets/Textures/Items/UnknownYoyo";
-         
+        public override string Texture => ModContent.RequestIfExists<Texture2D>(base.Texture, out _) ? base.Texture : "SPladisonsYoyoMod/Assets/Textures/Items/UnknownYoyo";
+
         public sealed override void PladSetStaticDefaults()
         {
             ItemID.Sets.Yoyo[Type] = true;
@@ -102,7 +99,8 @@ namespace SPladisonsYoyoMod.Content.Items
             _topSpeed = topSpeed;
         }
 
-        public override string Texture => ModContent.FileExists(base.Texture) ? base.Texture : "SPladisonsYoyoMod/Assets/Textures/Projectiles/UnknownYoyoProjectile";
+        public override string Texture => ModContent.RequestIfExists<Texture2D>(base.Texture, out _) ? base.Texture : "SPladisonsYoyoMod/Assets/Textures/Projectiles/UnknownYoyoProjectile";
+        public override void Unload() => StringColorMethodInfo = null;
 
         public sealed override void SetStaticDefaults()
         {
@@ -160,5 +158,12 @@ namespace SPladisonsYoyoMod.Content.Items
         public virtual bool IsSoloYoyo() => false;
         public virtual void OnActivateYoyoGlove() { }
         public virtual void ModifyYoyo(ref float lifeTime, ref float maxRange, ref float topSpeed) { }
+
+        protected static Color TryApplyingPlayerStringColor(int color)
+        {
+            return (Color)(StringColorMethodInfo?.Invoke(null, new object[] { color, Color.White }) ?? Color.White);
+        }
+
+        private static MethodInfo StringColorMethodInfo = typeof(Main).GetMethod("TryApplyingPlayerStringColor", BindingFlags.NonPublic | BindingFlags.Static);
     }
 }

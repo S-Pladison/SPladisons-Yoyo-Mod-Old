@@ -1,12 +1,12 @@
-﻿using System.Reflection;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.RuntimeDetour.HookGen;
-using Terraria;
-using Terraria.ID;
 using SPladisonsYoyoMod.Common.Globals;
 using SPladisonsYoyoMod.Common.Misc;
 using SPladisonsYoyoMod.Content.Items;
+using System.Reflection;
+using Terraria;
+using Terraria.ID;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {

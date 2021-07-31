@@ -60,7 +60,7 @@ namespace SPladisonsYoyoMod.Common.Misc
 
             if (timeLeft <= 0 || scale <= 0f) active = false;
         }
-        
+
         public void Kill()
         {
             active = false;

@@ -22,6 +22,7 @@ Mods: {
             Stable: Стабильный
             TheStellarThrow: Звездный бросок
         }
+
         ItemTooltip: {
             // Аксессуары
             Bearing: 12%-ное увеличение времени полета йо-йо
@@ -54,15 +55,19 @@ Mods: {
             PrefixYoyoLifeTime: % время полета
             PrefixYoyoMaxRange: % максимальная дальность
         }
+
         BuffName: {
             ImprovedPoisoning: Improved Poisoning
         }
+
         GameUI: {
             FlamingFlowerMapIcon: Странный цветок
         }
+
         Config: {
             YoyoCustomUseStyle: Пользовательский стиль использования йо-йо
         }
+
         WorldGen: {
             SpaceChest: S-Pladison's Yoyo Mod: Космический сундук
             SpaceChest_0: Добавление кусочка космоса в подземелье...

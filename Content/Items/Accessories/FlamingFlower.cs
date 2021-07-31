@@ -2,15 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -141,7 +136,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
             if (mapRect == null || mapRect.Value.Contains(vec.ToPoint()))
             {
-                Texture2D texture = SPladisonsYoyoMod.ExtraTextures[1].Value;
+                Texture2D texture = ModAssets.ExtraTextures[1].Value;
                 Rectangle rectangle = texture.Frame(1, 1, 0, 0, 0, 0);
 
                 float progress = 1;

@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Common
@@ -15,11 +12,9 @@ namespace SPladisonsYoyoMod.Common
 
         public int TrailCount => _trails.Count;
 
-        public void CreateTrail(Entity target, Trail trail)
+        public void CreateTrail(Trail trail)
         {
             if (Main.dedServ) return;
-
-            trail.Target = target;
             _trails.Add(trail);
         }
 

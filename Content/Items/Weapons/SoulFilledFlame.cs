@@ -2,15 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common.Misc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.UI.Chat;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
 {
@@ -102,7 +97,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public void DrawSoulFilledFlame(SpriteBatch spriteBatch)
         {
-            
+
         }
 
         private static void UpdateBlueParticles(Particle particle)

@@ -1,17 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using SPladisonsYoyoMod.Content.Trails;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
@@ -34,10 +25,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class BloomingDeathProjectile : YoyoProjectile, IDrawCustomString
     {
-        public static MethodInfo StringColorMethodInfo { get; private set; }
-        public static Asset<Texture2D> StringTexture { get; private set; }
-        public static Asset<Texture2D> LeafTexture { get; private set; }
-
         private int _key;
 
         public BloomingDeathProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
@@ -47,30 +34,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             this.SetDisplayName(eng: "Blooming Death", rus: "Цветущая смерть");
         }
 
-        /*public override void Load()
-        {
-            StringColorMethodInfo = null; // typeof(Main).GetMethod("TryApplyingPlayerStringColor", BindingFlags.NonPublic | BindingFlags.Static);
-            StringTexture = SPladisonsYoyoMod.ExtraTextures[9];
-            LeafTexture = SPladisonsYoyoMod.ExtraTextures[10];
-        }*/
-
-        public override void Unload()
-        {
-            StringColorMethodInfo = null;
-            StringTexture = null;
-            LeafTexture = null;
-        }
-
         public override void OnSpawn()
         {
             _key = Main.rand.Next(1337);
-
-            // As some have said, trail is superfluous
-
-            /*TriangularTrail trail = new(length: 16 * 6, width: (p) => 16 * (1 - p), color: (p) => Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), new Color(230, 163, 68)) * 0.5f);
-            trail.SetEffectTexture(ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_11").Value);
-            trail.SetDissolveSpeed(0.15f);
-            SPladisonsYoyoMod.Primitives.CreateTrail(target: Projectile, trail: trail);*/
         }
 
         public override void AI()
@@ -94,7 +60,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             Vector2 drawPosition = Projectile.position + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
 
-            var texture = SPladisonsYoyoMod.ExtraTextures[12];
+            var texture = ModAssets.ExtraTextures[12];
             var color = Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), Color.White);
 
             for (int i = 0; i < 5; i++) Main.EntitySpriteDraw(texture.Value, drawPosition, null, color * 0.22f, Projectile.rotation * 0.05f + MathHelper.Pi + (MathHelper.TwoPi / 5 * i), new Vector2(9, 20), 1.22f, SpriteEffects.None, 0);
@@ -203,17 +169,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
                 float num4 = (float)Math.Atan2(num3, num2) - 1.57f;
                 Vector2 position = vector - Main.screenPosition + new Vector2(6, 6) - new Vector2(6f, 0f);
-                Rectangle sourceRectangle = new Rectangle(0, 12 * frame, StringTexture.Width(), (int)num7);
+                Rectangle sourceRectangle = new Rectangle(0, 12 * frame, ModAssets.ExtraTextures[9].Width(), (int)num7);
 
                 // Set string color
                 Color color = Color.White;
                 {
-                    try
-                    {
-                        // ...
-                        if (frame == 0) color = (Color)(StringColorMethodInfo?.Invoke(null, new object[] { player.stringColor, Color.White }) ?? Color.White);
-                    }
-                    catch { }
+                    if (frame == 0) color = TryApplyingPlayerStringColor(player.stringColor);
 
                     color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f), color);
                     if (frame == 0)
@@ -223,7 +184,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     }
                 }
 
-                Main.EntitySpriteDraw(color: color, texture: StringTexture.Value, position: position, sourceRectangle: sourceRectangle, rotation: num4, origin: new Vector2(6, 0f), scale: 1f, effects: SpriteEffects.None, worthless: 0);
+                Main.EntitySpriteDraw(color: color, texture: ModAssets.ExtraTextures[9].Value, position: position, sourceRectangle: sourceRectangle, rotation: num4, origin: new Vector2(6, 0f), scale: 1f, effects: SpriteEffects.None, worthless: 0);
 
                 // Leafs
                 {
@@ -236,7 +197,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     if (counter % 3 == 0 || counter % 4 == 0)
                     {
                         SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.75f, texture: LeafTexture.Value, position: position, sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, worthless: 0);
+                        Main.EntitySpriteDraw(color: color * 0.75f, texture: ModAssets.ExtraTextures[10].Value, position: position, sourceRectangle: new Rectangle(0, ModAssets.ExtraTextures[10].Height() / 3 * (int)(counter % 3), ModAssets.ExtraTextures[10].Width(), ModAssets.ExtraTextures[10].Height() / 3), rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, worthless: 0);
                     }
 
                     flip = -flip;
@@ -244,7 +205,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     {
                         color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f), Color.Gray);
                         SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.3f, texture: LeafTexture.Value, position: position, sourceRectangle: new Rectangle(0, LeafTexture.Height() / 3 * (int)(counter % 3), LeafTexture.Width(), LeafTexture.Height() / 3), rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, worthless: 0);
+                        Main.EntitySpriteDraw(color: color * 0.3f, texture: ModAssets.ExtraTextures[10].Value, position: position, sourceRectangle: new Rectangle(0, ModAssets.ExtraTextures[10].Height() / 3 * (int)(counter % 3), ModAssets.ExtraTextures[10].Width(), ModAssets.ExtraTextures[10].Height() / 3), rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, worthless: 0);
                     }
                 }
             }

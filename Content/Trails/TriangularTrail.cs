@@ -2,11 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Trails
@@ -15,47 +10,17 @@ namespace SPladisonsYoyoMod.Content.Trails
     {
         protected int _tipLength;
 
-        public TriangularTrail(int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, int? tipLength = null) : base(length, width, color, effect)
+        public TriangularTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, int? tipLength = null) : base(target, length, width, color, effect)
         {
             _tipLength = tipLength ?? -1;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        protected override int ExtraTrianglesCount => 1;
+        protected override bool NormalFlip => true;
+
+        protected override void CreateTipMesh(Vector2 normal, float width, Color color)
         {
-            if (_points.Count <= 1) return;
-            _vertices.Clear();
-
-            float progress = 0f;
-            float currentWidth = _width?.Invoke(progress) ?? 0;
-            Color currentColor = (_color?.Invoke(progress) ?? Color.White) * _dissolveProgress;
-
-            Vector2 normal = (_points[1] - _points[0]).SafeNormalize(Vector2.Zero) * currentWidth / 2f;
-            this.AddVertex(_points[0] - normal * 0.5f, currentColor, new Vector2(0, 0.5f));
-            normal = normal.RotatedBy(MathHelper.PiOver2);
-
-            this.AddVertex(_points[0] - normal, currentColor, new Vector2(progress, 1));
-            this.AddVertex(_points[0] + normal, currentColor, new Vector2(progress, 0));
-
-            for (int i = 1; i < _points.Count; i++)
-            {
-                progress += Vector2.Distance(_points[i], _points[i - 1]) / this.Length;
-
-                currentWidth = _width?.Invoke(progress) ?? 0;
-                currentColor = (_color?.Invoke(progress) ?? Color.White) * _dissolveProgress;
-                normal = (_points[i] - _points[i - 1]).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * currentWidth / 2f;
-
-                this.AddVertex(_points[i] - normal, currentColor, new Vector2(progress, 1));
-                this.AddVertex(_points[i] + normal, currentColor, new Vector2(progress, 0));
-            }
-
-            _effect.Value.Parameters["transformMatrix"].SetValue(Primitives.GetTransformMatrix());
-
-            var graphics = Main.instance.GraphicsDevice;
-            foreach (var pass in _effect.Value.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                graphics.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, _vertices.ToArray(), 0, (_points.Count - 1) * 2 + 1);
-            }
+            AddVertex(_points[0] - Vector2.Normalize(normal) * (_tipLength > 0 ? _tipLength : width * 0.5f), color, new Vector2(0, 0.5f));
         }
     }
 }

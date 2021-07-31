@@ -1,11 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Hooks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -30,14 +24,13 @@ namespace SPladisonsYoyoMod.Commands
                     if (PladSystem.FlamingFlowerPosition != Point.Zero) Main.LocalPlayer.Teleport(PladSystem.FlamingFlowerPosition.ToVector2() * 16);
                     break;
                 case 2:
-                    Main.LocalPlayer.QuickSpawnItem(ModContent.ItemType<Content.Items.Weapons.Blackhole>(), 1);
+                    //Main.LocalPlayer.QuickSpawnItem(ModContent.ItemType<Content.Items.Weapons.Blackhole>(), 1);
                     /*Main.LocalPlayer.QuickSpawnItem(ModContent.ItemType<Content.Items.Weapons.TheStellarThrow>(), 1);
-                    Main.LocalPlayer.QuickSpawnItem(ModContent.ItemType<Content.Items.Weapons.BloomingDeath>(), 1);
-                    Main.LocalPlayer.QuickSpawnItem(ItemID.CyanString, 1);*/
+                    Main.LocalPlayer.QuickSpawnItem(ModContent.ItemType<Content.Items.Weapons.BloomingDeath>(), 1);*/
+                    Main.LocalPlayer.QuickSpawnItem(ItemID.Binoculars, 1);
                     break;
                 case 3:
-                    //for (int i = 0; i < 20; i++) NPC.NewNPC((int)Main.LocalPlayer.Center.X, (int)Main.LocalPlayer.Center.Y - 100, NPCID.Harpy);
-                    SPladisonsYoyoMod.Instance.testerUI.Visible = !SPladisonsYoyoMod.Instance.testerUI.Visible;
+                    for (int i = 0; i < 20; i++) NPC.NewNPC((int)Main.LocalPlayer.Center.X, (int)Main.LocalPlayer.Center.Y - 100, NPCID.Harpy);
                     break;
             }
         }

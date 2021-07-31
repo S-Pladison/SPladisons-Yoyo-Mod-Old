@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿/*using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Content.Trails;
@@ -16,7 +16,7 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
 {
-    public class Indefinite : YoyoItem
+    /*public class Indefinite : YoyoItem
     {
         public Indefinite() : base(gamepadExtraRange: 15) { }
 
@@ -48,9 +48,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         /*public override void Load()
         {
-            StringTexture = SPladisonsYoyoMod.ExtraTextures[20];
-            LeafTexture = SPladisonsYoyoMod.ExtraTextures[18];
-        }*/
+            StringTexture = ModAssets.ExtraTextures[20];
+            LeafTexture = ModAssets.ExtraTextures[18];
+        }*
 
         public override void Unload()
         {
@@ -84,7 +84,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             Vector2 drawPosition = Projectile.position + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
 
-            var texture = SPladisonsYoyoMod.ExtraTextures[17];
+            var texture = ModAssets.ExtraTextures[17];
 
             for (int i = 0; i < 5; i++)
             {
@@ -255,4 +255,4 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
         }
     }
-}
+}*/

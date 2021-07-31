@@ -1,16 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
-using Terraria.GameContent;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
 {
@@ -123,18 +117,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void PostDraw(Color lightColor)
         {
-            var texture = SPladisonsYoyoMod.ExtraTextures[3];
+            var texture = ModAssets.ExtraTextures[3];
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
 
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
             {
                 Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, (float)Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), texture.Size() * 0.5f, radiusProgress - pulse * 5f, SpriteEffects.None, 0);
-                texture = SPladisonsYoyoMod.ExtraTextures[4];
+                texture = ModAssets.ExtraTextures[4];
                 Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, Projectile.rotation * 0.33f, texture.Size() * 0.5f, radiusProgress * 0.3f, SpriteEffects.None, 0);
             }
             SetSpriteBatch();
 
-            texture = SPladisonsYoyoMod.ExtraTextures[5];
+            texture = ModAssets.ExtraTextures[5];
             Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.Black, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * radiusProgress, SpriteEffects.None, 0);
         }
     }
