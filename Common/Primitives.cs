@@ -12,7 +12,7 @@ namespace SPladisonsYoyoMod.Common
 
         public int TrailCount => _trails.Count;
 
-        public void CreateTrail(Trail trail)
+        public void NewTrail(Trail trail)
         {
             if (Main.dedServ) return;
             _trails.Add(trail);

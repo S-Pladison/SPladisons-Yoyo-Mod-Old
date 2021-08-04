@@ -20,7 +20,8 @@ namespace SPladisonsYoyoMod.Content.Trails
 
         protected override void CreateTipMesh(Vector2 normal, float width, Color color)
         {
-            AddVertex(_points[0] - Vector2.Normalize(normal) * (_tipLength > 0 ? _tipLength : width * 0.5f), color, new Vector2(0, 0.5f));
+            float length = _tipLength >= 0 ? _tipLength : (width * 0.5f);
+            AddVertex(_points[0] - Vector2.Normalize(normal) * length, color, new Vector2(0, 0.5f));
         }
     }
 }

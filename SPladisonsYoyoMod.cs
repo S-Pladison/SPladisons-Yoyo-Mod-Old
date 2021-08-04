@@ -43,6 +43,8 @@ namespace SPladisonsYoyoMod
 
         public override void PostSetupContent()
         {
+            ModAssets.SetEffectsParameters();
+
             static void TryAddYoyo(int type)
             {
                 Item item = new Item();

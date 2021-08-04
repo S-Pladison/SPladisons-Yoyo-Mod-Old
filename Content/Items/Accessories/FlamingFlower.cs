@@ -13,9 +13,15 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
     public class FlamingFlower : PladItem
     {
+        public override void Load()
+        {
+            Mod.AddEquipTexture(this, EquipType.Head, "SPladisonsYoyoMod/Assets/Textures/Players/FlamingFlower_Head");
+        }
+
         public override void SetDefaults()
         {
             Item.accessory = true;
+            Item.canBePlacedInVanityRegardlessOfConditions = true;
             Item.width = 38;
             Item.height = 36;
 
@@ -27,6 +33,8 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         {
             player.GetPladPlayer().flamingFlowerEquipped = true;
         }
+
+        public override bool DrawHead() => true;
     }
 
     public class FlamingFlowerTile : PladTile

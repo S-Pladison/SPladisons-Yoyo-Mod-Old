@@ -1,3 +1,6 @@
-displayName = S-Pladison's Yoyo Mod
+displayName = [c/c2f26e:S-Pladison's Yoyo Mod]
 author = S-Pladison
 version = 1.0.0.1
+hideCode = true
+hideResources = false
+buildIgnore = Assets\Effects\Compiler\*

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Content.Trails;
 using System;
 using Terraria;
 using Terraria.Graphics.Shaders;
@@ -26,17 +27,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class BlackholeProjectile : YoyoProjectile
     {
-        public readonly float Radius = 16 * 9;
-
         public float radiusProgress = 0;
         public float pulse = 0;
 
-        public BlackholeProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
+        private readonly float _radius = 16 * 9;
 
-        public override void Load()
-        {
-            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"] = new MiscShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Assets/Effects/Blackhole").Value), "Blackhole").UseImage1("Images/Misc/Perlin");
-        }
+        public BlackholeProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
 
         public override bool IsSoloYoyo() => true;
 
@@ -60,7 +56,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 float numX = Projectile.position.X - target.position.X - (float)(target.width / 2);
                 float numY = Projectile.position.Y - target.position.Y - (float)(target.height / 2);
                 float distance = (float)Math.Sqrt((double)(numX * numX + numY * numY));
-                float currentRadius = Radius * radiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f);
+                float currentRadius = _radius * radiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f);
 
                 if (distance < currentRadius)
                 {
@@ -97,19 +93,16 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             // Shitty code... I can't do better than that :(
 
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            var texture = ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_2").Value;
+            var texture = ModAssets.ExtraTextures[2].Value;
+            var effect = ModAssets.BlackholeEffect.Value;
+            effect.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
 
-            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"].Shader.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
-            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"].Shader.Parameters["width"].SetValue(texture.Width / 4);
+            SetSpriteBatch(SpriteSortMode.Immediate, BlendState.Additive, effect);
+            Main.spriteBatch.Draw(texture, drawPosition, null, new Color(95, 65, 255) * 0.75f, Main.GlobalTimeWrappedHourly, texture.Size() * 0.5f, radiusProgress * 0.5f - pulse, SpriteEffects.None, 0);
 
-            SetSpriteBatch(SpriteSortMode.Immediate, BlendState.Additive);
-            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"].Apply();
-            Main.spriteBatch.Draw(texture, drawPosition, null, new Color(95, 65, 255) * 0.75f, 0f, texture.Size() * 0.5f, radiusProgress * 0.5f - pulse, SpriteEffects.None, 0);
-
-            SetSpriteBatch(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            GameShaders.Misc["SPladisonsYoyoMod:Blackhole"].Apply();
-            Main.spriteBatch.Draw(texture, drawPosition, null, new Color(35, 0, 100) * 0.5f, 0f, texture.Size() * 0.5f, radiusProgress * 0.35f - pulse, SpriteEffects.None, 0);
-            Main.spriteBatch.Draw(texture, drawPosition, null, Color.Black, 0f, texture.Size() * 0.5f, radiusProgress * 0.2f - pulse, SpriteEffects.None, 0);
+            SetSpriteBatch(SpriteSortMode.Immediate, BlendState.AlphaBlend, effect);
+            Main.spriteBatch.Draw(texture, drawPosition, null, new Color(35, 0, 100) * 0.5f, Main.GlobalTimeWrappedHourly, texture.Size() * 0.5f, radiusProgress * 0.35f - pulse, SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(texture, drawPosition, null, Color.Black, Main.GlobalTimeWrappedHourly, texture.Size() * 0.5f, radiusProgress * 0.2f - pulse, SpriteEffects.None, 0);
 
             SetSpriteBatch();
             return true;
@@ -122,9 +115,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
             {
-                Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, (float)Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), texture.Size() * 0.5f, radiusProgress - pulse * 5f, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White * radiusProgress, (float)Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), texture.Size() * 0.5f, radiusProgress - pulse * 5f, SpriteEffects.None, 0);
                 texture = ModAssets.ExtraTextures[4];
-                Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, Projectile.rotation * 0.33f, texture.Size() * 0.5f, radiusProgress * 0.3f, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White * radiusProgress, Projectile.rotation * 0.33f, texture.Size() * 0.5f, radiusProgress * 0.3f, SpriteEffects.None, 0);
             }
             SetSpriteBatch();
 

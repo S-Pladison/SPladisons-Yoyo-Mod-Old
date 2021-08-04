@@ -48,8 +48,6 @@ namespace SPladisonsYoyoMod.Content.Items
             _gamepadExtraRange = gamepadExtraRange;
         }
 
-        public override string Texture => ModContent.RequestIfExists<Texture2D>(base.Texture, out _) ? base.Texture : "SPladisonsYoyoMod/Assets/Textures/Items/UnknownYoyo";
-
         public sealed override void PladSetStaticDefaults()
         {
             ItemID.Sets.Yoyo[Type] = true;
