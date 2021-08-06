@@ -44,11 +44,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 target: Projectile,
                 length: 16 * 10,
                 width: (progress) => 21 * (1 - progress * 0.44f),
-                color: (progress) => ModHelper.GradientValue<Color>(method: Color.Lerp, percent: progress, values: TrailColors) * (1 - progress)
+                color: (progress) => ModUtils.GradientValue<Color>(method: Color.Lerp, percent: progress, values: TrailColors) * (1 - progress)
             );
             trail.SetEffectTexture(ModAssets.ExtraTextures[7].Value);
             trail.SetDissolveSpeed(0.15f);
-            SPladisonsYoyoMod.Primitives?.NewTrail(trail);
+            SPladisonsYoyoMod.Primitives.NewTrail(trail);
         }
 
         public override void AI()

@@ -13,19 +13,21 @@ namespace SPladisonsYoyoMod.Common
         public bool bearingEquipped;
         public bool candyCaneEquipped;
         public bool desecratedDiceEquipped;
+        public bool eternalConfusionEquipped;
         public bool flamingFlowerEquipped;
 
-        public int starsOverHeadDye;
-        public bool starsOverHeadVisible;
+        public int eternalConfusionDye;
+        public bool eternalConfusionVisible;
 
         public override void ResetEffects()
         {
             bearingEquipped = false;
             candyCaneEquipped = false;
             desecratedDiceEquipped = false;
+            eternalConfusionEquipped = false;
             flamingFlowerEquipped = false;
 
-            starsOverHeadVisible = false;
+            eternalConfusionVisible = false;
 
             this.UpdateDyes();
         }
@@ -33,18 +35,6 @@ namespace SPladisonsYoyoMod.Common
         public override void PostUpdate()
         {
             this.UpdateFlamingFlowerZoneEffect();
-        }
-
-        public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
-        {
-            /*if (Player.direction == 1 && Main.MouseWorld.X > Player.position.X)
-            {
-                Player.headRotation = Utils.Clamp((Main.MouseWorld - Player.Center).ToRotation(), -0.5f, 0.5f);
-            }
-            if (Player.direction == -1 && Main.MouseWorld.X < Player.position.X)
-            {
-                Player.headRotation = Utils.Clamp((Player.Center - Main.MouseWorld).ToRotation(), -0.5f, 0.5f);
-            }*/
         }
 
         public override void UpdateEquips()
@@ -77,7 +67,7 @@ namespace SPladisonsYoyoMod.Common
 
         private void UpdateDyes()
         {
-            starsOverHeadDye = 0;
+            eternalConfusionDye = 0;
 
             for (int i = 0; i < 20; i++)
             {
@@ -97,9 +87,9 @@ namespace SPladisonsYoyoMod.Common
 
             if (!flag && flag2) return;
 
-            if (armorItem.type == ModContent.ItemType<Content.Items.Accessories.NonameVanity>())
+            if (armorItem.type == ModContent.ItemType<Content.Items.Accessories.EternalConfusion>())
             {
-                starsOverHeadDye = dyeItem.dye;
+                eternalConfusionDye = dyeItem.dye;
             }
         }
     }

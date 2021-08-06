@@ -34,7 +34,7 @@ namespace SPladisonsYoyoMod.Common
             int index = tasks.FindIndex(genpass => genpass.Name.Equals("Dungeon"));
             if (index >= 0)
             {
-                tasks.Insert(index + 1, new PassLegacy(Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest"), this.GenerateSpaceChest));
+                tasks.Insert(index + 1, new PassLegacy(Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest"), GenerateSpaceChest));
             }
         }
 

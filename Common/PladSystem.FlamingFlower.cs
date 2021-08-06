@@ -7,7 +7,7 @@ namespace SPladisonsYoyoMod.Common
 {
     public partial class PladSystem : ModSystem
     {
-        public static Point FlamingFlowerPosition;
+        public static Point FlamingFlowerPosition { get; set; }
 
         public static void UpdateFlamingFlower()
         {
@@ -56,7 +56,7 @@ namespace SPladisonsYoyoMod.Common
 
                     if (WorldGen.SolidOrSlopedTile(x, y) && Main.tile[x, y].type == TileID.Stone && WorldGen.SolidOrSlopedTile(x + 1, y) && Main.tile[x + 1, y].type == TileID.Stone)
                     {
-                        if (Main.tile[x - 1, y - 3].active() || Main.tile[x + 2, y - 3].active()) continue; // Вроде как после обновы стала публичной... позже исправлю короче ( на данный момент internal а не public... )
+                        if (Main.tile[x - 1, y - 3].IsActive || Main.tile[x + 2, y - 3].IsActive) continue; // Вроде как после обновы стала публичной... позже исправлю короче ( на данный момент internal а не public... )
                         if (WorldGen.SolidOrSlopedTile(x, y - 1) || WorldGen.SolidOrSlopedTile(x + 1, y - 1) || WorldGen.SolidOrSlopedTile(x, y - 2) || WorldGen.SolidOrSlopedTile(x + 1, y - 2)) continue;
                         if (Main.tile[x, y - 1].LiquidAmount > 0 || Main.tile[x + 1, y - 1].LiquidAmount > 0 || Main.tile[x, y - 2].LiquidAmount > 0 || Main.tile[x + 1, y - 2].LiquidAmount > 0) continue;
                         if (!WorldGen.SolidOrSlopedTile(x, y + 1) || Main.tile[x, y + 1].type != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 1, y + 1) || Main.tile[x + 1, y + 1].type != TileID.Stone) continue;

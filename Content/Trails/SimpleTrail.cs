@@ -21,33 +21,37 @@ namespace SPladisonsYoyoMod.Content.Trails
         protected override void CreateMesh()
         {
             float progress = 0f;
-            float currentWidth = _width?.Invoke(progress) ?? 0;
-            Color currentColor = (_color?.Invoke(progress) ?? Color.White) * _dissolveProgress;
+            (Color color, Vector2 normal) = GetProgressVariables(progress);
 
-            Vector2 normal = (_points[1] - _points[0]).SafeNormalize(Vector2.Zero) * currentWidth / 2f;
-            CreateTipMesh(normal, currentWidth, currentColor);
-            normal = normal.RotatedBy(MathHelper.PiOver2) * (NormalFlip ? -1f : 1f);
-
-            AddVertex(_points[0] + normal, currentColor, new Vector2(progress, 0));
-            AddVertex(_points[0] - normal, currentColor, new Vector2(progress, 1));
+            CreateTipMesh(normal, color);
 
             for (int i = 1; i < _points.Count; i++)
             {
-                progress += Vector2.Distance(_points[i], _points[i - 1]) / this.Length;
+                float nextProgress = progress + Vector2.Distance(_points[i], _points[i - 1]) / this.Length;
+                (Color nextColor, Vector2 nextNormal) = GetProgressVariables(nextProgress, i);
 
-                currentWidth = _width?.Invoke(progress) ?? 0;
-                currentColor = (_color?.Invoke(progress) ?? Color.White) * _dissolveProgress;
-                normal = (_points[i] - _points[i - 1]).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * currentWidth / 2f * (NormalFlip ? -1f : 1f);
+                AddVertex(_points[i - 1] - normal, color, new Vector2(progress, 0));
+                AddVertex(_points[i] - nextNormal, nextColor, new Vector2(nextProgress, 0));
+                AddVertex(_points[i] + nextNormal, nextColor, new Vector2(nextProgress, 1));
 
-                AddVertex(_points[i] + normal, currentColor, new Vector2(progress, 0));
-                AddVertex(_points[i] - normal, currentColor, new Vector2(progress, 1));
+                AddVertex(_points[i - 1] - normal, color, new Vector2(progress, 0));
+                AddVertex(_points[i] + nextNormal, nextColor, new Vector2(nextProgress, 1));
+                AddVertex(_points[i - 1] + normal, color, new Vector2(progress, 1));
+
+                progress = nextProgress;
+                color = nextColor;
+                normal = nextNormal;
             }
         }
 
-        protected virtual bool NormalFlip => false;
-        protected virtual void CreateTipMesh(Vector2 normal, float width, Color color) { }
+        protected virtual void CreateTipMesh(Vector2 normal, Color color) { }
 
-        public delegate float WidthDelegate(float progress);
-        public delegate Color ColorDelegate(float progress);
+        private (Color, Vector2) GetProgressVariables(float progress, int index = 1)
+        {
+            float width = _width?.Invoke(progress) ?? 0;
+            Color color = (_color?.Invoke(progress) ?? Color.White) * _dissolveProgress;
+            Vector2 normal = (_points[index] - _points[index - 1]).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * width / 2f;
+            return (color, normal);
+        }
     }
 }

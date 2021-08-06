@@ -1,4 +1,7 @@
-﻿using Terraria.ID;
+﻿using Microsoft.Xna.Framework;
+using SPladisonsYoyoMod.Content.Trails;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
@@ -26,6 +29,22 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override void YoyoSetStaticDefaults()
         {
             this.SetDisplayName(eng: "Stable", rus: "Стабильный");
+        }
+
+        public override void OnSpawn()
+        {
+            static Color StripColors(float progressOnStrip)
+            {
+                Color value = Main.hslToRgb((progressOnStrip * 1.6f - Main.GlobalTimeWrappedHourly) % 1f, 1f, 0.5f, byte.MaxValue);
+                Color result = Color.Lerp(Color.White, value, Utils.GetLerpValue(-0.2f, 0.5f, progressOnStrip, true)) * (1f - Utils.GetLerpValue(0f, 0.98f, progressOnStrip, false));
+                result.A = 0;
+                return result;
+            }
+
+            var trail = new SimpleTrail(target: Projectile, length: 16 * 8, width: (p) => 16 * (1 - p), color: StripColors);
+            //trail.SetEffectTexture(ModAssets.ExtraTextures[17].Value);
+            trail.SetDissolveSpeed(0.15f);
+            SPladisonsYoyoMod.Primitives.NewTrail(trail);
         }
     }
 }

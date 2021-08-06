@@ -35,7 +35,7 @@ namespace SPladisonsYoyoMod.Common
                 _target = target;
                 _maxLength = length;
 
-                _effect = effect ?? ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Primitive");
+                _effect = effect ?? ModAssets.BasicPrimitiveEffect;
                 _effect.Value.Parameters["texture0"].SetValue(ModAssets.ExtraTextures[6].Value);
             }
 
@@ -72,7 +72,7 @@ namespace SPladisonsYoyoMod.Common
                 foreach (var pass in _effect.Value.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    graphics.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType, _vertices.ToArray(), 0, (_points.Count - 1) * 2 + ExtraTrianglesCount);
+                    graphics.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _vertices.ToArray(), 0, (_points.Count - 1) * 2 + ExtraTrianglesCount);
                 }
 
                 _vertices.Clear();
@@ -127,7 +127,6 @@ namespace SPladisonsYoyoMod.Common
                 _vertices.Add(new VertexPositionColorTexture(pos, color, uv));
             }
 
-            protected virtual PrimitiveType PrimitiveType => PrimitiveType.TriangleStrip;
             protected virtual int ExtraTrianglesCount => 0;
             protected virtual bool PreKill() => true;
             protected virtual void CreateMesh() { }
@@ -141,6 +140,9 @@ namespace SPladisonsYoyoMod.Common
                     if (param.Name == "time") effect.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
                 }
             }
+
+            public delegate float WidthDelegate(float progress);
+            public delegate Color ColorDelegate(float progress);
         }
     }
 }

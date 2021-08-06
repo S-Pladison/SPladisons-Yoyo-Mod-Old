@@ -9,7 +9,7 @@ namespace SPladisonsYoyoMod.Common
 {
     public partial class PladSystem : ModSystem
     {
-        public void GenerateSpaceChest(GenerationProgress progress, GameConfiguration configuration)
+        public static void GenerateSpaceChest(GenerationProgress progress, GameConfiguration configuration)
         {
             progress.Message = Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest_0");
 
@@ -23,7 +23,7 @@ namespace SPladisonsYoyoMod.Common
                 int x = WorldGen.genRand.Next((int)dMinX, (int)dMaxX);
                 int y = WorldGen.genRand.Next((int)Main.worldSurface, (int)dMaxY);
 
-                if (Main.wallDungeon[(int)Main.tile[x, y].wall] && !Main.tile[x, y].active())
+                if (Main.wallDungeon[(int)Main.tile[x, y].wall] && !Main.tile[x, y].IsActive)
                 {
                     flag = WorldGen.AddBuriedChest(x, y, ModContent.ItemType<Content.Items.Weapons.Blackhole>(), false, 1, chestTileType: (ushort)ModContent.TileType<Content.Items.Placeables.SpaceChestTile>());
                 }

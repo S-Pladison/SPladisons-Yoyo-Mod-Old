@@ -1,24 +1,14 @@
-﻿using MonoMod.Cil;
-using SPladisonsYoyoMod.Content.Items;
+﻿using static Mono.Cecil.Cil.OpCodes;
+using MonoMod.Cil;
 using System;
 using Terraria;
-using static Mono.Cecil.Cil.OpCodes;
+using SPladisonsYoyoMod.Content.Items;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public partial class Hooks
+    public partial class ModHooks
     {
-        public static void LoadIL()
-        {
-            IL.Terraria.Player.Counterweight += SoloYoyoMethod;
-        }
-
-        public static void UnloadIL()
-        {
-            IL.Terraria.Player.Counterweight -= SoloYoyoMethod;
-        }
-
-        private static void SoloYoyoMethod(ILContext il)
+        private static void IL_Terraria_Player_Counterweight(ILContext il)
         {
             //  bool flag3 = Main.projectile[i].aiStyle == 99;
             //  if (flag3)

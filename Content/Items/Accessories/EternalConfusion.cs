@@ -8,7 +8,7 @@ using Terraria.ID;
 
 namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
-    public class NonameVanity : PladItem
+    public class EternalConfusion : PladItem
     {
         public override void SetDefaults()
         {
@@ -23,12 +23,15 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            if (!hideVisual) player.GetPladPlayer().starsOverHeadVisible = true;
+            var modPlayer = player.GetPladPlayer();
+
+            modPlayer.eternalConfusionEquipped = true;
+            modPlayer.eternalConfusionVisible = !hideVisual;
         }
 
         public override void UpdateVanity(Player player)
         {
-            player.GetPladPlayer().starsOverHeadVisible = true;
+            player.GetPladPlayer().eternalConfusionVisible = true;
         }
     }
 }

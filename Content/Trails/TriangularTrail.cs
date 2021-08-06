@@ -8,20 +8,22 @@ namespace SPladisonsYoyoMod.Content.Trails
 {
     public class TriangularTrail : SimpleTrail
     {
-        protected int _tipLength;
+        protected float _tipLength;
 
-        public TriangularTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, int? tipLength = null) : base(target, length, width, color, effect)
+        public TriangularTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, float? tipLength = null) : base(target, length, width, color, effect)
         {
             _tipLength = tipLength ?? -1;
         }
 
         protected override int ExtraTrianglesCount => 1;
-        protected override bool NormalFlip => true;
 
-        protected override void CreateTipMesh(Vector2 normal, float width, Color color)
+        protected override void CreateTipMesh(Vector2 normal, Color color)
         {
-            float length = _tipLength >= 0 ? _tipLength : (width * 0.5f);
-            AddVertex(_points[0] - Vector2.Normalize(normal) * length, color, new Vector2(0, 0.5f));
+            float length = _tipLength >= 0 ? _tipLength : (normal.Length());
+
+            AddVertex(_points[0] - Vector2.Normalize(normal).RotatedBy(-MathHelper.PiOver2) * length, color, new Vector2(0, 0.5f));
+            AddVertex(_points[0] - normal, color, new Vector2(0, 0));
+            AddVertex(_points[0] + normal, color, new Vector2(0, 1));
         }
     }
 }

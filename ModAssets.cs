@@ -42,6 +42,8 @@ namespace SPladisonsYoyoMod
 
         public static void SetEffectsParameters()
         {
+            if (Main.dedServ) return;
+
             BlackholeEffect.Value.Parameters["texture1"].SetValue(ModAssets.PerlinNoiseTexture.Value);
             BlackholeEffect.Value.Parameters["width"].SetValue(ModAssets.ExtraTextures[2].Width() / 4);
         }
