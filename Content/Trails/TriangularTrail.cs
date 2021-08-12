@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Trails
@@ -10,7 +9,7 @@ namespace SPladisonsYoyoMod.Content.Trails
     {
         protected float _tipLength;
 
-        public TriangularTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, float? tipLength = null) : base(target, length, width, color, effect)
+        public TriangularTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, BlendState blendState = null, float? tipLength = null) : base(target, length, width, color, effect, blendState)
         {
             _tipLength = tipLength ?? -1;
         }

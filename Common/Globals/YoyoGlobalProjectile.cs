@@ -1,5 +1,4 @@
-﻿using SPladisonsYoyoMod.Content.Items;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Globals
@@ -10,7 +9,7 @@ namespace SPladisonsYoyoMod.Common.Globals
 
         public override bool AppliesToEntity(Projectile entity, bool lateInstantiation) => entity.IsYoyo();
 
-        public static void ModifyYoyo(Projectile projectile, ref float lifeTime, ref float maxRange, ref float topSpeed, bool infinite)
+        public static void ModifyYoyoStats(Projectile projectile, ref float lifeTime, ref float maxRange, ref float topSpeed, bool infinite)
         {
             var player = Main.player[projectile.owner];
             var modPlayer = player.GetPladPlayer();

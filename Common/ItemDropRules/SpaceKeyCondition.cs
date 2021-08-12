@@ -8,6 +8,6 @@ namespace SPladisonsYoyoMod.Common.ItemDropRules
     {
         public bool CanDrop(DropAttemptInfo info) => info.npc.value > 0f && Main.hardMode && !info.IsInSimulation && info.player.ZoneSkyHeight;
         public bool CanShowItemDropInUI() => true;
-        public string GetConditionDescription() => Language.GetTextValue("SPladisonsYoyoMod.Bestiary.ItemDropConditions.SpaceKeyCondition");
+        public string GetConditionDescription() => Language.GetTextValue("SPladisonsYoyoMod.Bestiary_ItemDropConditions.SpaceKeyCondition");
     }
 }

@@ -3,16 +3,15 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using Terraria;
-using Terraria.GameContent;
 
 namespace SPladisonsYoyoMod.Content.Trails
 {
-    public class SimpleTrail : Primitives.Trail
+    public class SimpleTrail : PrimitiveTrailSystem.Trail
     {
         protected readonly WidthDelegate _width;
         protected readonly ColorDelegate _color;
 
-        public SimpleTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null) : base(target, length, effect)
+        public SimpleTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, BlendState blendState = null) : base(target, length, effect, blendState)
         {
             _width = width;
             _color = color;

@@ -9,12 +9,47 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common
 {
-    public partial class Primitives
+    public class PrimitiveTrailSystem : ModSystem
     {
+        private static readonly List<Trail> _trails = new List<Trail>();
+
+        public override void PostUpdateEverything()
+        {
+            foreach (var trail in _trails.ToList()) trail.Update();
+        }
+
+        public static void NewTrail(Trail trail)
+        {
+            if (Main.dedServ) return;
+
+            _trails.Add(trail);
+        }
+
+        public static void DrawTrails(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.Additive)) trail.Draw(spriteBatch);
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.AlphaBlend)) trail.Draw(spriteBatch);
+            spriteBatch.End();
+        }
+
+        public static Matrix GetTransformMatrix()
+        {
+            Matrix view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) * Main.GameViewMatrix.EffectMatrix * Matrix.CreateTranslation(Main.screenWidth / 2, -Main.screenHeight / 2, 0) * Matrix.CreateRotationZ(MathHelper.Pi);
+            Matrix projection = Matrix.CreateOrthographic(Main.screenWidth, Main.screenHeight, 0, 1000);
+            return view * Matrix.CreateScale(Main.GameViewMatrix.Zoom.X, Main.GameViewMatrix.Zoom.Y, 1) * projection;
+        }
+
+        // ...
+
         public abstract class Trail
         {
             public bool Active { get; set; } = true;
             public float Length { get; protected set; }
+            public BlendState BlendState { get; }
 
             protected readonly int _maxLength;
             protected readonly List<Vector2> _points = new();
@@ -30,13 +65,15 @@ namespace SPladisonsYoyoMod.Common
 
             private readonly Asset<Effect> _effect;
 
-            public Trail(Entity target, int length, Asset<Effect> effect = null)
+            public Trail(Entity target, int length, Asset<Effect> effect = null, BlendState blendState = null)
             {
                 _target = target;
                 _maxLength = length;
 
                 _effect = effect ?? ModAssets.BasicPrimitiveEffect;
                 _effect.Value.Parameters["texture0"].SetValue(ModAssets.ExtraTextures[6].Value);
+
+                BlendState = blendState ?? BlendState.AlphaBlend;
             }
 
             public void Update()
@@ -82,7 +119,7 @@ namespace SPladisonsYoyoMod.Common
             {
                 if (PreKill()) Active = false;
 
-                SPladisonsYoyoMod.Primitives?._trails.Remove(this);
+                _trails.Remove(this);
             }
 
             public void StartDissolving() => _dissolving = true;
@@ -134,7 +171,7 @@ namespace SPladisonsYoyoMod.Common
 
             private static void ApplyGlobalEffectParameters(Effect effect)
             {
-                effect.Parameters["transformMatrix"].SetValue(Primitives.GetTransformMatrix());
+                effect.Parameters["transformMatrix"].SetValue(GetTransformMatrix());
                 foreach (var param in effect.Parameters)
                 {
                     if (param.Name == "time") effect.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);

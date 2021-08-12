@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace SPladisonsYoyoMod.Content.Items
+namespace SPladisonsYoyoMod.Common.Interfaces
 {
     public interface IDrawCustomString
     {

@@ -31,8 +31,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void YoyoSetStaticDefaults()
         {
-            this.SetDisplayName(eng: "Soul-Filled Flame", rus: "Наполненное душой пламя");
-
             ProjectileID.Sets.TrailingMode[Type] = 0;
             ProjectileID.Sets.TrailCacheLength[Type] = 3;
         }

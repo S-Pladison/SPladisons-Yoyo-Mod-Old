@@ -33,6 +33,13 @@ namespace SPladisonsYoyoMod.Common.Globals
                         tooltips.Insert(index + 1, new TooltipLine(Mod, "ModTooltip", Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoYoGlove")));
                     }
                     break;
+                case int type when type >= ItemID.RedString && type <= ItemID.BlackString:
+                    index = GetTooltipsLastIndex(tooltips);
+                    if (index >= 0)
+                    {
+                        tooltips[index].text = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoyoString");
+                    }
+                    break;
             }
         }
 

@@ -2,7 +2,6 @@
 using ReLogic.Content;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod
@@ -16,6 +15,7 @@ namespace SPladisonsYoyoMod
         // Effects
         public static Asset<Effect> BasicPrimitiveEffect { get; private set; }
         public static Asset<Effect> BlackholeEffect { get; private set; }
+        public static Asset<Effect> ResidualLightEffect { get; private set; }
 
         public static void Load(Mod mod)
         {
@@ -28,6 +28,7 @@ namespace SPladisonsYoyoMod
 
             BasicPrimitiveEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Primitive");
             BlackholeEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Blackhole");
+            ResidualLightEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/ResidualLight");
         }
 
         public static void Unload()
@@ -38,6 +39,7 @@ namespace SPladisonsYoyoMod
 
             BasicPrimitiveEffect = null;
             BlackholeEffect = null;
+            ResidualLightEffect = null;
         }
 
         public static void SetEffectsParameters()
@@ -46,6 +48,8 @@ namespace SPladisonsYoyoMod
 
             BlackholeEffect.Value.Parameters["texture1"].SetValue(ModAssets.PerlinNoiseTexture.Value);
             BlackholeEffect.Value.Parameters["width"].SetValue(ModAssets.ExtraTextures[2].Width() / 4);
+
+            ResidualLightEffect.Value.Parameters["texture1"].SetValue(ModAssets.ExtraTextures[20].Value);
         }
 
         private static readonly List<Asset<Texture2D>> _extraTexturesList = new List<Asset<Texture2D>>();

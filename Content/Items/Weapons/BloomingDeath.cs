@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Common.Interfaces;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -13,12 +14,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void YoyoSetDefaults()
         {
-            Item.damage = 43;
+            Item.damage = 12;
             Item.knockBack = 2.5f;
 
             Item.shoot = ModContent.ProjectileType<BloomingDeathProjectile>();
 
-            Item.rare = ItemRarityID.Lime;
+            Item.rare = ItemRarityID.Blue;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
         }
     }
@@ -28,11 +29,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         private int _key;
 
         public BloomingDeathProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
-
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Blooming Death", rus: "Цветущая смерть");
-        }
 
         public override void OnSpawn()
         {
@@ -44,6 +40,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             float _ = float.NaN;
             foreach (var target in Main.npc)
             {
+                if (target == null || !target.active) continue;
+                if (target.friendly || target.lifeMax <= 5 || target.dontTakeDamage || target.immortal) continue;
+
                 if (Collision.CheckAABBvLineCollision(target.Hitbox.TopLeft(), target.Hitbox.Size(), Projectile.Center, Main.player[Projectile.owner].MountedCenter, 8, ref _))
                 {
                     target.AddBuff(ModContent.BuffType<Buffs.ImprovedPoisoningDebuff>(), 60 * 7);

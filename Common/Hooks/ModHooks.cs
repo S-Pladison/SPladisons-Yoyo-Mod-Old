@@ -1,9 +1,7 @@
-﻿using Terraria;
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    // TODO: Unload this shit...
     public partial class ModHooks : ILoadable
     {
         public void Load(Mod mod)

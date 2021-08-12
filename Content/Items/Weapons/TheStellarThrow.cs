@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
+using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Content.Trails;
 using System;
 using Terraria;
@@ -20,7 +20,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             Item.shoot = ModContent.ProjectileType<TheStellarThrowProjectile>();
 
-            Item.rare = ItemRarityID.LightRed;
+            Item.rare = ItemRarityID.Pink;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
         }
     }
@@ -31,11 +31,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public static readonly Color[] DustColors = new Color[] { new Color(11, 25, 25), new Color(16, 11, 25), new Color(25, 11, 18) };
 
         public TheStellarThrowProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
-
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "The Stellar Throw", rus: "Звездный бросок");
-        }
 
         public override void OnSpawn()
         {
@@ -48,7 +43,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             );
             trail.SetEffectTexture(ModAssets.ExtraTextures[7].Value);
             trail.SetDissolveSpeed(0.15f);
-            SPladisonsYoyoMod.Primitives.NewTrail(trail);
+            PrimitiveTrailSystem.NewTrail(trail);
         }
 
         public override void AI()

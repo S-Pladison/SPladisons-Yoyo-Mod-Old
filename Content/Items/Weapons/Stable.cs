@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Content.Trails;
 using Terraria;
 using Terraria.ID;
@@ -26,11 +27,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public StableProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
 
-        public override void YoyoSetStaticDefaults()
-        {
-            this.SetDisplayName(eng: "Stable", rus: "Стабильный");
-        }
-
         public override void OnSpawn()
         {
             static Color StripColors(float progressOnStrip)
@@ -41,10 +37,10 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 return result;
             }
 
-            var trail = new SimpleTrail(target: Projectile, length: 16 * 8, width: (p) => 16 * (1 - p), color: StripColors);
-            //trail.SetEffectTexture(ModAssets.ExtraTextures[17].Value);
+            var trail = new RoundedTrail(target: Projectile, length: 16 * 8, width: (p) => 50 * (1 - p), color: StripColors, effect: null, smoothness: 15);
+            trail.SetEffectTexture(ModAssets.ExtraTextures[17].Value);
             trail.SetDissolveSpeed(0.15f);
-            SPladisonsYoyoMod.Primitives.NewTrail(trail);
+            PrimitiveTrailSystem.NewTrail(trail);
         }
     }
 }

@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Misc;
 using System.Collections.Generic;
 using Terraria;
@@ -11,19 +10,12 @@ namespace SPladisonsYoyoMod
     public class SPladisonsYoyoMod : Mod
     {
         public static SPladisonsYoyoMod Instance { get; private set; }
-        public static Primitives Primitives { get; private set; }
-
         public static IReadOnlyList<int> GetYoyos => _yoyos;
 
         public SPladisonsYoyoMod() => Instance = this;
 
         public override void Load()
         {
-            if (!Main.dedServ)
-            {
-                Primitives = new Primitives();
-            }
-
             _yoyos = new List<int>();
 
             ModAssets.Load(this);
@@ -37,7 +29,6 @@ namespace SPladisonsYoyoMod
 
             _yoyos = null;
 
-            Primitives = null;
             Instance = null;
         }
 

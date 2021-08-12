@@ -1,13 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Content.Prefixes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.GameContent.UI;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.Utilities;
 
 namespace SPladisonsYoyoMod.Common.Globals
 {
@@ -82,6 +79,6 @@ namespace SPladisonsYoyoMod.Common.Globals
             }
         }
 
-        public override int ChoosePrefix(Item item, UnifiedRandom rand) => rand.Next(ModPrefixLoader.GetYoyoPrefixes().ToList());
+        //public override int ChoosePrefix(Item item, UnifiedRandom rand) => rand.Next(ModPrefixLoader.GetYoyoPrefixes().ToList());
     }
 }

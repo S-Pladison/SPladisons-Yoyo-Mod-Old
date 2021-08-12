@@ -1,8 +1,8 @@
-﻿using static Mono.Cecil.Cil.OpCodes;
-using MonoMod.Cil;
+﻿using MonoMod.Cil;
+using SPladisonsYoyoMod.Content.Items;
 using System;
 using Terraria;
-using SPladisonsYoyoMod.Content.Items;
+using static Mono.Cecil.Cil.OpCodes;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {

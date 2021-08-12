@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour.HookGen;
-using SPladisonsYoyoMod.Content.Items;
+using SPladisonsYoyoMod.Common.Interfaces;
 using System.Reflection;
 using Terraria;
 
