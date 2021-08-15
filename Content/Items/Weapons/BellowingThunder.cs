@@ -1,6 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Common;
+using System;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -17,7 +22,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             Item.shoot = ModContent.ProjectileType<BellowingThunderProjectile>();
 
-            Item.rare = ItemRarityID.LightPurple;
+            Item.rare = ItemRarityID.Green;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
         }
     }
@@ -32,9 +37,16 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             set => Projectile.localAI[1] = value;
         }
 
+        public override void YoyoSetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailingMode[Type] = 1;
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+        }
+
         public override void AI()
         {
-            Lighting.AddLight(Projectile.Center, new Color(145, 198, 249).ToVector3() * 0.2f);
+            Projectile.rotation -= 0.2f;
+            Lighting.AddLight(Projectile.Center, _effectColor.ToVector3() * 0.2f);
 
             Counter++;
             if (Counter >= 20)
@@ -47,15 +59,41 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             _effect.Update(Counter);
         }
 
+        public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
+        {
+            if (!Main.rand.NextBool(2 + (Main.raining ? 0 : 2))) return;
+
+            Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BellowingThunderLightningProjectile>(), Projectile.damage * 2, Projectile.knockBack * 3f, Projectile.owner);
+        }
+
+        public override bool PreDrawExtras()
+        {
+            // ... Is it possible to get rid of so many drawing methods? ... 15 + 1 + 3 + 1 = ... 20 ... ... ...
+            SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
+            {
+                for (int k = 0; k < Projectile.oldPos.Length; k++)
+                {
+                    var position = GetDrawPosition(Projectile.oldPos[k] + Projectile.Size * 0.5f);
+                    float num = (Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length;
+                    Color color = _effectColor * num;
+                    Main.EntitySpriteDraw(ModAssets.ExtraTextures[21].Value, position, null, color, Projectile.oldRot[k], ModAssets.ExtraTextures[21].Size() * .5f, Projectile.scale * num * 0.15f, SpriteEffects.None, 0);
+                }
+                Main.EntitySpriteDraw(ModAssets.ExtraTextures[21].Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, ModAssets.ExtraTextures[21].Size() * .5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
+            }
+            SetSpriteBatch();
+
+            return true;
+        }
+
         public override void PostDraw(Color lightColor)
         {
-            Vector2 drawPosition = Projectile.position + Projectile.Size / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
+            Vector2 drawPosition = GetDrawPosition();
 
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
             {
                 _effect.Draw(drawPosition, 0.45f * Projectile.scale);
-                Main.EntitySpriteDraw(ModAssets.ExtraTextures[23].Value, drawPosition, null, new Color(137, 90, 248) * 0.4f, 0f, ModAssets.ExtraTextures[23].Size() * 0.5f, Projectile.scale * 0.1f, SpriteEffects.None, 0);
-                Main.EntitySpriteDraw(ModAssets.ExtraTextures[21].Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, new Color(137, 90, 248) * 0.2f, Projectile.rotation, ModAssets.ExtraTextures[21].Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(ModAssets.ExtraTextures[23].Value, drawPosition, null, _effectColor * 0.4f, 0f, ModAssets.ExtraTextures[23].Size() * 0.5f, Projectile.scale * 0.1f, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(ModAssets.ExtraTextures[21].Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.2f, Projectile.rotation, ModAssets.ExtraTextures[21].Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
             }
             SetSpriteBatch();
 
@@ -64,6 +102,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
 
         private readonly LightningEffect _effect = new();
+        private readonly Color _effectColor = new Color(137, 90, 248);
 
         // ...
 
@@ -84,7 +123,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
                 var texture = ModAssets.ExtraTextures[22];
                 Rectangle rectangle = new(_time * 96, _frame * 96, 96, 96);
-                Main.spriteBatch.Draw(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, 0);
+                Main.EntitySpriteDraw(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, 0);
             }
 
             public void Update(int counter)
@@ -105,13 +144,92 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         #endregion
     }
 
-    public class BellowingThunderLightingProjectile : PladProjectile
+    public class BellowingThunderLightningProjectile : PladProjectile
     {
-        public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Misc/Extra_0";
+        // TODO: Доделать звук удара молнии...
+        // public static readonly SoundStyle DodgerollSound = new ModSoundStyle($"{nameof(SPladisonsYoyoMod)}/Assets/Sounds/", 3, volume: 0.65f, pitchVariance: 0.2f);
 
-        /*public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
+        public ref float BeamProgress => ref Projectile.ai[0];
+        public ref float LightningProgress => ref Projectile.ai[1];
+        public ref float Timer => ref Projectile.localAI[0];
+
+        public override void SetDefaults()
         {
-            //ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 3f, range: 16 * 35, time: 50);
-        }*/
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 20;
+
+            Projectile.width = 70;
+            Projectile.height = 70;
+
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -2;
+        }
+
+        public override void OnSpawn()
+        {
+            Timer += Main.rand.Next(2000);
+        }
+
+        public override void AI()
+        {
+            Timer += 0.01f;
+            BeamProgress = ModUtils.GradientValue<float>(MathHelper.Lerp, 1 - Projectile.timeLeft / 20f, new float[] { 0f, 0.1f, 0.2f, 0.9f, 0.45f, 0f });
+            LightningProgress = ModUtils.GradientValue<float>(MathHelper.Lerp, 1 - Projectile.timeLeft / 30f, new float[] { 0f, 0f, 0f, 0.7f, 0.3f, 0f });
+
+            Lighting.AddLight(Projectile.Center, new Color(90, 40, 255).ToVector3() * BeamProgress * 1.3f);
+
+            if (Projectile.timeLeft != 5) return;
+
+            ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 7f, range: 16 * 50, time: 50);
+            // SoundEngine.PlaySound(Mod.GetLegacySoundSlot(Terraria.ModLoader.SoundType.Custom, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);
+        }
+
+        public override bool? CanHitNPC(NPC target) => LightningProgress >= 0.5f;
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            var drawPosition = GetDrawPosition();
+            var scale = Projectile.scale * 3;
+            var effect = ModAssets.BellowingThunderEffect.Value;
+            var texture = TextureAssets.Projectile[Type];
+            var origin = new Vector2(texture.Width() * 0.5f, texture.Height());
+            var offset = Vector2.UnitY * texture.Height() * scale;
+
+            // Please don't look at this code...
+            SetSpriteBatch(sortMode: SpriteSortMode.Immediate, blendState: BlendState.Additive, effect: effect);
+            {
+                void DrawLightning(Vector2 position, Color color) => Main.EntitySpriteDraw(texture.Value, position, null, color, 0f, origin, scale, SpriteEffects.None, 0);
+
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector2 position = drawPosition - offset * i;
+
+                    effect.Parameters["time"].SetValue(Timer + 300);
+                    DrawLightning(position + new Vector2(7, 0), _effectColor * LightningProgress);
+                    DrawLightning(position - new Vector2(7, 0), _effectColor * LightningProgress);
+
+                    effect.Parameters["time"].SetValue(Timer + 600);
+                    DrawLightning(position, new Color(179, 166, 255) * LightningProgress);
+
+                    if (BeamProgress > 0.7f)
+                    {
+                        effect.Parameters["time"].SetValue(Timer);
+                        DrawLightning(position, Color.White);
+                    }
+                }
+            }
+            SetSpriteBatch(sortMode: SpriteSortMode.Deferred, blendState: BlendState.Additive);
+            {
+                Main.EntitySpriteDraw(ModAssets.ExtraTextures[25].Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(ModAssets.ExtraTextures[26].Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, ModAssets.ExtraTextures[26].Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, 0);
+            }
+            SetSpriteBatch();
+
+            return false;
+        }
+
+        private readonly Color _effectColor = new Color(90, 40, 255);
     }
 }

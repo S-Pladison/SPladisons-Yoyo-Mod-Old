@@ -14,6 +14,7 @@ namespace SPladisonsYoyoMod
 
         // Effects
         public static Asset<Effect> BasicPrimitiveEffect { get; private set; }
+        public static Asset<Effect> BellowingThunderEffect { get; private set; }
         public static Asset<Effect> BlackholeEffect { get; private set; }
         public static Asset<Effect> ResidualLightEffect { get; private set; }
 
@@ -27,6 +28,7 @@ namespace SPladisonsYoyoMod
             if (Main.dedServ) return;
 
             BasicPrimitiveEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Primitive");
+            BellowingThunderEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/BellowingThunder");
             BlackholeEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Blackhole");
             ResidualLightEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/ResidualLight");
         }
@@ -38,6 +40,7 @@ namespace SPladisonsYoyoMod
             _extraTexturesList.Clear();
 
             BasicPrimitiveEffect = null;
+            BellowingThunderEffect = null;
             BlackholeEffect = null;
             ResidualLightEffect = null;
         }
@@ -45,6 +48,8 @@ namespace SPladisonsYoyoMod
         public static void SetEffectsParameters()
         {
             if (Main.dedServ) return;
+
+            BellowingThunderEffect.Value.Parameters["texture1"].SetValue(ModAssets.ExtraTextures[24].Value);
 
             BlackholeEffect.Value.Parameters["texture1"].SetValue(ModAssets.PerlinNoiseTexture.Value);
             BlackholeEffect.Value.Parameters["width"].SetValue(ModAssets.ExtraTextures[2].Width() / 4);

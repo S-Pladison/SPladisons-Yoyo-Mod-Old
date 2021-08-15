@@ -74,10 +74,10 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override bool PreDraw(ref Color lightColor)
         {
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
-
-            var texture = ModAssets.ExtraTextures[4];
-            Main.EntitySpriteDraw(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, Color.White, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.3f, SpriteEffects.None, 0);
-
+            {
+                var texture = ModAssets.ExtraTextures[4];
+                Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, Color.White, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.3f, SpriteEffects.None, 0);
+            }
             SetSpriteBatch();
             return true;
         }
@@ -119,15 +119,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDraw(ref Color lightColor)
         {
-            var position = Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
+            var position = GetDrawPosition();
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
+            {
+                var texture = ModAssets.ExtraTextures[21];
+                Main.spriteBatch.Draw(texture.Value, position, null, _color, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
 
-            var texture = ModAssets.ExtraTextures[21];
-            Main.spriteBatch.Draw(texture.Value, position, null, _color, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
-
-            texture = ModAssets.ExtraTextures[3];
-            Main.spriteBatch.Draw(texture.Value, position, null, _color, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
-
+                texture = ModAssets.ExtraTextures[3];
+                Main.spriteBatch.Draw(texture.Value, position, null, _color, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
+            }
             SetSpriteBatch();
             return false;
         }

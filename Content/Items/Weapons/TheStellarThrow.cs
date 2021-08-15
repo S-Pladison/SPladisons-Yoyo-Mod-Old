@@ -68,22 +68,24 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDrawExtras()
         {
-            Vector2 drawPosition = Projectile.position + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
+            Vector2 drawPosition = GetDrawPosition();
             Vector2 origin = ModAssets.ExtraTextures[8].Size() * 0.5f + new Vector2(0, 6);
             float starRotation = Projectile.rotation * 0.05f;
             float starScalePulse = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 3f) * 0.15f;
 
-            void DrawStar(Color color, float rotation, float scale)
-            {
-                Main.spriteBatch.Draw(ModAssets.ExtraTextures[8].Value, drawPosition, null, color, rotation, origin, scale + starScalePulse, SpriteEffects.None, 0);
-            }
-
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
-            DrawStar(new Color(16, 11, 25, 90), -starRotation, 0.5f);
-            DrawStar(new Color(16, 11, 25, 210), starRotation, 0.3f);
+            {
+                void DrawStar(Color color, float rotation, float scale)
+                {
+                    Main.EntitySpriteDraw(ModAssets.ExtraTextures[8].Value, drawPosition, null, color, rotation, origin, scale + starScalePulse, SpriteEffects.None, 0);
+                }
 
+                DrawStar(new Color(16, 11, 25, 90), -starRotation, 0.5f);
+                DrawStar(new Color(16, 11, 25, 210), starRotation, 0.3f);
+            }
             SetSpriteBatch();
-            Main.spriteBatch.Draw(ModAssets.ExtraTextures[5].Value, drawPosition, null, Color.White, Projectile.rotation, ModAssets.ExtraTextures[5].Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
+
+            Main.EntitySpriteDraw(ModAssets.ExtraTextures[5].Value, drawPosition, null, Color.White, Projectile.rotation, ModAssets.ExtraTextures[5].Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
 
             return true;
         }

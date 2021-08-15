@@ -82,19 +82,19 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 drawPosition = Projectile.position + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
+            Vector2 GetDrawPosition = Projectile.position + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
 
             var texture = ModAssets.ExtraTextures[17];
 
             for (int i = 0; i < 5; i++)
             {
                 float rot = Projectile.rotation * 0.05f + MathHelper.Pi + (MathHelper.TwoPi / 5 * i);
-                Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White * 0.22f, rot, new Vector2(9, 36), 1.22f, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(texture.Value, GetDrawPosition, null, Color.White * 0.22f, rot, new Vector2(9, 36), 1.22f, SpriteEffects.None, 0);
             }
             for (int i = 0; i < 5; i++)
             {
                 float rot = Projectile.rotation * 0.05f + (MathHelper.TwoPi / 5 * i);
-                Main.spriteBatch.Draw(texture.Value, drawPosition, null, Color.White * 0.5f, rot, new Vector2(9, 36), 1f, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(texture.Value, GetDrawPosition, null, Color.White * 0.5f, rot, new Vector2(9, 36), 1f, SpriteEffects.None, 0);
             }
 
             return true;

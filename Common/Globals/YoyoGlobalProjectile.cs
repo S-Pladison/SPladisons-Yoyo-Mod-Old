@@ -5,9 +5,9 @@ namespace SPladisonsYoyoMod.Common.Globals
 {
     public class YoyoGlobalProjectile : GlobalProjectile
     {
-        public static readonly int YoyoAIStyle = 99;
-
         public override bool AppliesToEntity(Projectile entity, bool lateInstantiation) => entity.IsYoyo();
+
+        // ...
 
         public static void ModifyYoyoStats(Projectile projectile, ref float lifeTime, ref float maxRange, ref float topSpeed, bool infinite)
         {
@@ -19,5 +19,7 @@ namespace SPladisonsYoyoMod.Common.Globals
                 if (modPlayer.bearingEquipped) lifeTime += 0.12f;
             }
         }
+
+        public static readonly int YoyoAIStyle = 99;
     }
 }

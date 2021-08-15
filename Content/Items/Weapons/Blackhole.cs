@@ -85,26 +85,29 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             // Shitty code... I can't do better than that :(
 
-            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Vector2 drawPosition = GetDrawPosition();
             var texture = ModAssets.ExtraTextures[2].Value;
             var effect = ModAssets.BlackholeEffect.Value;
             effect.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
 
             SetSpriteBatch(SpriteSortMode.Immediate, BlendState.Additive, effect);
-            Main.spriteBatch.Draw(texture, drawPosition, null, new Color(95, 65, 255) * 0.75f, Main.GlobalTimeWrappedHourly, texture.Size() * 0.5f, radiusProgress * 0.5f - pulse, SpriteEffects.None, 0);
-
+            {
+                Main.spriteBatch.Draw(texture, drawPosition, null, new Color(95, 65, 255) * 0.75f, Main.GlobalTimeWrappedHourly, texture.Size() * 0.5f, radiusProgress * 0.5f - pulse, SpriteEffects.None, 0);
+            }
             SetSpriteBatch(SpriteSortMode.Immediate, BlendState.AlphaBlend, effect);
-            Main.spriteBatch.Draw(texture, drawPosition, null, new Color(35, 0, 100) * 0.5f, Main.GlobalTimeWrappedHourly, texture.Size() * 0.5f, radiusProgress * 0.35f - pulse, SpriteEffects.None, 0);
-            Main.spriteBatch.Draw(texture, drawPosition, null, Color.Black, Main.GlobalTimeWrappedHourly, texture.Size() * 0.5f, radiusProgress * 0.2f - pulse, SpriteEffects.None, 0);
-
+            {
+                Main.spriteBatch.Draw(texture, drawPosition, null, new Color(35, 0, 100) * 0.5f, Main.GlobalTimeWrappedHourly, texture.Size() * 0.5f, radiusProgress * 0.35f - pulse, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(texture, drawPosition, null, Color.Black, Main.GlobalTimeWrappedHourly, texture.Size() * 0.5f, radiusProgress * 0.2f - pulse, SpriteEffects.None, 0);
+            }
             SetSpriteBatch();
+
             return true;
         }
 
         public override void PostDraw(Color lightColor)
         {
             var texture = ModAssets.ExtraTextures[3];
-            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Vector2 drawPosition = GetDrawPosition();
 
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
             {

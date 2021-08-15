@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using SPladisonsYoyoMod.Common.Globals;
+using Terraria;
 using Terraria.DataStructures;
 
 namespace SPladisonsYoyoMod.Common.Hooks

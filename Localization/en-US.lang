@@ -38,7 +38,7 @@ ItemTooltip.YoYoGlove=Some yoyos have different effect
 ItemTooltip.SpaceKey=Unlocks a Space Chest in the dungeon
 
 # Item Tooltip | Weapons
-ItemTooltip.BellowingThunder=...
+ItemTooltip.BellowingThunder=On hit, gives a chance to strike the enemy with lightning\nRainy weather drastically increases the probability
 ItemTooltip.Blackhole=Pulls enemies to itself\n|?|Changes the effect of «Yoyo Glove»:\n• Increases pull radius by 25%\n• Increases damage by 20%
 ItemTooltip.BloomingDeath=Yoyo and its string poison enemies
 ItemTooltip.Indefinite=...

@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.PlayerDrawLayers
 {
-    public class AfterFaceAccDrawLayer : PlayerDrawLayer
+    public class FaceAccDrawLayer : PlayerDrawLayer
     {
         private static Asset<Texture2D> EternalConfusionStarTexture => ModAssets.ExtraTextures[13];
 
