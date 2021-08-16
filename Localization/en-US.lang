@@ -20,6 +20,7 @@ ItemName.ResidualLight=Residual Light
 ItemName.SoulFilledFlame=Soul-Filled Flame
 ItemName.Stable=Stable
 ItemName.TheStellarThrow=The Stellar Throw
+ItemName.WakeOfEarth=Wake of Earth
 
 #|----- --- -
 
@@ -46,6 +47,7 @@ ItemTooltip.ResidualLight=At night, the string length is increased by 20%\n|?|Ch
 ItemTooltip.SoulFilledFlame=...
 ItemTooltip.Stable=...
 ItemTooltip.TheStellarThrow=...
+ItemTooltip.WakeOfEarth=...
 
 # Item Tooltip | Prefixes
 ItemTooltip.PrefixYoyoLifeTime=% duration
@@ -55,6 +57,7 @@ ItemTooltip.PrefixYoyoMaxRange=% maximum range
 
 # Projectile Name
 ProjectileName.BellowingThunderProjectile={$Mods.SPladisonsYoyoMod.ItemName.BellowingThunder}
+ProjectileName.BellowingThunderLightningProjectile={$Mods.SPladisonsYoyoMod.ItemName.BellowingThunder}
 ProjectileName.BlackholeProjectile={$Mods.SPladisonsYoyoMod.ItemName.Blackhole}
 ProjectileName.BloomingDeathProjectile={$Mods.SPladisonsYoyoMod.ItemName.BloomingDeath}
 ProjectileName.IndefiniteProjectile={$Mods.SPladisonsYoyoMod.ItemName.Indefinite}
@@ -63,6 +66,7 @@ ProjectileName.ResidualLightHitProjectile={$Mods.SPladisonsYoyoMod.ItemName.Resi
 ProjectileName.SoulFilledFlameProjectile={$Mods.SPladisonsYoyoMod.ItemName.SoulFilledFlame}
 ProjectileName.StableProjectile={$Mods.SPladisonsYoyoMod.ItemName.Stable}
 ProjectileName.TheStellarThrowProjectile={$Mods.SPladisonsYoyoMod.ItemName.TheStellarThrow}
+ProjectileName.WakeOfEarthProjectile={$Mods.SPladisonsYoyoMod.ItemName.WakeOfEarth}
 
 # Buff Name
 BuffName.ImprovedPoisoning=Improved Poisoning

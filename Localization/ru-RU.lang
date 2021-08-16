@@ -20,6 +20,7 @@ ItemName.ResidualLight=Остаточный свет
 ItemName.SoulFilledFlame=Наполненное душой пламя
 ItemName.Stable=Стабильный
 ItemName.TheStellarThrow=Звездный бросок
+ItemName.WakeOfEarth=Пробуждение земли
 
 #|----- --- -
 
@@ -46,6 +47,7 @@ ItemTooltip.ResidualLight=Ночью длина нити увеличена на
 ItemTooltip.SoulFilledFlame=...
 ItemTooltip.Stable=...
 ItemTooltip.TheStellarThrow=...
+ItemTooltip.WakeOfEarth=...
 
 # Item Tooltip | Prefixes
 ItemTooltip.PrefixYoyoLifeTime=% время полета

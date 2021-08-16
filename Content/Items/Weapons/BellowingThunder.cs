@@ -147,7 +147,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     public class BellowingThunderLightningProjectile : PladProjectile
     {
         // TODO: Доделать звук удара молнии...
-        // public static readonly SoundStyle DodgerollSound = new ModSoundStyle($"{nameof(SPladisonsYoyoMod)}/Assets/Sounds/", 3, volume: 0.65f, pitchVariance: 0.2f);
+        // public static readonly SoundStyle Sound = new ModSoundStyle($"{nameof(SPladisonsYoyoMod)}/Assets/Sounds/", 3, volume: 0.65f, pitchVariance: 0.2f);
 
         public ref float BeamProgress => ref Projectile.ai[0];
         public ref float LightningProgress => ref Projectile.ai[1];
@@ -158,7 +158,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
             Projectile.ignoreWater = true;
-            Projectile.timeLeft = 20;
+            Projectile.timeLeft = 25;
 
             Projectile.width = 70;
             Projectile.height = 70;
@@ -174,13 +174,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void AI()
         {
+            var progress = 1 - Projectile.timeLeft / 25f;
+
             Timer += 0.01f;
-            BeamProgress = ModUtils.GradientValue<float>(MathHelper.Lerp, 1 - Projectile.timeLeft / 20f, new float[] { 0f, 0.1f, 0.2f, 0.9f, 0.45f, 0f });
-            LightningProgress = ModUtils.GradientValue<float>(MathHelper.Lerp, 1 - Projectile.timeLeft / 30f, new float[] { 0f, 0f, 0f, 0.7f, 0.3f, 0f });
+            BeamProgress = ModUtils.GradientValue<float>(MathHelper.Lerp, progress, new float[] { 0f, 0.1f, 0.2f, 0.9f, 0.45f, 0f });
+            LightningProgress = ModUtils.GradientValue<float>(MathHelper.Lerp, progress, new float[] { 0f, 0f, 0f, 0.7f, 0.3f, 0f });
 
             Lighting.AddLight(Projectile.Center, new Color(90, 40, 255).ToVector3() * BeamProgress * 1.3f);
 
-            if (Projectile.timeLeft != 5) return;
+            if (Projectile.timeLeft != 7) return;
 
             ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 7f, range: 16 * 50, time: 50);
             // SoundEngine.PlaySound(Mod.GetLegacySoundSlot(Terraria.ModLoader.SoundType.Custom, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);
