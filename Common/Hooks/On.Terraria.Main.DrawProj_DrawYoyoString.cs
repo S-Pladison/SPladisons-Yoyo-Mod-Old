@@ -6,7 +6,7 @@ using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public partial class ModHooks
+    public partial class HooksLoader
     {
         private static void On_Terraria_Main_DrawProj_DrawYoyoString(OrigDrawYoyoString orig, Main main, Projectile projectile, Vector2 mountedCenter)
         {

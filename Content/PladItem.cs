@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ModLoader;
 
@@ -17,12 +18,19 @@ namespace SPladisonsYoyoMod.Content
 
         public sealed override void SetStaticDefaults()
         {
-            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = SacrificeCount;
+            uint sacrificeCount = 1;
 
-            this.PladSetStaticDefaults();
+            this.SetStaticDefaults(ref sacrificeCount);
+
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = (int)sacrificeCount;
         }
 
-        public virtual int SacrificeCount => 1;
-        public virtual void PladSetStaticDefaults() { }
+        // ...
+
+        /// <summary>
+        /// Allows you to modify the properties after initial loading has completed.
+        /// </summary>
+        /// <param name="sacrificeCount">How many units of that item will be required to complete its research.</param>
+        public virtual void SetStaticDefaults(ref uint sacrificeCount) { }
     }
 }

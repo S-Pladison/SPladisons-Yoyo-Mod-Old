@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using SPladisonsYoyoMod.Content;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -16,6 +17,8 @@ namespace SPladisonsYoyoMod.Common
 
         public int eternalConfusionDye;
         public bool eternalConfusionVisible;
+
+        // ...
 
         public override void ResetEffects()
         {
@@ -35,20 +38,7 @@ namespace SPladisonsYoyoMod.Common
             this.UpdateFlamingFlowerZoneEffect();
         }
 
-        public override void UpdateEquips()
-        {
-            /*if (Player.counterWeight > 0)
-            {
-                this.counterWeight = 556 + Main.rand.Next(6);
-                this.yoyoGlove = true;
-                this.yoyoString = true;
-            }
-
-            if (currentItem.type >= 3309 && currentItem.type <= 3314)
-            {
-                this.counterWeight = 556 + currentItem.type - 3309;
-            }*/
-        }
+        // ...
 
         private void UpdateFlamingFlowerZoneEffect()
         {

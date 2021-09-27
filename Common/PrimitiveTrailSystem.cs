@@ -12,11 +12,28 @@ namespace SPladisonsYoyoMod.Common
     public class PrimitiveTrailSystem : ModSystem
     {
         private static readonly List<Trail> _trails = new List<Trail>();
+        public static Asset<Effect> BasicPrimitiveEffect { get; private set; }
+
+        // ...
+
+        public override void Load()
+        {
+            if (Main.dedServ) return;
+
+            BasicPrimitiveEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Primitive");
+        }
+
+        public override void Unload()
+        {
+            BasicPrimitiveEffect = null;
+        }
 
         public override void PostUpdateEverything()
         {
             foreach (var trail in _trails.ToList()) trail.Update();
         }
+
+        // ...
 
         public static void NewTrail(Trail trail)
         {
@@ -27,12 +44,14 @@ namespace SPladisonsYoyoMod.Common
 
         public static void DrawTrails(SpriteBatch spriteBatch)
         {
+            var matrix = GetTransformMatrix();
+
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.Additive)) trail.Draw(spriteBatch);
+            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.Additive)) trail.Draw(spriteBatch, matrix);
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.AlphaBlend)) trail.Draw(spriteBatch);
+            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.AlphaBlend)) trail.Draw(spriteBatch, matrix);
             spriteBatch.End();
         }
 
@@ -70,8 +89,8 @@ namespace SPladisonsYoyoMod.Common
                 _target = target;
                 _maxLength = length;
 
-                _effect = effect ?? ModAssets.BasicPrimitiveEffect;
-                _effect.Value.Parameters["texture0"].SetValue(ModAssets.ExtraTextures[6].Value);
+                _effect = effect ?? BasicPrimitiveEffect;
+                _effect.Value.Parameters["texture0"].SetValue(SPladisonsYoyoMod.GetExtraTextures[6].Value);
 
                 BlendState = blendState ?? BlendState.AlphaBlend;
             }
@@ -97,12 +116,12 @@ namespace SPladisonsYoyoMod.Common
                 UpdateLength(maxLength: length);
             }
 
-            public void Draw(SpriteBatch spriteBatch)
+            public void Draw(SpriteBatch spriteBatch, Matrix matrix)
             {
                 if (_points.Count <= 1) return;
 
                 CreateMesh();
-                ApplyGlobalEffectParameters(effect: _effect.Value);
+                ApplyGlobalEffectParameters(effect: _effect.Value, matrix: matrix);
                 ApplyEffectParameters(effect: _effect.Value);
 
                 var graphics = spriteBatch.GraphicsDevice;
@@ -169,9 +188,9 @@ namespace SPladisonsYoyoMod.Common
             protected virtual void CreateMesh() { }
             protected virtual void ApplyEffectParameters(Effect effect) { }
 
-            private static void ApplyGlobalEffectParameters(Effect effect)
+            private static void ApplyGlobalEffectParameters(Effect effect, Matrix matrix)
             {
-                effect.Parameters["transformMatrix"].SetValue(GetTransformMatrix());
+                effect.Parameters["transformMatrix"].SetValue(matrix);
                 foreach (var param in effect.Parameters)
                 {
                     if (param.Name == "time") effect.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);

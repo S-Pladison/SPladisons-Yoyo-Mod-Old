@@ -60,7 +60,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         {
             Item.NewItem(i * 16, j * 16, 32, 48, ModContent.ItemType<FlamingFlower>());
 
-            PladSystem.FlamingFlowerPosition = Point.Zero;
+            WorldSystem.FlamingFlowerPosition = Point.Zero;
         }
 
         public override void NearbyEffects(int i, int j, bool closer)
@@ -127,9 +127,9 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public static void DrawMapIcon(SpriteBatch spriteBatch, Vector2 mapTopLeft, Vector2 mapX2Y2AndOff, Rectangle? mapRect, float mapScale, float drawScale, ref string mouseTextString)
         {
-            if (Main.LocalPlayer == null || PladSystem.FlamingFlowerPosition == Point.Zero) return;
+            if (Main.LocalPlayer == null || WorldSystem.FlamingFlowerPosition == Point.Zero) return;
 
-            Vector2 position = Common.PladSystem.FlamingFlowerPosition.ToVector2() * 16 + new Vector2(16, 16);
+            Vector2 position = WorldSystem.FlamingFlowerPosition.ToVector2() * 16 + new Vector2(16, 16);
             float dist = (position - Main.LocalPlayer.Center).Length();
 
             const float maxDist = 16 * 90;
@@ -143,7 +143,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
             if (mapRect == null || mapRect.Value.Contains(vec.ToPoint()))
             {
-                Texture2D texture = ModAssets.ExtraTextures[1].Value;
+                Texture2D texture = SPladisonsYoyoMod.GetExtraTextures[1].Value;
                 Rectangle rectangle = texture.Frame(1, 1, 0, 0, 0, 0);
 
                 float progress = 1;

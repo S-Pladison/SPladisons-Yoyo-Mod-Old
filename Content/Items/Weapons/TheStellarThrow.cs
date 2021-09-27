@@ -41,7 +41,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 width: (progress) => 21 * (1 - progress * 0.44f),
                 color: (progress) => ModUtils.GradientValue<Color>(method: Color.Lerp, percent: progress, values: TrailColors) * (1 - progress)
             );
-            trail.SetEffectTexture(ModAssets.ExtraTextures[7].Value);
+            trail.SetEffectTexture(SPladisonsYoyoMod.GetExtraTextures[7].Value);
             trail.SetDissolveSpeed(0.15f);
             PrimitiveTrailSystem.NewTrail(trail);
         }
@@ -69,7 +69,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override bool PreDrawExtras()
         {
             Vector2 drawPosition = GetDrawPosition();
-            Vector2 origin = ModAssets.ExtraTextures[8].Size() * 0.5f + new Vector2(0, 6);
+            Vector2 origin = SPladisonsYoyoMod.GetExtraTextures[8].Size() * 0.5f + new Vector2(0, 6);
             float starRotation = Projectile.rotation * 0.05f;
             float starScalePulse = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 3f) * 0.15f;
 
@@ -77,7 +77,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             {
                 void DrawStar(Color color, float rotation, float scale)
                 {
-                    Main.EntitySpriteDraw(ModAssets.ExtraTextures[8].Value, drawPosition, null, color, rotation, origin, scale + starScalePulse, SpriteEffects.None, 0);
+                    Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[8].Value, drawPosition, null, color, rotation, origin, scale + starScalePulse, SpriteEffects.None, 0);
                 }
 
                 DrawStar(new Color(16, 11, 25, 90), -starRotation, 0.5f);
@@ -85,7 +85,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
             SetSpriteBatch();
 
-            Main.EntitySpriteDraw(ModAssets.ExtraTextures[5].Value, drawPosition, null, Color.White, Projectile.rotation, ModAssets.ExtraTextures[5].Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[5].Value, drawPosition, null, Color.White, Projectile.rotation, SPladisonsYoyoMod.GetExtraTextures[5].Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
 
             return true;
         }

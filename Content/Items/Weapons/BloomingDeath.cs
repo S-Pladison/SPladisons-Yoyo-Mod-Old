@@ -58,7 +58,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override bool PreDraw(ref Color lightColor)
         {
             Vector2 drawPosition = GetDrawPosition();
-            var texture = ModAssets.ExtraTextures[12];
+            var texture = SPladisonsYoyoMod.GetExtraTextures[12];
             var color = Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), Color.White);
 
             for (int i = 0; i < 5; i++) Main.EntitySpriteDraw(texture.Value, drawPosition, null, color * 0.22f, Projectile.rotation * 0.05f + MathHelper.Pi + (MathHelper.TwoPi / 5 * i), new Vector2(9, 20), 1.22f, SpriteEffects.None, 0);
@@ -166,8 +166,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 counter++;
 
                 float num4 = (float)Math.Atan2(num3, num2) - 1.57f;
+                var texture = SPladisonsYoyoMod.GetExtraTextures[9];
                 Vector2 position = vector - Main.screenPosition + new Vector2(6, 6) - new Vector2(6f, 0f);
-                Rectangle sourceRectangle = new Rectangle(0, 12 * frame, ModAssets.ExtraTextures[9].Width(), (int)num7);
+                Rectangle sourceRectangle = new Rectangle(0, 12 * frame, texture.Width(), (int)num7);
 
                 // Set string color
                 Color color = Color.White;
@@ -182,12 +183,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     }
                 }
 
-                Main.EntitySpriteDraw(color: color, texture: ModAssets.ExtraTextures[9].Value, position: position, sourceRectangle: sourceRectangle, rotation: num4, origin: new Vector2(6, 0f), scale: 1f, effects: SpriteEffects.None, worthless: 0);
+                Main.EntitySpriteDraw(color: color, texture: texture.Value, position: position, sourceRectangle: sourceRectangle, rotation: num4, origin: new Vector2(6, 0f), scale: 1f, effects: SpriteEffects.None, worthless: 0);
 
                 // Leafs
                 {
                     num4 += (float)Math.Sin(Main.GlobalTimeWrappedHourly) * 0.25f;
                     position += new Vector2(-7, 0).RotatedBy(num4);
+                    texture = SPladisonsYoyoMod.GetExtraTextures[10];
 
                     if (frame != 2 || !flag) continue;
 
@@ -195,7 +197,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     if (counter % 3 == 0 || counter % 4 == 0)
                     {
                         SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.75f, texture: ModAssets.ExtraTextures[10].Value, position: position, sourceRectangle: new Rectangle(0, ModAssets.ExtraTextures[10].Height() / 3 * (int)(counter % 3), ModAssets.ExtraTextures[10].Width(), ModAssets.ExtraTextures[10].Height() / 3), rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, worthless: 0);
+                        Main.EntitySpriteDraw(color: color * 0.75f, texture: texture.Value, position: position, sourceRectangle: new Rectangle(0, texture.Height() / 3 * (int)(counter % 3), texture.Width(), texture.Height() / 3), rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, worthless: 0);
                     }
 
                     flip = -flip;
@@ -203,7 +205,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     {
                         color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f), Color.Gray);
                         SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.3f, texture: ModAssets.ExtraTextures[10].Value, position: position, sourceRectangle: new Rectangle(0, ModAssets.ExtraTextures[10].Height() / 3 * (int)(counter % 3), ModAssets.ExtraTextures[10].Width(), ModAssets.ExtraTextures[10].Height() / 3), rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, worthless: 0);
+                        Main.EntitySpriteDraw(color: color * 0.3f, texture: texture.Value, position: position, sourceRectangle: new Rectangle(0, texture.Height() / 3 * (int)(counter % 3), texture.Width(), texture.Height() / 3), rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, worthless: 0);
                     }
                 }
             }

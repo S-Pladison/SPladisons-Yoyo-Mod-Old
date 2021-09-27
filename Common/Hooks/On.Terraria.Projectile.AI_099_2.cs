@@ -5,7 +5,7 @@ using Terraria.ID;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public partial class ModHooks
+    public partial class HooksLoader
     {
         private static void On_Terraria_Projectile_AI_099_2(On.Terraria.Projectile.orig_AI_099_2 orig, Projectile projectile)
         {

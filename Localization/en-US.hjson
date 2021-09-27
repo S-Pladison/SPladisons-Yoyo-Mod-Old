@@ -1,0 +1,126 @@
+Mods: {
+	SPladisonsYoyoMod: {
+		ItemName: {
+			// Accessories
+			Bearing: Bearing
+			CandyCane: Candy Cane
+			DesecratedDice: Desecrated Dice
+			EternalConfusion: Eternal Confusion
+			FlamingFlower: Flaming Flower
+
+			// Misc
+			SpaceKey: Space Key
+			SpaceChest: Space Chest
+			SuspiciousLookingBeehive: Suspicious Looking Beehive
+
+			// Weapons
+			BellowingThunder: Bellowing Thunder
+			Blackhole: Blackhole
+			BloomingDeath: Blooming Death
+			Indefinite: Indefinite
+			OutburstingGust: Outbursting Gust
+			ResidualLight: Residual Light
+			SoulFilledFlame: Soul-Filled Flame
+			Stable: Stable
+			TheStellarThrow: The Stellar Throw
+			WakeOfEarth: Wake of Earth
+		}
+
+		ItemTooltip: {
+			// Accessories
+			Bearing: 12% increased yoyo duration
+			CandyCane: ...
+			DesecratedDice: ...
+			EternalConfusion: ...
+			FlamingFlower: ...
+
+			// Vanilla Accessories
+			YoyoString: Increases yoyo range by 4 tiles
+			YoYoGlove: Some yoyos have different effect
+
+			// Misc
+			SpaceKey: Unlocks a Space Chest in the dungeon
+			SuspiciousLookingBeehive:
+				'''
+				Summons a Square Bee
+				'Great for impersonating devs!'
+				'''
+
+			// Weapons
+			BellowingThunder:
+				'''
+				On hit, gives a chance to strike the enemy with lightning
+				Rainy weather drastically increases the probability
+				'''
+			Blackhole:
+				'''
+				Pulls enemies to itself
+				|?|Changes the effect of «Yoyo Glove»:
+				• Increases pull radius by 25%
+				• Increases damage by 20%
+				'''
+			BloomingDeath: Yoyo and its string poison enemies
+			Indefinite: ...
+			OutburstingGust: ...
+			ResidualLight:
+				'''
+				At night, the string length is increased by 20%
+				|?|Changes the effect of «Yoyo Glove»:
+				• The flash also deals damage
+				'''
+			SoulFilledFlame: ...
+			Stable: ...
+			TheStellarThrow: ...
+			WakeOfEarth: ...
+
+			// Prefixes
+			PrefixYoyoLifeTime: % duration
+			PrefixYoyoMaxRange: % maximum range
+		}
+
+		ProjectileName: {
+			// Misc
+			SquareBeeProjectile: "{$Mods.SPladisonsYoyoMod.BuffName.SquareBeeBuff}"
+
+			// Weapons
+			BellowingThunderProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BellowingThunder}"
+			BellowingThunderLightningProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BellowingThunder}"
+			BlackholeProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Blackhole}"
+			BloomingDeathProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BloomingDeath}"
+			IndefiniteProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Indefinite}"
+			ResidualLightProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.ResidualLight}"
+			ResidualLightHitProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.ResidualLight}"
+			SoulFilledFlameProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.SoulFilledFlame}"
+			StableProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Stable}"
+			TheStellarThrowProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.TheStellarThrow}"
+			WakeOfEarthProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.WakeOfEarth}"
+		}
+
+		BuffName: {
+			ImprovedPoisoning: Improved Poisoning
+			SquareBeeBuff: Square Bee
+		}
+
+		BuffDescription: {
+			SquareBeeBuff: She's from this world?
+		}
+
+		GameUI: {
+			FlamingFlowerMapIcon: Strange Flower
+		}
+
+		Config: {
+			Misc: Misc
+			YoyoCustomUseStyle: Custom yoyo use style
+		}
+
+		WorldGen: {
+			SpaceChest: S-Pladison's Yoyo Mod: Space Chest
+			SpaceChest_0: Adding a piece of space to the dungeon...
+		}
+
+		Bestiary_ItemDropConditions: {
+			SpaceKeyCondition: Drops in the Hardmode Space
+		}
+	}
+}

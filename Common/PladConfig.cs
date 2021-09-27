@@ -7,6 +7,8 @@ namespace SPladisonsYoyoMod.Common
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
+        [Header("$Mods.SPladisonsYoyoMod.Config.Misc")]
+
         [DefaultValue(true)]
         [Label("$Mods.SPladisonsYoyoMod.Config.YoyoCustomUseStyle")]
         public bool YoyoCustomUseStyle { get; set; }

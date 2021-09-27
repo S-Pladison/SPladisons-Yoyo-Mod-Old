@@ -48,7 +48,7 @@ namespace SPladisonsYoyoMod.Content.Items
             _gamepadExtraRange = gamepadExtraRange;
         }
 
-        public sealed override void PladSetStaticDefaults()
+        public sealed override void SetStaticDefaults(ref uint sacrificeCount)
         {
             ItemID.Sets.Yoyo[Type] = true;
             ItemID.Sets.GamepadExtraRange[Type] = _gamepadExtraRange;
@@ -83,12 +83,11 @@ namespace SPladisonsYoyoMod.Content.Items
     public abstract class YoyoProjectile : PladProjectile
     {
         public bool YoyoGloveActivated { get; private set; }
+        public bool IsReturning { get => Projectile.ai[0] == -1; }
 
         private readonly float _lifeTime;
         private readonly float _maxRange;
         private readonly float _topSpeed;
-
-        public bool IsReturning => Projectile.ai[0] == -1;
 
         public YoyoProjectile(float lifeTime, float maxRange, float topSpeed)
         {
@@ -98,7 +97,8 @@ namespace SPladisonsYoyoMod.Content.Items
         }
 
         public override string Texture => ModContent.RequestIfExists<Texture2D>(base.Texture, out _) ? base.Texture : "SPladisonsYoyoMod/Assets/Textures/Projectiles/UnknownYoyoProjectile";
-        public override void Unload() => StringColorMethodInfo = null;
+
+        // ...
 
         public sealed override void SetStaticDefaults()
         {
@@ -147,6 +147,8 @@ namespace SPladisonsYoyoMod.Content.Items
             this.YoyoReceiveExtraAI(reader);
         }
 
+        // ...
+
         public virtual void YoyoSetStaticDefaults() { }
         public virtual void YoyoSetDefaults() { }
         public virtual void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit) { }
@@ -157,11 +159,13 @@ namespace SPladisonsYoyoMod.Content.Items
         public virtual void OnActivateYoyoGlove() { }
         public virtual void ModifyYoyo(ref float lifeTime, ref float maxRange, ref float topSpeed, bool infinite) { }
 
+        // ...
+
         protected static Color TryApplyingPlayerStringColor(int color)
         {
             return (Color)(StringColorMethodInfo?.Invoke(null, new object[] { color, Color.White }) ?? Color.White);
         }
 
-        private static MethodInfo StringColorMethodInfo = typeof(Main).GetMethod("TryApplyingPlayerStringColor", BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo StringColorMethodInfo = typeof(Main).GetMethod("TryApplyingPlayerStringColor", BindingFlags.NonPublic | BindingFlags.Static);
     }
 }

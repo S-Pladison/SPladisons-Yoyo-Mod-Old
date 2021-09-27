@@ -14,7 +14,7 @@ namespace SPladisonsYoyoMod.Common.PlayerDrawLayers
 {
     public class FaceAccDrawLayer : PlayerDrawLayer
     {
-        private static Asset<Texture2D> EternalConfusionStarTexture => ModAssets.ExtraTextures[13];
+        private static Asset<Texture2D> EternalConfusionStarTexture => SPladisonsYoyoMod.GetExtraTextures[13];
 
         public override Position GetDefaultPosition() => new AfterParent(Terraria.DataStructures.PlayerDrawLayers.FaceAcc);
 

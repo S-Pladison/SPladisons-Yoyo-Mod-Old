@@ -2,9 +2,6 @@
 using SPladisonsYoyoMod.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -18,49 +15,42 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void YoyoSetDefaults()
         {
+            Item.width = 32;
+            Item.height = 28;
+
             Item.damage = 43;
             Item.knockBack = 2.5f;
 
             Item.shoot = ModContent.ProjectileType<WakeOfEarthProjectile>();
 
-            Item.rare = ItemRarityID.Green;
+            Item.rare = ItemRarityID.Blue;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
         }
     }
 
     public class WakeOfEarthProjectile : YoyoProjectile
     {
-        private bool _hitTile = false;
-
         public WakeOfEarthProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
 
-        public override void PostDraw(Color lightColor)
+        public override void AI()
         {
-            /*Point coord = (Projectile.Center / 16).ToPoint() + new Point(0, 1);
-            Tile tile = Framing.GetTileSafely(coord);
-
-            if (tile == null || !tile.IsActive || !Main.tileSolid[tile.type]) return;
-
-            Main.spriteBatch.Draw(TextureAssets.Tile[tile.type].Value, GetDrawPosition(coord.ToVector2() * 16), new Rectangle(tile.frameX, tile.frameY, 16, 16), lightColor);*/
+            Projectile.rotation += 0.2f;
         }
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
+        public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
         {
-            if (!_hitTile)
-            {
-                var type = ModContent.ProjectileType<WakeOfEarthShakingTileProjectile>();
-                var source = Projectile.GetProjectileSource_FromThis();
+            if (target.life > 0) return;
 
-                Projectile.NewProjectile(source, Projectile.Center + new Vector2(16, 0), Vector2.Zero, type, 0, 0f, Projectile.owner, 5, 1);
-                Projectile.NewProjectile(source, Projectile.Center - new Vector2(16, 0), Vector2.Zero, type, 0, 0f, Projectile.owner, 5, -1);
+            var type = ModContent.ProjectileType<WakeOfEarthSpawnerProjectile>();
+            var source = Projectile.GetProjectileSource_FromThis();
+            var position = target.position + new Vector2(target.Hitbox.Width * 0.5f, -20);
 
-                _hitTile = true;
-            }
-            return base.OnTileCollide(oldVelocity);
+            Projectile.NewProjectile(source, position + new Vector2(16, 0), Vector2.Zero, type, 0, 0f, Projectile.owner, 5);
+            Projectile.NewProjectile(source, position - new Vector2(16, 0), Vector2.Zero, type, 0, 0f, Projectile.owner, -5);
         }
     }
 
-    public class WakeOfEarthShakingTileProjectile : PladProjectile
+    public class WakeOfEarthSpawnerProjectile : PladProjectile
     {
         public int SpawnCounter
         {
@@ -76,22 +66,65 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
+
+            Projectile.width = 16;
+            Projectile.height = 16;
+        }
+
+        public override void OnSpawn()
+        {
+            Point point = (Projectile.Center / 16f).ToPoint();
+            int maxY = point.Y + 10;
+
+            while (point.Y < maxY &&
+                Main.tile[point.X, point.Y] != null && !WorldGen.SolidTile2(point.X, point.Y) &&
+                Main.tile[point.X - 1, point.Y] != null && !WorldGen.SolidTile2(point.X - 1, point.Y) &&
+                Main.tile[point.X + 1, point.Y] != null && !WorldGen.SolidTile2(point.X + 1, point.Y)) point.Y++;
+
+            if (point.Y <= maxY)
+            {
+                var position = (point + new Point(0, -1)).ToVector2() * 16 + new Vector2(8, 8);
+                Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), position, Vector2.Zero, ModContent.ProjectileType<WakeOfEarthShakingTileProjectile>(), 0, 0f, Projectile.owner);
+            }
+
+            if (SpawnCounter == 0) return;
+
+            if (SpawnCounter > 0) SpawnCounter--;
+            else SpawnCounter++;
+        }
+
+        public override void AI()
+        {
+            if (SpawnCounter == 0 || Projectile.timeLeft != 18) return;
+
+            var type = ModContent.ProjectileType<WakeOfEarthSpawnerProjectile>();
+            var source = Projectile.GetProjectileSource_FromThis();
+
+            Projectile.NewProjectile(source, Projectile.Center + new Vector2(16 * (Math.Sign(SpawnCounter) >= 0 ? 1 : -1), 0), Vector2.Zero, type, 0, 0f, Projectile.owner, SpawnCounter);
+        }
+
+        public override bool PreDraw(ref Color lightColor) => false;
+    }
+
+    public class WakeOfEarthShakingTileProjectile : PladProjectile
+    {
+        public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Misc/Extra_0";
+
+        public override void SetDefaults()
+        {
+            Projectile.timeLeft = 25;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
             Projectile.hide = true;
 
             Projectile.width = 16;
             Projectile.height = 16;
         }
 
-        public override void AI()
+        public override void OnSpawn()
         {
-            if (Projectile.timeLeft != 18) return;
-            if (SpawnCounter <= 0) return;
-
-            var type = ModContent.ProjectileType<WakeOfEarthShakingTileProjectile>();
-            var source = Projectile.GetProjectileSource_FromThis();
-
-            Projectile.NewProjectile(source, Projectile.Center + new Vector2(16 * Projectile.ai[1], 0), Vector2.Zero, type, 0, 0f, Projectile.owner, --SpawnCounter, Projectile.ai[1]);
-            ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 0.5f, range: 16 * 20, time: 50);
+            ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 0.65f, range: 16 * 25, time: 50);
         }
 
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)

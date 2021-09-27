@@ -2,7 +2,7 @@
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public partial class ModHooks : ILoadable
+    public partial class HooksLoader : ILoadable
     {
         public void Load(Mod mod)
         {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
-using System;
+using SPladisonsYoyoMod.Content.Trails;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -22,8 +22,17 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             Item.shoot = ModContent.ProjectileType<BellowingThunderProjectile>();
 
-            Item.rare = ItemRarityID.Green;
+            Item.rare = ItemRarityID.Orange;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
+        }
+
+        public override void AddRecipes()
+        {
+            var recipe = CreateRecipe();
+            recipe.AddIngredient<OutburstingGust>();
+            recipe.AddIngredient<WakeOfEarth>();
+            recipe.AddTile(TileID.DemonAltar);
+            recipe.Register();
         }
     }
 
@@ -41,6 +50,21 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             ProjectileID.Sets.TrailingMode[Type] = 1;
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
+        }
+
+        public override void OnSpawn()
+        {
+            RoundedTrail trail = new
+            (
+                target: Projectile,
+                length: 16 * 10,
+                width: (p) => 6 * (1 - p),
+                color: (p) => _effectColor * (1 - p) * 0.8f,
+                blendState: BlendState.Additive,
+                smoothness: 20
+            );
+            trail.SetMaxPoints(15);
+            PrimitiveTrailSystem.NewTrail(trail);
         }
 
         public override void AI()
@@ -68,17 +92,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDrawExtras()
         {
-            // ... Is it possible to get rid of so many drawing methods? ... 15 + 1 + 3 + 1 = ... 20 ... ... ...
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
             {
-                for (int k = 0; k < Projectile.oldPos.Length; k++)
+                var texture = SPladisonsYoyoMod.GetExtraTextures[21];
+                for (int k = 1; k < Projectile.oldPos.Length; k++)
                 {
                     var position = GetDrawPosition(Projectile.oldPos[k] + Projectile.Size * 0.5f);
                     float num = (Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length;
-                    Color color = _effectColor * num;
-                    Main.EntitySpriteDraw(ModAssets.ExtraTextures[21].Value, position, null, color, Projectile.oldRot[k], ModAssets.ExtraTextures[21].Size() * .5f, Projectile.scale * num * 0.15f, SpriteEffects.None, 0);
+                    Color color = _effectColor * num * 0.88f;
+
+                    Main.EntitySpriteDraw(texture.Value, position, null, color, Projectile.oldRot[k], texture.Size() * .5f, Projectile.scale * num * 0.15f, SpriteEffects.None, 0);
                 }
-                Main.EntitySpriteDraw(ModAssets.ExtraTextures[21].Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, ModAssets.ExtraTextures[21].Size() * .5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
             }
             SetSpriteBatch();
 
@@ -92,8 +117,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
             {
                 _effect.Draw(drawPosition, 0.45f * Projectile.scale);
-                Main.EntitySpriteDraw(ModAssets.ExtraTextures[23].Value, drawPosition, null, _effectColor * 0.4f, 0f, ModAssets.ExtraTextures[23].Size() * 0.5f, Projectile.scale * 0.1f, SpriteEffects.None, 0);
-                Main.EntitySpriteDraw(ModAssets.ExtraTextures[21].Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.2f, Projectile.rotation, ModAssets.ExtraTextures[21].Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
+
+                var texture = SPladisonsYoyoMod.GetExtraTextures[23];
+                Main.EntitySpriteDraw(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, Projectile.scale * 0.1f, SpriteEffects.None, 0);
+
+                texture = SPladisonsYoyoMod.GetExtraTextures[21];
+                Main.EntitySpriteDraw(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.2f, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
             }
             SetSpriteBatch();
 
@@ -102,11 +131,10 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
 
         private readonly LightningEffect _effect = new();
-        private readonly Color _effectColor = new Color(137, 90, 248);
+        private static readonly Color _effectColor = new Color(137, 90, 248);
 
         // ...
 
-        #region Lightning Effect
         private class LightningEffect
         {
             private bool _active;
@@ -121,7 +149,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             {
                 if (!_active) return;
 
-                var texture = ModAssets.ExtraTextures[22];
+                var texture = SPladisonsYoyoMod.GetExtraTextures[22];
                 Rectangle rectangle = new(_time * 96, _frame * 96, 96, 96);
                 Main.EntitySpriteDraw(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, 0);
             }
@@ -141,7 +169,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 _spriteEffects = Main.rand.NextBool(2) ? SpriteEffects.None : SpriteEffects.FlipVertically;
             }
         }
-        #endregion
     }
 
     public class BellowingThunderLightningProjectile : PladProjectile
@@ -149,9 +176,30 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         // TODO: Доделать звук удара молнии...
         // public static readonly SoundStyle Sound = new ModSoundStyle($"{nameof(SPladisonsYoyoMod)}/Assets/Sounds/", 3, volume: 0.65f, pitchVariance: 0.2f);
 
+        public static Asset<Effect> BellowingThunderEffect { get; private set; }
+
         public ref float BeamProgress => ref Projectile.ai[0];
         public ref float LightningProgress => ref Projectile.ai[1];
         public ref float Timer => ref Projectile.localAI[0];
+
+        // ...
+
+        public override void Load()
+        {
+            if (Main.dedServ) return;
+
+            BellowingThunderEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/BellowingThunder");
+        }
+
+        public override void Unload()
+        {
+            BellowingThunderEffect = null;
+        }
+
+        public override void SetStaticDefaults()
+        {
+            BellowingThunderEffect?.Value.Parameters["texture1"].SetValue(SPladisonsYoyoMod.GetExtraTextures[24].Value);
+        }
 
         public override void SetDefaults()
         {
@@ -194,12 +242,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             var drawPosition = GetDrawPosition();
             var scale = Projectile.scale * 3;
-            var effect = ModAssets.BellowingThunderEffect.Value;
+            var effect = BellowingThunderEffect.Value;
             var texture = TextureAssets.Projectile[Type];
             var origin = new Vector2(texture.Width() * 0.5f, texture.Height());
             var offset = Vector2.UnitY * texture.Height() * scale;
 
-            // Please don't look at this code...
             SetSpriteBatch(sortMode: SpriteSortMode.Immediate, blendState: BlendState.Additive, effect: effect);
             {
                 void DrawLightning(Vector2 position, Color color) => Main.EntitySpriteDraw(texture.Value, position, null, color, 0f, origin, scale, SpriteEffects.None, 0);
@@ -224,14 +271,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
             SetSpriteBatch(sortMode: SpriteSortMode.Deferred, blendState: BlendState.Additive);
             {
-                Main.EntitySpriteDraw(ModAssets.ExtraTextures[25].Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, 0);
-                Main.EntitySpriteDraw(ModAssets.ExtraTextures[26].Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, ModAssets.ExtraTextures[26].Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[25].Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[26].Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, SPladisonsYoyoMod.GetExtraTextures[26].Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, 0);
             }
             SetSpriteBatch();
 
             return false;
         }
 
-        private readonly Color _effectColor = new Color(90, 40, 255);
+        private static readonly Color _effectColor = new Color(90, 40, 255);
     }
 }

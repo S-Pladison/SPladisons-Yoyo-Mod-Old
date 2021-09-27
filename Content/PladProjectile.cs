@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Common.Interfaces;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -7,13 +8,18 @@ namespace SPladisonsYoyoMod.Content
 {
     public abstract class PladProjectile : ModProjectile
     {
+        public Vector2 GetDrawPosition() => GetDrawPosition(Projectile.position + Projectile.Size * 0.5f + Vector2.UnitY * Projectile.gfxOffY);
+        public Vector2 GetDrawPosition(Vector2 position) => position - Main.screenPosition;
+
+        // ...
+
         public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Projectiles/" + this.Name;
 
         // ...
 
-        public Vector2 GetDrawPosition() => GetDrawPosition(Projectile.position + Projectile.Size * 0.5f + Vector2.UnitY * Projectile.gfxOffY);
-        public Vector2 GetDrawPosition(Vector2 position) => position - Main.screenPosition;
-
+        /// <summary>
+        /// This code is called after calling <see cref="Projectile.NewProjectile(Terraria.DataStructures.IProjectileSource, float, float, float, float, int, int, float, int, float, float)"/>.
+        /// </summary>
         public virtual void OnSpawn() { }
 
         // ...

@@ -1,24 +1,27 @@
-﻿using SPladisonsYoyoMod.Common;
+﻿using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Globals;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod
 {
     internal static class ModUtils
     {
-        internal static PladPlayer GetPladPlayer(this Player player) => player.GetModPlayer<PladPlayer>();
+        public static PladPlayer GetPladPlayer(this Player player) => player.GetModPlayer<PladPlayer>();
 
-        internal static YoyoGlobalProjectile GetYoyoGlobalProjectile(this Projectile projectile) => projectile.GetGlobalProjectile<YoyoGlobalProjectile>();
-        internal static YoyoGlobalItem GetYoyoGlobalItem(this Item item) => item.GetGlobalItem<YoyoGlobalItem>();
+        public static YoyoGlobalProjectile GetYoyoGlobalProjectile(this Projectile projectile) => projectile.GetGlobalProjectile<YoyoGlobalProjectile>();
+        public static YoyoGlobalItem GetYoyoGlobalItem(this Item item) => item.GetGlobalItem<YoyoGlobalItem>();
 
-        internal static bool IsYoyo(this Projectile projectile) => projectile.aiStyle == YoyoGlobalProjectile.YoyoAIStyle;
-        internal static bool IsYoyo(this Item item) => SPladisonsYoyoMod.GetYoyos.Contains(item.type);
+        public static bool IsYoyo(this Projectile projectile) => projectile.aiStyle == YoyoGlobalProjectile.YoyoAIStyle;
+        public static bool IsYoyo(this Item item) => SPladisonsYoyoMod.GetYoyos.Contains(item.type);
 
         // ...
 
-        internal static T GradientValue<T>(Func<T, T, float, T> method, float percent, params T[] values)
+        public static T GradientValue<T>(Func<T, T, float, T> method, float percent, params T[] values)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
             if (percent >= 1) return values.Last();

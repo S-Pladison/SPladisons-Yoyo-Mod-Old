@@ -5,7 +5,7 @@ using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public partial class ModHooks
+    public partial class HooksLoader
     {
         private static void On_Terraria_Main_DrawMiscMapIcons(On.Terraria.Main.orig_DrawMiscMapIcons orig, Main main, SpriteBatch spriteBatch, Vector2 mapTopLeft, Vector2 mapX2Y2AndOff, Rectangle? mapRect, float mapScale, float drawScale, ref string mouseTextString)
         {

@@ -38,7 +38,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
 
             var trail = new RoundedTrail(target: Projectile, length: 16 * 8, width: (p) => 50 * (1 - p), color: StripColors, effect: null, smoothness: 15);
-            trail.SetEffectTexture(ModAssets.ExtraTextures[17].Value);
+            trail.SetEffectTexture(SPladisonsYoyoMod.GetExtraTextures[17].Value);
             trail.SetDissolveSpeed(0.15f);
             PrimitiveTrailSystem.NewTrail(trail);
         }

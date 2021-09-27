@@ -1,6 +1,12 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Common.Misc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,31 +17,26 @@ namespace SPladisonsYoyoMod
     {
         public static SPladisonsYoyoMod Instance { get; private set; }
         public static IReadOnlyList<int> GetYoyos => _yoyos;
+        public static IReadOnlyList<Asset<Texture2D>> GetExtraTextures => _extraTextures;
 
         public SPladisonsYoyoMod() => Instance = this;
 
         public override void Load()
         {
-            _yoyos = new List<int>();
+            SPladisonsYoyoMod.LoadExtraTextures(this);
 
-            ModAssets.Load(this);
             Main.OnPreDraw += DrawTargets;
         }
 
         public override void Unload()
         {
-            ModAssets.Unload();
             Main.OnPreDraw -= DrawTargets;
-
-            _yoyos = null;
 
             Instance = null;
         }
 
         public override void PostSetupContent()
         {
-            ModAssets.SetEffectsParameters();
-
             static void TryAddYoyo(int type)
             {
                 Item item = new Item();
@@ -58,11 +59,20 @@ namespace SPladisonsYoyoMod
             for (int i = 0; i < ItemLoader.ItemCount; i++) TryAddYoyo(i);
         }
 
+        // ...
+
         private static void DrawTargets(GameTime gameTime)
         {
             SoulFilledFlameEffect.Instance?.Render(Main.spriteBatch);
         }
 
-        private static List<int> _yoyos;
+        private static void LoadExtraTextures(Mod mod)
+        {
+            int index = 0;
+            while (mod.RequestAssetIfExists("Assets/Textures/Misc/Extra_" + index++, out Asset<Texture2D> texture)) _extraTextures.Add(texture);
+        }
+
+        private static readonly List<int> _yoyos = new List<int>();
+        private static readonly List<Asset<Texture2D>> _extraTextures = new List<Asset<Texture2D>>();
     }
 }

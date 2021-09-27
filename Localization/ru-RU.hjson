@@ -1,0 +1,108 @@
+Mods: {
+	SPladisonsYoyoMod: {
+		ItemName: {
+			// Аксессуары
+			Bearing: Подшипник
+			CandyCane: Карамельная трость
+			DesecratedDice: Оскверненная игральная кость
+			EternalConfusion: Вечное замешательство
+			FlamingFlower: Пылающий цветок
+
+			// Разное
+			SpaceKey: Космический ключ
+			SpaceChest: Космический сундук
+			SuspiciousLookingBeehive: Подозрительно выглядящий улей
+
+			// Оружия
+			BellowingThunder: Раскаты грома
+			Blackhole: Черная дыра
+			BloomingDeath: Цветущая смерть
+			Indefinite: Неопределенный
+			OutburstingGust: Шквальный ветер
+			ResidualLight: Остаточный свет
+			SoulFilledFlame: Наполненное душой пламя
+			Stable: Стабильный
+			TheStellarThrow: Звездный бросок
+			WakeOfEarth: Пробуждение земли
+		}
+
+		ItemTooltip: {
+			// Аксессуары
+			Bearing: Увеличивает время полета йо-йо на 12%
+			CandyCane: ...
+			DesecratedDice: ...
+			EternalConfusion: ...
+			FlamingFlower: ...
+
+			// Ванильные аксессуары
+			YoyoString: Увеличивает дистанцию действия йо-йо на 4 блока
+			YoYoGlove: На некоторые йо-йо действует другой эффект
+
+			// Разное
+			SpaceKey: Открывает космический сундук в Темнице
+			SuspiciousLookingBeehive:
+				'''
+				Призывает квадратную пчелу
+				Отлично подходит, чтобы впечатлить разработчиков!
+				'''
+
+			// Оружия
+			BellowingThunder:
+				'''
+				При попадании дает шанс поразить врага молнией
+				Дождливая погода значительно увеличивает вероятность
+				'''
+			Blackhole:
+				'''
+				Притягивает к себе врагов
+				|?|Изменяет эффект у «Перчатка для йо-йо»:
+				• Увеличивает радиус притягивания на 25%
+				• Увеличивает урон на 20%
+				'''
+			BloomingDeath: Йо-йо и его нить отравляют врагов
+			Indefinite: ...
+			OutburstingGust: ...
+			ResidualLight:
+				'''
+				Ночью длина нити увеличена на 20%
+				|?|Изменяет эффект у «Перчатка для йо-йо»:
+				• Вспышка также наносит урон
+				'''
+			SoulFilledFlame: ...
+			Stable: ...
+			TheStellarThrow: ...
+			WakeOfEarth: Убийство противника вызывает слабое землетрясение
+
+			// Префиксы
+			PrefixYoyoLifeTime: % время полета
+			PrefixYoyoMaxRange: % максимальная дальность
+		}
+
+		BuffName: {
+			ImprovedPoisoning: Улучшенное отравление
+			SquareBeeBuff: Квадратная пчела
+		}
+
+		BuffDescription: {
+			SquareBeeBuff: Она из этого мира?
+		}
+
+		GameUI: {
+			FlamingFlowerMapIcon: Странный цветок
+		}
+
+		Config: {
+			Misc: Разное
+			YoyoCustomUseStyle: Пользовательский стиль использования йо-йо
+		}
+
+		WorldGen: {
+			SpaceChest: S-Pladison's Yoyo Mod: Космический сундук
+			SpaceChest_0: Добавление кусочка космоса в подземелье...
+		}
+
+		Bestiary_ItemDropConditions: {
+			SpaceKeyCondition: Выпадает в сложном режиме в космосе
+		}
+	}
+}

@@ -3,7 +3,7 @@ using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public partial class ModHooks
+    public partial class HooksLoader
     {
         private static void On_Terraria_Main_DrawProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main main)
         {

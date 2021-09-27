@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Content.Trails;
 using Terraria;
@@ -33,9 +34,30 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class ResidualLightProjectile : YoyoProjectile
     {
+        public static Asset<Effect> ResidualLightEffect { get; private set; }
+
+        // ...
+
         public ResidualLightProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 12f) { }
 
         public override bool IsSoloYoyo() => true;
+
+        public override void Load()
+        {
+            if (Main.dedServ) return;
+
+            ResidualLightEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/ResidualLight");
+        }
+
+        public override void Unload()
+        {
+            ResidualLightEffect = null;
+        }
+
+        public override void YoyoSetStaticDefaults()
+        {
+            ResidualLightEffect?.Value.Parameters["texture1"].SetValue(SPladisonsYoyoMod.GetExtraTextures[20].Value);
+        }
 
         public override void OnSpawn()
         {
@@ -45,7 +67,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 length: 16 * 10,
                 width: (p) => 20,
                 color: (p) => Color.White * (1 - p),
-                effect: ModAssets.ResidualLightEffect,
+                effect: ResidualLightEffect,
                 blendState: BlendState.Additive,
                 tipLength: 3
             );
@@ -75,7 +97,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
             {
-                var texture = ModAssets.ExtraTextures[4];
+                var texture = SPladisonsYoyoMod.GetExtraTextures[4];
                 Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, Color.White, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.3f, SpriteEffects.None, 0);
             }
             SetSpriteBatch();
@@ -122,10 +144,10 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             var position = GetDrawPosition();
             SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
             {
-                var texture = ModAssets.ExtraTextures[21];
+                var texture = SPladisonsYoyoMod.GetExtraTextures[21];
                 Main.spriteBatch.Draw(texture.Value, position, null, _color, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
 
-                texture = ModAssets.ExtraTextures[3];
+                texture = SPladisonsYoyoMod.GetExtraTextures[3];
                 Main.spriteBatch.Draw(texture.Value, position, null, _color, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
             }
             SetSpriteBatch();
