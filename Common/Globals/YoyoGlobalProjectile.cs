@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using SPladisonsYoyoMod.Content.Items;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Globals
@@ -11,15 +14,27 @@ namespace SPladisonsYoyoMod.Common.Globals
 
         // ...
 
-        public static void ModifyYoyoStats(Projectile projectile, ref float lifeTime, ref float maxRange, ref float topSpeed, bool infinite)
+        public static void ModifyYoyoLifeTime(Projectile projectile, ref float lifeTime)
         {
+            if (ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] == -1f) return;
+
             var player = Main.player[projectile.owner];
             var modPlayer = player.GetPladPlayer();
+            var lifeTimeMult = 1f;
 
-            if (!infinite)
-            {
-                if (modPlayer.bearingEquipped) lifeTime += 0.12f;
-            }
+            if (projectile.ModProjectile is YoyoProjectile yoyo) yoyo.ModifyYoyoLifeTime(ref lifeTimeMult);
+            if (modPlayer.bearingEquipped) lifeTimeMult += 0.12f;
+
+            lifeTime *= Math.Max(lifeTimeMult, 0.1f);
+        }
+
+        public static void ModifyYoyoMaximumRange(Projectile projectile, ref float maxRange)
+        {
+            var maxRangeMult = 1f;
+
+            if (projectile.ModProjectile is YoyoProjectile yoyo) yoyo.ModifyYoyoMaximumRange(ref maxRangeMult);
+
+            maxRange *= Math.Max(maxRangeMult, 0.1f);
         }
 
         public static readonly int YoyoAIStyle = 99;

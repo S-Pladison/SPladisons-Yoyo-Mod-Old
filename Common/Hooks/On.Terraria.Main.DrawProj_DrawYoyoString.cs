@@ -6,7 +6,7 @@ using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public partial class HooksLoader
+    public partial class HookLoader
     {
         private static void On_Terraria_Main_DrawProj_DrawYoyoString(OrigDrawYoyoString orig, Main main, Projectile projectile, Vector2 mountedCenter)
         {
@@ -23,6 +23,8 @@ namespace SPladisonsYoyoMod.Common.Hooks
 
             orig(main, projectile, mountedCenter);
         }
+
+        // ...
 
         private static readonly MethodInfo DrawYoyoStringInfo = typeof(Main).GetMethod("DrawProj_DrawYoyoString", BindingFlags.Instance | BindingFlags.NonPublic);
 

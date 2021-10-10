@@ -6,7 +6,7 @@ using static Mono.Cecil.Cil.OpCodes;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
-    public partial class HooksLoader
+    public partial class HookLoader
     {
         private static void IL_Terraria_Player_Counterweight(ILContext il)
         {

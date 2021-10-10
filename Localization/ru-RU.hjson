@@ -19,9 +19,11 @@ Mods: {
 			BloomingDeath: Цветущая смерть
 			Indefinite: Неопределенный
 			OutburstingGust: Шквальный ветер
+			PrototypeF34: Прототип F-34
 			ResidualLight: Остаточный свет
 			SoulFilledFlame: Наполненное душой пламя
 			Stable: Стабильный
+			TheFinestHour: Звездный час
 			TheStellarThrow: Звездный бросок
 			WakeOfEarth: Пробуждение земли
 		}
@@ -62,14 +64,21 @@ Mods: {
 			BloomingDeath: Йо-йо и его нить отравляют врагов
 			Indefinite: ...
 			OutburstingGust: ...
+			PrototypeF34: ...
 			ResidualLight:
 				'''
 				Ночью длина нити увеличена на 20%
 				|?|Изменяет эффект у «Перчатка для йо-йо»:
-				• Вспышка также наносит урон
+				• При попадании вызывает вспышки света
 				'''
 			SoulFilledFlame: ...
 			Stable: ...
+			TheFinestHour:
+				'''
+				Когда-нибудь я сделаю его
+				|?|Изменяет эффект у «Перчатка для йо-йо»:
+				• Когда-нибудь... Ну, вы поняли...
+				'''
 			TheStellarThrow: ...
 			WakeOfEarth: Убийство противника вызывает слабое землетрясение
 

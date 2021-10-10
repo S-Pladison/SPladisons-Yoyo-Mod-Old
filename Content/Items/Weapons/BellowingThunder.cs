@@ -6,6 +6,7 @@ using SPladisonsYoyoMod.Content.Trails;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,7 +14,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 {
     public class BellowingThunder : YoyoItem
     {
-        public BellowingThunder() : base(gamepadExtraRange: 15) { }
+        public BellowingThunder() : base(gamepadExtraRange: 10) { }
 
         public override void YoyoSetDefaults()
         {
@@ -21,6 +22,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Item.knockBack = 2.5f;
 
             Item.shoot = ModContent.ProjectileType<BellowingThunderProjectile>();
+            Item.autoReuse = true;
 
             Item.rare = ItemRarityID.Orange;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
@@ -38,13 +40,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class BellowingThunderProjectile : YoyoProjectile
     {
-        public BellowingThunderProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
+        public BellowingThunderProjectile() : base(lifeTime: 10f, maxRange: 220f, topSpeed: 13f) { }
 
         public int Counter
         {
             get => (int)Projectile.localAI[1];
             set => Projectile.localAI[1] = value;
         }
+
+        public override string GlowTexture => this.Texture + "_Glowmask";
 
         public override void YoyoSetStaticDefaults()
         {
@@ -60,7 +64,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 length: 16 * 10,
                 width: (p) => 6 * (1 - p),
                 color: (p) => _effectColor * (1 - p) * 0.8f,
-                blendState: BlendState.Additive,
+                additive: true,
                 smoothness: 20
             );
             trail.SetMaxPoints(15);
@@ -90,44 +94,29 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BellowingThunderLightningProjectile>(), Projectile.damage * 2, Projectile.knockBack * 3f, Projectile.owner);
         }
 
-        public override bool PreDrawExtras()
+        public override void DrawAdditive()
         {
-            SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
+            var texture = SPladisonsYoyoMod.GetExtraTextures[21];
+            var drawPosition = GetDrawPosition();
+
+            for (int k = 1; k < Projectile.oldPos.Length; k++)
             {
-                var texture = SPladisonsYoyoMod.GetExtraTextures[21];
-                for (int k = 1; k < Projectile.oldPos.Length; k++)
-                {
-                    var position = GetDrawPosition(Projectile.oldPos[k] + Projectile.Size * 0.5f);
-                    float num = (Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length;
-                    Color color = _effectColor * num * 0.88f;
+                var position = GetDrawPosition(Projectile.oldPos[k] + Projectile.Size * 0.5f);
+                var num = (Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length;
+                var color = _effectColor * num * 0.88f;
 
-                    Main.EntitySpriteDraw(texture.Value, position, null, color, Projectile.oldRot[k], texture.Size() * .5f, Projectile.scale * num * 0.15f, SpriteEffects.None, 0);
-                }
-                Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(texture.Value, position, null, color, Projectile.oldRot[k], texture.Size() * .5f, Projectile.scale * num * 0.15f, SpriteEffects.None, 0);
             }
-            SetSpriteBatch();
 
-            return true;
-        }
+            Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
 
-        public override void PostDraw(Color lightColor)
-        {
-            Vector2 drawPosition = GetDrawPosition();
+            _effect.Draw(drawPosition, 0.45f * Projectile.scale);
 
-            SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
-            {
-                _effect.Draw(drawPosition, 0.45f * Projectile.scale);
+            texture = SPladisonsYoyoMod.GetExtraTextures[23];
+            Main.EntitySpriteDraw(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, Projectile.scale * 0.1f, SpriteEffects.None, 0);
 
-                var texture = SPladisonsYoyoMod.GetExtraTextures[23];
-                Main.EntitySpriteDraw(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, Projectile.scale * 0.1f, SpriteEffects.None, 0);
-
-                texture = SPladisonsYoyoMod.GetExtraTextures[21];
-                Main.EntitySpriteDraw(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.2f, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
-            }
-            SetSpriteBatch();
-
-            var glowTexture = ModContent.Request<Texture2D>(this.Texture + "_Glowmask");
-            Main.EntitySpriteDraw(glowTexture.Value, drawPosition, null, Color.White, Projectile.rotation, glowTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
+            texture = SPladisonsYoyoMod.GetExtraTextures[21];
+            Main.EntitySpriteDraw(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.2f, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
         }
 
         private readonly LightningEffect _effect = new();
@@ -150,7 +139,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 if (!_active) return;
 
                 var texture = SPladisonsYoyoMod.GetExtraTextures[22];
-                Rectangle rectangle = new(_time * 96, _frame * 96, 96, 96);
+                var rectangle = new Rectangle(_time * 96, _frame * 96, 96, 96);
+
                 Main.EntitySpriteDraw(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, 0);
             }
 
@@ -184,21 +174,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         // ...
 
-        public override void Load()
-        {
-            if (Main.dedServ) return;
-
-            BellowingThunderEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/BellowingThunder");
-        }
-
-        public override void Unload()
-        {
-            BellowingThunderEffect = null;
-        }
+        public override void Unload() => BellowingThunderEffect = null;
 
         public override void SetStaticDefaults()
         {
-            BellowingThunderEffect?.Value.Parameters["texture1"].SetValue(SPladisonsYoyoMod.GetExtraTextures[24].Value);
+            if (Main.dedServ) return;
+
+            BellowingThunderEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/BellowingThunder", AssetRequestMode.ImmediateLoad);
+            BellowingThunderEffect.Value.Parameters["texture1"].SetValue(SPladisonsYoyoMod.GetExtraTextures[24].Value);
         }
 
         public override void SetDefaults()
@@ -208,8 +191,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 25;
 
-            Projectile.width = 70;
-            Projectile.height = 70;
+            Projectile.width = 80;
+            Projectile.height = 80;
+            Projectile.DamageType = DamageClass.Melee;
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -2;
@@ -234,6 +218,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 7f, range: 16 * 50, time: 50);
             // SoundEngine.PlaySound(Mod.GetLegacySoundSlot(Terraria.ModLoader.SoundType.Custom, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);
+        }
+
+        public override void ModifyDamageHitbox(ref Rectangle hitbox)
+        {
+            var value = (int)(TextureAssets.Projectile[Type].Height() * Projectile.scale * 9);
+            hitbox.Y -= value;
+            hitbox.Height += value;
         }
 
         public override bool? CanHitNPC(NPC target) => LightningProgress >= 0.5f;
@@ -272,7 +263,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             SetSpriteBatch(sortMode: SpriteSortMode.Deferred, blendState: BlendState.Additive);
             {
                 Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[25].Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, 0);
-                Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[26].Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, SPladisonsYoyoMod.GetExtraTextures[26].Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, 0);
+
+                texture = SPladisonsYoyoMod.GetExtraTextures[26];
+                Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, texture.Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, 0);
+
+                texture = SPladisonsYoyoMod.GetExtraTextures[23];
+                Main.EntitySpriteDraw(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None, 0);
             }
             SetSpriteBatch();
 

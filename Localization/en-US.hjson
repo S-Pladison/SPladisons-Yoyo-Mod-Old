@@ -19,9 +19,11 @@ Mods: {
 			BloomingDeath: Blooming Death
 			Indefinite: Indefinite
 			OutburstingGust: Outbursting Gust
+			PrototypeF34: Prototype F-34
 			ResidualLight: Residual Light
 			SoulFilledFlame: Soul-Filled Flame
 			Stable: Stable
+			TheFinestHour: The Finest Hour
 			TheStellarThrow: The Stellar Throw
 			WakeOfEarth: Wake of Earth
 		}
@@ -62,14 +64,16 @@ Mods: {
 			BloomingDeath: Yoyo and its string poison enemies
 			Indefinite: ...
 			OutburstingGust: ...
+			PrototypeF34: ...
 			ResidualLight:
 				'''
 				At night, the string length is increased by 20%
 				|?|Changes the effect of «Yoyo Glove»:
-				• The flash also deals damage
+				• On hit, triggers bursts of light
 				'''
 			SoulFilledFlame: ...
 			Stable: ...
+			TheFinestHour: ...
 			TheStellarThrow: ...
 			WakeOfEarth: ...
 
@@ -88,10 +92,13 @@ Mods: {
 			BlackholeProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Blackhole}"
 			BloomingDeathProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BloomingDeath}"
 			IndefiniteProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Indefinite}"
+			OutburstingGustProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.OutburstingGust}"
+			PrototypeF34Projectile: "{$Mods.SPladisonsYoyoMod.ItemName.PrototypeF34}"
 			ResidualLightProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.ResidualLight}"
 			ResidualLightHitProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.ResidualLight}"
 			SoulFilledFlameProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.SoulFilledFlame}"
 			StableProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Stable}"
+			TheFinestHourProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.TheFinestHour}"
 			TheStellarThrowProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.TheStellarThrow}"
 			WakeOfEarthProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.WakeOfEarth}"
 		}

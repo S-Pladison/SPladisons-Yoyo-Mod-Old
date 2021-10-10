@@ -11,7 +11,7 @@ namespace SPladisonsYoyoMod.Content.Trails
         protected readonly WidthDelegate _width;
         protected readonly ColorDelegate _color;
 
-        public SimpleTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, BlendState blendState = null) : base(target, length, effect, blendState)
+        public SimpleTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, bool additive = false) : base(target, length, effect, additive)
         {
             _width = width;
             _color = color;

@@ -9,7 +9,7 @@ namespace SPladisonsYoyoMod.Content.Trails
     {
         protected uint _smoothness;
 
-        public RoundedTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, BlendState blendState = null, uint smoothness = 10) : base(target, length, width, color, effect, blendState)
+        public RoundedTrail(Entity target, int length, WidthDelegate width, ColorDelegate color, Asset<Effect> effect = null, bool additive = false, uint smoothness = 10) : base(target, length, width, color, effect, additive)
         {
             _smoothness = smoothness;
         }

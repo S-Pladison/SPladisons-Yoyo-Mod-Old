@@ -11,7 +11,9 @@ namespace SPladisonsYoyoMod.Common
 {
     public class PrimitiveTrailSystem : ModSystem
     {
-        private static readonly List<Trail> _trails = new List<Trail>();
+        public static readonly List<Trail> AdditiveBlendTrails = new List<Trail>();
+        public static readonly List<Trail> AlphaBlendTrails = new List<Trail>();
+
         public static Asset<Effect> BasicPrimitiveEffect { get; private set; }
 
         // ...
@@ -30,7 +32,8 @@ namespace SPladisonsYoyoMod.Common
 
         public override void PostUpdateEverything()
         {
-            foreach (var trail in _trails.ToList()) trail.Update();
+            foreach (var trail in AdditiveBlendTrails.ToArray()) trail.Update();
+            foreach (var trail in AlphaBlendTrails.ToArray()) trail.Update();
         }
 
         // ...
@@ -39,27 +42,15 @@ namespace SPladisonsYoyoMod.Common
         {
             if (Main.dedServ) return;
 
-            _trails.Add(trail);
-        }
-
-        public static void DrawTrails(SpriteBatch spriteBatch)
-        {
-            var matrix = GetTransformMatrix();
-
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.Additive)) trail.Draw(spriteBatch, matrix);
-            spriteBatch.End();
-
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (var trail in _trails.FindAll(i => i.Active && i.BlendState == BlendState.AlphaBlend)) trail.Draw(spriteBatch, matrix);
-            spriteBatch.End();
+            if (trail.Additive) AdditiveBlendTrails.Add(trail);
+            else AlphaBlendTrails.Add(trail);
         }
 
         public static Matrix GetTransformMatrix()
         {
-            Matrix view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) * Main.GameViewMatrix.EffectMatrix * Matrix.CreateTranslation(Main.screenWidth / 2, -Main.screenHeight / 2, 0) * Matrix.CreateRotationZ(MathHelper.Pi);
-            Matrix projection = Matrix.CreateOrthographic(Main.screenWidth, Main.screenHeight, 0, 1000);
-            return view * Matrix.CreateScale(Main.GameViewMatrix.Zoom.X, Main.GameViewMatrix.Zoom.Y, 1) * projection;
+            Matrix m1 = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) * Main.GameViewMatrix.EffectMatrix * Matrix.CreateTranslation(Main.screenWidth / 2, -Main.screenHeight / 2, 0) * Matrix.CreateRotationZ(MathHelper.Pi);
+            Matrix m3 = Matrix.CreateOrthographic(Main.screenWidth, Main.screenHeight, 0, 1000);
+            return m1 * Matrix.CreateScale(Main.GameViewMatrix.Zoom.X, Main.GameViewMatrix.Zoom.Y, 1) * m3;
         }
 
         // ...
@@ -67,8 +58,8 @@ namespace SPladisonsYoyoMod.Common
         public abstract class Trail
         {
             public bool Active { get; set; } = true;
+            public bool Additive { get; protected set; }
             public float Length { get; protected set; }
-            public BlendState BlendState { get; }
 
             protected readonly int _maxLength;
             protected readonly List<Vector2> _points = new();
@@ -84,7 +75,7 @@ namespace SPladisonsYoyoMod.Common
 
             private readonly Asset<Effect> _effect;
 
-            public Trail(Entity target, int length, Asset<Effect> effect = null, BlendState blendState = null)
+            public Trail(Entity target, int length, Asset<Effect> effect = null, bool additive = false)
             {
                 _target = target;
                 _maxLength = length;
@@ -92,7 +83,7 @@ namespace SPladisonsYoyoMod.Common
                 _effect = effect ?? BasicPrimitiveEffect;
                 _effect.Value.Parameters["texture0"].SetValue(SPladisonsYoyoMod.GetExtraTextures[6].Value);
 
-                BlendState = blendState ?? BlendState.AlphaBlend;
+                this.Additive = additive;
             }
 
             public void Update()
@@ -138,7 +129,8 @@ namespace SPladisonsYoyoMod.Common
             {
                 if (PreKill()) Active = false;
 
-                _trails.Remove(this);
+                if (Additive) AdditiveBlendTrails.Remove(this);
+                else AlphaBlendTrails.Remove(this);
             }
 
             public void StartDissolving() => _dissolving = true;

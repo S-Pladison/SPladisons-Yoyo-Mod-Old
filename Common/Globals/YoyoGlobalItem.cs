@@ -43,7 +43,13 @@ namespace SPladisonsYoyoMod.Common.Globals
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
-            int index = tooltips.FindLastIndex(i => i.Name == "OneDropLogo" || i.Name.StartsWith("Tooltip")) + 1;
+            var oneDropLogoTooltip = tooltips.Find(i => i.Name == "OneDropLogo");
+            if (oneDropLogoTooltip != null)
+            {
+                tooltips.Remove(oneDropLogoTooltip);
+            }
+
+            int index = tooltips.FindLastIndex(i => i.Name.StartsWith("Tooltip")) + 1;
             if (index > 0)
             {
                 if (lifeTimeMult != 1)
@@ -72,7 +78,7 @@ namespace SPladisonsYoyoMod.Common.Globals
                 }
             }
 
-            foreach (var line in tooltips.FindAll(i => i.text.StartsWith("|?|") && (i.mod == "Terraria" || i.mod == nameof(SPladisonsYoyoMod))))
+            foreach (var line in tooltips.FindAll(i => i.text.Contains("|?|") && (i.mod == "Terraria" || i.mod == nameof(SPladisonsYoyoMod))))
             {
                 line.text = line.text.Replace("|?|", "");
                 line.overrideColor = ItemRarity.GetColor(item.rare);
