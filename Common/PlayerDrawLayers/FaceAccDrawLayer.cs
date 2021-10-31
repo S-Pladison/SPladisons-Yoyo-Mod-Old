@@ -23,7 +23,7 @@ namespace SPladisonsYoyoMod.Common.PlayerDrawLayers
             var player = drawInfo.drawPlayer;
             var modPlayer = player.GetPladPlayer();
 
-            if (modPlayer.eternalConfusionVisible)
+            if (!player.dead && modPlayer.eternalConfusionVisible)
             {
                 Vector2 position = new Vector2((int)(drawInfo.Position.X - Main.screenPosition.X - player.bodyFrame.Width / 2 + player.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + player.height - player.bodyFrame.Height + 4f));
                 position += player.headPosition + drawInfo.headVect + Main.OffsetsPlayerHeadgear[player.bodyFrame.Y / player.bodyFrame.Height] * player.gravDir;

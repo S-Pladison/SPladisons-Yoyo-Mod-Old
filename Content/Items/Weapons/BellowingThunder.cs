@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Content.Trails;
 using Terraria;
 using Terraria.Audio;
@@ -38,7 +39,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class BellowingThunderProjectile : YoyoProjectile
+    public class BellowingThunderProjectile : YoyoProjectile, IDrawAdditive
     {
         public BellowingThunderProjectile() : base(lifeTime: 10f, maxRange: 220f, topSpeed: 13f) { }
 
@@ -87,6 +88,22 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             _effect.Update(Counter);
         }
 
+        public override bool PreDrawExtras()
+        {
+            var texture = SPladisonsYoyoMod.GetExtraTextures[5];
+
+            for (int k = 1; k < Projectile.oldPos.Length; k++)
+            {
+                var position = GetDrawPosition(Projectile.oldPos[k] + Projectile.Size * 0.5f);
+                var num = (Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length;
+                var color = _effectColor * num * 0.3f;
+
+                Main.EntitySpriteDraw(texture.Value, position, null, color, Projectile.oldRot[k], texture.Size() * .5f, Projectile.scale * num * 0.65f, SpriteEffects.None, 0);
+            }
+
+            return true;
+        }
+
         public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
         {
             if (!Main.rand.NextBool(2 + (Main.raining ? 0 : 2))) return;
@@ -94,22 +111,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BellowingThunderLightningProjectile>(), Projectile.damage * 2, Projectile.knockBack * 3f, Projectile.owner);
         }
 
-        public override void DrawAdditive()
+        void IDrawAdditive.DrawAdditive()
         {
             var texture = SPladisonsYoyoMod.GetExtraTextures[21];
             var drawPosition = GetDrawPosition();
 
-            for (int k = 1; k < Projectile.oldPos.Length; k++)
-            {
-                var position = GetDrawPosition(Projectile.oldPos[k] + Projectile.Size * 0.5f);
-                var num = (Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length;
-                var color = _effectColor * num * 0.88f;
-
-                Main.EntitySpriteDraw(texture.Value, position, null, color, Projectile.oldRot[k], texture.Size() * .5f, Projectile.scale * num * 0.15f, SpriteEffects.None, 0);
-            }
-
             Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
-
             _effect.Draw(drawPosition, 0.45f * Projectile.scale);
 
             texture = SPladisonsYoyoMod.GetExtraTextures[23];
@@ -164,7 +171,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     public class BellowingThunderLightningProjectile : PladProjectile
     {
         // TODO: Доделать звук удара молнии...
-        // public static readonly SoundStyle Sound = new ModSoundStyle($"{nameof(SPladisonsYoyoMod)}/Assets/Sounds/", 3, volume: 0.65f, pitchVariance: 0.2f);
 
         public static Asset<Effect> BellowingThunderEffect { get; private set; }
 
@@ -217,7 +223,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (Projectile.timeLeft != 7) return;
 
             ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 7f, range: 16 * 50, time: 50);
-            // SoundEngine.PlaySound(Mod.GetLegacySoundSlot(Terraria.ModLoader.SoundType.Custom, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);
+            // SoundEngine.PlaySound(SoundLoader.GetSoundSlot(Mod, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);
         }
 
         public override void ModifyDamageHitbox(ref Rectangle hitbox)

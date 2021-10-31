@@ -14,7 +14,6 @@ using Terraria.ObjectData;
 
 namespace SPladisonsYoyoMod.Content.Items.Placeables
 {
-    // TODO (RUS): Если у игрока есть в инвентаре ключ и он пытается открыть открытый сундук, то он используется. Нужно исправить это
     public class SpaceChest : PladItem
     {
         public override void SetDefaults()

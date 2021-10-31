@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Content.Trails;
 using System;
 using System.Collections.Generic;
@@ -128,7 +129,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             if (!this.YoyoGloveActivated) return;
 
-            List<int> list = new List<int>();
+            List<int> list = new();
             for (int i = 0; i < Main.npc.Length; i++)
             {
                 NPC npc = Main.npc[i];
@@ -138,7 +139,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 if (i == target.whoAmI) continue;
 
                 float distance = Vector2.Distance(Projectile.Center, npc.Center);
-                if (distance > _radius || distance < 16 * 3) continue;
+                if (distance > _radius || distance < 16 * 2) continue;
 
                 list.Add(i);
             }
@@ -157,7 +158,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override Color? GetAlpha(Color lightColor) => Color.White;
     }
 
-    public class ResidualLightHitProjectile : PladProjectile
+    public class ResidualLightHitProjectile : PladProjectile, IDrawAdditive
     {
         private readonly Color[] _colors = new Color[] { new Color(252, 222, 252), new Color(202, 243, 248), new Color(155, 255, 225) };
         private Color _color;
@@ -204,7 +205,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Lighting.AddLight(Projectile.Center, Color.White.ToVector3() * 0.3f * Projectile.scale);
         }
 
-        public override void DrawAdditive()
+        public override bool PreDraw(ref Color lightColor) => false;
+
+        void IDrawAdditive.DrawAdditive()
         {
             var position = GetDrawPosition();
             var texture = SPladisonsYoyoMod.GetExtraTextures[21];
@@ -216,7 +219,5 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             texture = SPladisonsYoyoMod.GetExtraTextures[3];
             Main.spriteBatch.Draw(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.3f, SpriteEffects.None, 0);
         }
-
-        public override bool PreDraw(ref Color lightColor) => false;
     }
 }

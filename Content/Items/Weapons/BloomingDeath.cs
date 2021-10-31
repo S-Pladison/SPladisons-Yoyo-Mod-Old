@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common.Interfaces;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,7 +11,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 {
     public class BloomingDeath : YoyoItem
     {
-        public BloomingDeath() : base(gamepadExtraRange: 15) { }
+        public BloomingDeath() : base(gamepadExtraRange: 6) { }
 
         public override void YoyoSetDefaults()
         {
@@ -24,15 +25,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class BloomingDeathProjectile : YoyoProjectile, IDrawCustomString
+    public class BloomingDeathProjectile : YoyoProjectile
     {
-        private int _key;
-
-        public BloomingDeathProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
+        public BloomingDeathProjectile() : base(lifeTime: 7f, maxRange: 170f, topSpeed: 11f) { }
 
         public override void OnSpawn()
         {
-            _key = Main.rand.Next(1337);
+            Projectile.localAI[1] = Main.rand.Next(1337);
         }
 
         public override void AI()
@@ -41,41 +40,59 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             foreach (var target in Main.npc)
             {
                 if (target == null || !target.active) continue;
-                if (target.friendly || target.lifeMax <= 5 || target.dontTakeDamage || target.immortal) continue;
+                if (target.type != NPCID.TargetDummy && (target.friendly || target.lifeMax <= 5 || target.dontTakeDamage || target.immortal)) continue;
 
                 if (Collision.CheckAABBvLineCollision(target.Hitbox.TopLeft(), target.Hitbox.Size(), Projectile.Center, Main.player[Projectile.owner].MountedCenter, 8, ref _))
                 {
                     target.AddBuff(ModContent.BuffType<Buffs.ImprovedPoisoningDebuff>(), 60 * 7);
                 }
             }
+
+            Projectile.rotation -= 0.25f;
+
+            if (Projectile.velocity.Length() >= 1f && Main.rand.Next((int)(Projectile.velocity.Length())) > 1 && Main.rand.NextBool(3))
+            {
+                var dust = Dust.NewDustPerfect(Projectile.Center, 115, Vector2.Normalize(-Projectile.velocity).RotatedBy(Main.rand.NextFloat(-0.5f, 0.5f)) * Main.rand.NextFloat(1f, 3f), 140, default, Main.rand.NextFloat(0.4f, 0.8f));
+                dust.noLight = true;
+            }
         }
 
         public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
         {
             target.AddBuff(ModContent.BuffType<Buffs.ImprovedPoisoningDebuff>(), 60 * 5);
+
+            for (int i = 0; i < 7; i++)
+            {
+                var dust = Dust.NewDustPerfect(Projectile.Center, 115, Vector2.Normalize(-Projectile.velocity).RotatedBy(Main.rand.NextFloat(-0.5f, 0.5f)) * Main.rand.NextFloat(1f, 3f), 140, default, Main.rand.NextFloat(0.4f, 0.8f));
+                dust.noLight = true;
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 drawPosition = GetDrawPosition();
-            var texture = SPladisonsYoyoMod.GetExtraTextures[12];
-            var color = Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), Color.White);
+            this.DrawCustomString(Main.player[Projectile.owner].MountedCenter);
 
-            for (int i = 0; i < 5; i++) Main.EntitySpriteDraw(texture.Value, drawPosition, null, color * 0.22f, Projectile.rotation * 0.05f + MathHelper.Pi + (MathHelper.TwoPi / 5 * i), new Vector2(9, 20), 1.22f, SpriteEffects.None, 0);
-            for (int i = 0; i < 5; i++) Main.EntitySpriteDraw(texture.Value, drawPosition, null, color * 0.88f, Projectile.rotation * 0.05f + (MathHelper.TwoPi / 5 * i), new Vector2(9, 20), 1f, SpriteEffects.None, 0);
+            var drawPosition = GetDrawPosition();
+            var texture = SPladisonsYoyoMod.GetExtraTextures[12];
+            var color = Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), new Color(230, 230, 230, 230));
+
+            for (int i = 0; i < 5; i++)
+            {
+                Main.EntitySpriteDraw(texture.Value, drawPosition, null, color * 0.15f, Projectile.rotation * 0.05f + (MathHelper.TwoPi / 5 * i), new Vector2(texture.Width() * 0.5f, texture.Height()), 1f, SpriteEffects.None, 0);
+            }
 
             return true;
         }
 
-        public void DrawCustomString(Vector2 startPosition)
+        private void DrawCustomString(Vector2 startPosition)
         {
-            Vector2 offset = Vector2.Zero; // ...
-            Vector2 vector = startPosition;
+            var offset = Vector2.Zero; // ...
+            var vector = startPosition;
             vector.Y += Main.player[Projectile.owner].gfxOffY;
 
-            Player player = Main.player[Projectile.owner];
-            float num2 = Projectile.Center.X - vector.X;
-            float num3 = Projectile.Center.Y - vector.Y;
+            var player = Main.player[Projectile.owner];
+            var num2 = Projectile.Center.X - vector.X;
+            var num3 = Projectile.Center.Y - vector.Y;
 
             // Hand rotation
             {
@@ -85,7 +102,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 player.itemRotation = (float)Math.Atan2(num3 * (float)num5, num2 * (float)num5);
             }
 
-            bool flag = true;
+            var flag = true;
             if (num2 == 0f && num3 == 0f) flag = false;
             else
             {
@@ -99,10 +116,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 num3 = Projectile.position.Y + Projectile.height * 0.5f - vector.Y;
             }
 
-            int counter = _key;
+            var counter = (int)Projectile.localAI[1];
             while (flag)
             {
-                float num7 = 12f;
                 float num8 = (float)Math.Sqrt(num2 * num2 + num3 * num3);
                 float num9 = num8;
 
@@ -114,7 +130,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
                 if (num8 < 20f)
                 {
-                    num7 = num8 - 8f;
                     flag = false;
                 }
 
@@ -128,8 +143,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
                 if (num9 > 12f)
                 {
-                    float num10 = 0.3f;
-                    float num11 = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y);
+                    var num10 = 0.3f;
+                    var num11 = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y);
                     if (num11 > 16f) num11 = 16f;
 
                     num11 = 1f - num11 / 16f;
@@ -162,50 +177,32 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     }
                 }
 
-                int frame = Math.Min(counter - _key, 2);
                 counter++;
-
-                float num4 = (float)Math.Atan2(num3, num2) - 1.57f;
-                var texture = SPladisonsYoyoMod.GetExtraTextures[9];
-                Vector2 position = vector - Main.screenPosition + new Vector2(6, 6) - new Vector2(6f, 0f);
-                Rectangle sourceRectangle = new Rectangle(0, 12 * frame, texture.Width(), (int)num7);
-
-                // Set string color
-                Color color = Color.White;
-                {
-                    if (frame == 0) color = TryApplyingPlayerStringColor(player.stringColor);
-
-                    color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f), color);
-                    if (frame == 0)
-                    {
-                        color.A = (byte)(color.A * 0.4f);
-                        color *= 0.5f;
-                    }
-                }
-
-                Main.EntitySpriteDraw(color: color, texture: texture.Value, position: position, sourceRectangle: sourceRectangle, rotation: num4, origin: new Vector2(6, 0f), scale: 1f, effects: SpriteEffects.None, worthless: 0);
+                var num4 = (float)Math.Atan2(num3, num2) - 1.57f;
+                var position = vector - Main.screenPosition + new Vector2(6, 6) - new Vector2(6f, 0f);
+                var color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f), Color.White);
+                var colorProgress = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2f + counter * 0.3f);
+                var texture = SPladisonsYoyoMod.GetExtraTextures[10];
 
                 // Leafs
                 {
                     num4 += (float)Math.Sin(Main.GlobalTimeWrappedHourly) * 0.25f;
                     position += new Vector2(-7, 0).RotatedBy(num4);
-                    texture = SPladisonsYoyoMod.GetExtraTextures[10];
 
-                    if (frame != 2 || !flag) continue;
+                    var flip = counter % 2 == 0 ? 1 : -1;
+                    var rectangle = new Rectangle(0, texture.Height() / 3 * (int)(counter % 3), texture.Width(), texture.Height() / 3);
 
-                    int flip = counter % 2 == 0 ? 1 : -1;
                     if (counter % 3 == 0 || counter % 4 == 0)
                     {
                         SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.75f, texture: texture.Value, position: position, sourceRectangle: new Rectangle(0, texture.Height() / 3 * (int)(counter % 3), texture.Width(), texture.Height() / 3), rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, worthless: 0);
+                        Main.EntitySpriteDraw(color: color * 0.4f * colorProgress, texture: texture.Value, position: position, sourceRectangle: rectangle, rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, worthless: 0);
                     }
 
                     flip = -flip;
                     if (counter % 5 == 0 || counter % 7 == 0)
                     {
-                        color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f), Color.Gray);
                         SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.3f, texture: texture.Value, position: position, sourceRectangle: new Rectangle(0, texture.Height() / 3 * (int)(counter % 3), texture.Width(), texture.Height() / 3), rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, worthless: 0);
+                        Main.EntitySpriteDraw(color: color * 0.15f * colorProgress, texture: texture.Value, position: position, sourceRectangle: rectangle, rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, worthless: 0);
                     }
                 }
             }

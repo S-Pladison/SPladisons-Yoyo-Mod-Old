@@ -80,6 +80,9 @@ Mods: {
 			// Prefixes
 			PrefixYoyoLifeTime: % duration
 			PrefixYoyoMaxRange: % maximum range
+
+			// ...
+			EternalConfusionDye: Stars cannot emit light if a dye is equipped
 		}
 
 		ProjectileName: {

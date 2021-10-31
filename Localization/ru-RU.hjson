@@ -85,6 +85,9 @@ Mods: {
 			// Префиксы
 			PrefixYoyoLifeTime: % время полета
 			PrefixYoyoMaxRange: % максимальная дальность
+
+			// ...
+			EternalConfusionDye: Звезды не могут излучать свет, если оборудован краситель
 		}
 
 		BuffName: {

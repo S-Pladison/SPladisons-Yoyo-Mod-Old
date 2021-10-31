@@ -1,5 +1,6 @@
 ﻿using SPladisonsYoyoMod.Content;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -29,8 +30,6 @@ namespace SPladisonsYoyoMod.Common
             flamingFlowerEquipped = false;
 
             eternalConfusionVisible = false;
-
-            this.UpdateDyes();
         }
 
         public override void PostUpdate()
@@ -53,7 +52,7 @@ namespace SPladisonsYoyoMod.Common
             }
         }
 
-        private void UpdateDyes()
+        public override void UpdateDyes()
         {
             eternalConfusionDye = 0;
 

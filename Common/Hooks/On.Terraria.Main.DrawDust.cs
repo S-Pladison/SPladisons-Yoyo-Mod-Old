@@ -1,0 +1,36 @@
+﻿using SPladisonsYoyoMod.Common.Misc;
+using SPladisonsYoyoMod.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using System.Linq;
+using System;
+using System.Collections.Generic;
+using SPladisonsYoyoMod.Common.Interfaces;
+
+namespace SPladisonsYoyoMod.Common.Hooks
+{
+    public partial class HookLoader
+    {
+        private static void On_Terraria_Main_DrawDust(On.Terraria.Main.orig_DrawDust orig, Main main)
+        {
+            orig(main);
+
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            {
+                foreach (var proj in Main.projectile.ToList().FindAll(i => i.active && i.ModProjectile is IDrawAdditive))
+                {
+                    try
+                    {
+                        (proj.ModProjectile as IDrawAdditive).DrawAdditive();
+                    }
+                    catch (Exception e)
+                    {
+                        TimeLogger.DrawException(e);
+                        proj.active = false;
+                    }
+                }
+            }
+            Main.spriteBatch.End();
+        }
+    }
+}

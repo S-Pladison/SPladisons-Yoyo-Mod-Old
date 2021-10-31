@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Content.Trails;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
@@ -17,6 +20,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             Item.damage = 99;
             Item.knockBack = 2.5f;
+            Item.crit = 10;
 
             Item.shoot = ModContent.ProjectileType<TheStellarThrowProjectile>();
 
@@ -25,10 +29,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class TheStellarThrowProjectile : YoyoProjectile
+    public class TheStellarThrowProjectile : YoyoProjectile, IDrawAdditive
     {
         public static readonly Color[] TrailColors = new Color[] { new Color(255, 206, 90), new Color(255, 55, 125), new Color(137, 59, 114) };
         public static readonly Color[] DustColors = new Color[] { new Color(11, 25, 25), new Color(16, 11, 25), new Color(25, 11, 18) };
+
+        // ...
 
         public TheStellarThrowProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
 
@@ -39,10 +45,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 target: Projectile,
                 length: 16 * 10,
                 width: (progress) => 21 * (1 - progress * 0.44f),
-                color: (progress) => ModUtils.GradientValue<Color>(method: Color.Lerp, percent: progress, values: TrailColors) * (1 - progress)
+                color: (progress) => ModUtils.GradientValue<Color>(method: Color.Lerp, percent: progress, values: TrailColors) * (1 - progress),
+                additive: true
             );
             trail.SetEffectTexture(SPladisonsYoyoMod.GetExtraTextures[7].Value);
-            trail.SetDissolveSpeed(0.15f);
+            trail.SetDissolveSpeed(0.26f);
             PrimitiveTrailSystem.NewTrail(trail);
         }
 
@@ -66,11 +73,17 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
         }
 
-        public override void DrawAdditive()
+        public override bool PreDrawExtras()
+        {
+            Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[5].Value, GetDrawPosition(), null, Color.White, Projectile.rotation, SPladisonsYoyoMod.GetExtraTextures[5].Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
+            return true;
+        }
+
+        void IDrawAdditive.DrawAdditive()
         {
             var drawPosition = GetDrawPosition();
             var origin = SPladisonsYoyoMod.GetExtraTextures[8].Size() * 0.5f + new Vector2(0, 6);
-            var starRotation = Projectile.rotation * 0.05f;
+            var starRotation = Main.GlobalTimeWrappedHourly;
             var starScalePulse = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 3f) * 0.15f;
 
             void DrawStar(Color color, float rotation, float scale)
@@ -80,12 +93,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             DrawStar(new Color(16, 11, 25, 90), -starRotation, 0.5f);
             DrawStar(new Color(16, 11, 25, 210), starRotation, 0.3f);
-        }
-
-        public override bool PreDrawExtras()
-        {
-            Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[5].Value, GetDrawPosition(), null, Color.White, Projectile.rotation, SPladisonsYoyoMod.GetExtraTextures[5].Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
-            return true;
         }
     }
 }
