@@ -1,9 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.ModLoader;
+﻿using Microsoft.Xna.Framework;
 using System;
+using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Dusts
 {

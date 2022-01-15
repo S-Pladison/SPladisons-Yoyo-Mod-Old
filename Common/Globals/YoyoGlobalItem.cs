@@ -33,12 +33,11 @@ namespace SPladisonsYoyoMod.Common.Globals
 
         public override void UseStyle(Item item, Player player, Rectangle heldItemFrame)
         {
-            if (ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle)
-            {
-                float rotation = player.itemRotation * player.gravDir - 1.57079637f * player.direction;
-                player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotation);
-                player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Quarter, rotation);
-            }
+            if (!ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle) return;
+
+            float rotation = player.itemRotation * player.gravDir - 1.57079637f * player.direction;
+            player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotation);
+            player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Quarter, rotation);
         }
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)

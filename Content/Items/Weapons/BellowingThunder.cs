@@ -5,9 +5,8 @@ using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Content.Trails;
 using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
-using Terraria.GameContent.Drawing;
+using Terraria.Graphics.CameraModifiers;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -222,7 +221,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             if (Projectile.timeLeft != 7) return;
 
-            ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 7f, range: 16 * 50, time: 50);
+            var modifier = new PunchCameraModifier(Projectile.Center, (Main.rand.NextFloat() * 6.28318548f).ToRotationVector2(), 20f, 6f, 30, 1000f);
+            Main.instance.CameraModifiers.Add(modifier);
+
             // SoundEngine.PlaySound(SoundLoader.GetSoundSlot(Mod, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);
         }
 

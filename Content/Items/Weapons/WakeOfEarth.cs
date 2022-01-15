@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -124,7 +123,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn()
         {
-            ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 0.65f, range: 16 * 25, time: 50);
+            //ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 0.65f, range: 16 * 25, time: 50);
         }
 
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)

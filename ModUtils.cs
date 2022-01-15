@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Globals;
 using System;
@@ -133,6 +131,11 @@ namespace SPladisonsYoyoMod
 
                 method.Invoke(vector - Main.screenPosition + TextureAssets.FishingLine.Size() * 0.5f - new Vector2(6f, 0f), num4, num7, color, ++counter);
             }
+        }
+
+        public static Vector2 GetYoyoStringOffset()
+        {
+            return Vector2.UnitY * (ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle ? -4 : 0);
         }
 
         public static Color TryApplyingPlayerStringColor(int playerStringColor, Color stringColor)

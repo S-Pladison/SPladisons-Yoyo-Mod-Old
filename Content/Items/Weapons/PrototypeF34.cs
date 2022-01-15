@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Content.Trails;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 

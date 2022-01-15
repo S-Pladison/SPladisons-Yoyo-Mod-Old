@@ -1,11 +1,8 @@
-﻿using SPladisonsYoyoMod.Common.Misc;
-using SPladisonsYoyoMod.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using System.Linq;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common.Interfaces;
+using System;
+using System.Linq;
+using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {

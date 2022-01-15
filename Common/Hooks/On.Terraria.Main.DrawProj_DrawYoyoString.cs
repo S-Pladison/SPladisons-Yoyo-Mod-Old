@@ -1,12 +1,7 @@
-﻿using SPladisonsYoyoMod.Common.Misc;
-using SPladisonsYoyoMod.Content;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using System.Linq;
 using System;
-using System.Collections.Generic;
-using SPladisonsYoyoMod.Common.Interfaces;
-using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
@@ -23,7 +18,8 @@ namespace SPladisonsYoyoMod.Common.Hooks
             }
 
             Player owner = Main.player[projectile.owner];
-            mountedCenter.Y += owner.gfxOffY - 4;
+            mountedCenter += ModUtils.GetYoyoStringOffset();
+            mountedCenter.Y += owner.gfxOffY;
 
             ModUtils.DrawYoyoString(projectile, mountedCenter, (position, rotation, height, color, i) =>
             {

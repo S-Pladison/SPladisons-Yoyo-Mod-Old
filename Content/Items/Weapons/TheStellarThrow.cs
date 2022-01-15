@@ -4,10 +4,8 @@ using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Content.Trails;
 using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons

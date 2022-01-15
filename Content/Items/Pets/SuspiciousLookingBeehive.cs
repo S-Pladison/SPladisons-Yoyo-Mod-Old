@@ -30,8 +30,10 @@ namespace SPladisonsYoyoMod.Content.Items.Pets
         }
     }
 
-    public class SquareBeeBuff : PladBuff
+    public class SquareBeeBuff : ModBuff
     {
+        public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Buffs/" + this.Name;
+
         public override void SetStaticDefaults()
         {
             Main.buffNoTimeDisplay[Type] = true;

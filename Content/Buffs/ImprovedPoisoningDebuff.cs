@@ -1,10 +1,13 @@
 ﻿using SPladisonsYoyoMod.Common.Globals;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Buffs
 {
-    public class ImprovedPoisoningDebuff : PladBuff
+    public class ImprovedPoisoningDebuff : ModBuff
     {
+        public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Buffs/" + this.Name;
+
         public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;
@@ -14,6 +17,7 @@ namespace SPladisonsYoyoMod.Content.Buffs
 
         public override void Update(NPC npc, ref int buffIndex)
         {
+            // АЛОООО: А нужна ли вообще эта переменная, если мы итак накладывает дебафф...
             npc.GetGlobalNPC<PladGlobalNPC>().improvedPoisoningDebuff = true;
         }
     }

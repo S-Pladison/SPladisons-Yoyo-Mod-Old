@@ -1,7 +1,5 @@
 ﻿using MonoMod.Cil;
 using SPladisonsYoyoMod.Common.Globals;
-using SPladisonsYoyoMod.Content.Items;
-using System;
 using Terraria;
 using Terraria.ID;
 using static Mono.Cecil.Cil.OpCodes;
