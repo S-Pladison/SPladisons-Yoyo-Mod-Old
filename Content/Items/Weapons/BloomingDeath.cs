@@ -70,11 +70,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDraw(ref Color lightColor)
         {
-            this.DrawCustomString(Main.player[Projectile.owner].MountedCenter);
+            ModUtils.DrawYoyoString(Projectile, Main.player[Projectile.owner].MountedCenter + Vector2.UnitY * (Main.player[Projectile.owner].gfxOffY - 4), this.DrawStrangeString);
 
             var drawPosition = GetDrawPosition();
-            var texture = SPladisonsYoyoMod.GetExtraTextures[12];
             var color = Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), new Color(230, 230, 230, 230));
+            var texture = SPladisonsYoyoMod.GetExtraTextures[12];
 
             for (int i = 0; i < 5; i++)
             {
@@ -84,127 +84,49 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return true;
         }
 
-        private void DrawCustomString(Vector2 startPosition)
+        private void DrawStrangeString(Vector2 position, float rotation, float height, Color color, int i)
         {
-            var offset = Vector2.Zero; // ...
-            var vector = startPosition;
-            vector.Y += Main.player[Projectile.owner].gfxOffY;
+            i += (int)Projectile.localAI[1];
+            rotation += (float)Math.Sin(Main.GlobalTimeWrappedHourly) * 0.25f;
+            position += new Vector2(-7, 0).RotatedBy(rotation);
 
-            var player = Main.player[Projectile.owner];
-            var num2 = Projectile.Center.X - vector.X;
-            var num3 = Projectile.Center.Y - vector.Y;
+            var texture = SPladisonsYoyoMod.GetExtraTextures[10];
+            var colorProgress = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2f + i * 0.3f);
+            var flip = i % 2 == 0 ? 1 : -1;
+            var rectangle = new Rectangle(0, texture.Height() / 3 * (int)(i % 3), texture.Width(), texture.Height() / 3);
 
-            // Hand rotation
+            if (i % 3 == 0 || i % 4 == 0)
             {
-                int num5 = -1;
-                if (Projectile.position.X + (float)(Projectile.width / 2) < player.position.X + (float)(player.width / 2)) num5 = 1;
-                num5 *= -1;
-                player.itemRotation = (float)Math.Atan2(num3 * (float)num5, num2 * (float)num5);
+                SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                Main.EntitySpriteDraw(
+                    color: color * Math.Min(i / 12.0f, 0.4f) * colorProgress,
+                    texture: texture.Value,
+                    position: position,
+                    sourceRectangle: rectangle,
+                    rotation: rotation,
+                    origin: new Vector2(4 * flip, 0),
+                    scale: 1f,
+                    effects: effect,
+                    worthless: 0
+                );
             }
 
-            var flag = true;
-            if (num2 == 0f && num3 == 0f) flag = false;
-            else
+            flip = -flip;
+
+            if (i % 5 == 0 || i % 7 == 0)
             {
-                float num6 = (float)Math.Sqrt(num2 * num2 + num3 * num3);
-                num6 = 12f / num6;
-                num2 *= num6;
-                num3 *= num6;
-                vector.X -= num2 * 0.1f;
-                vector.Y -= num3 * 0.1f;
-                num2 = Projectile.position.X + Projectile.width * 0.5f - vector.X;
-                num3 = Projectile.position.Y + Projectile.height * 0.5f - vector.Y;
-            }
-
-            var counter = (int)Projectile.localAI[1];
-            while (flag)
-            {
-                float num8 = (float)Math.Sqrt(num2 * num2 + num3 * num3);
-                float num9 = num8;
-
-                if (float.IsNaN(num8) || float.IsNaN(num9))
-                {
-                    flag = false;
-                    continue;
-                }
-
-                if (num8 < 20f)
-                {
-                    flag = false;
-                }
-
-                num8 = 12f / num8;
-                num2 *= num8;
-                num3 *= num8;
-                vector.X += num2;
-                vector.Y += num3;
-                num2 = Projectile.position.X + Projectile.width * 0.5f - vector.X - offset.X;
-                num3 = Projectile.position.Y + Projectile.height * 0.1f - vector.Y - offset.Y;
-
-                if (num9 > 12f)
-                {
-                    var num10 = 0.3f;
-                    var num11 = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y);
-                    if (num11 > 16f) num11 = 16f;
-
-                    num11 = 1f - num11 / 16f;
-                    num10 *= num11;
-                    num11 = num9 / 80f;
-                    if (num11 > 1f) num11 = 1f;
-
-                    num10 *= num11;
-                    if (num10 < 0f) num10 = 0f;
-
-                    num10 *= num11;
-                    num10 *= 0.5f;
-
-                    if (num3 > 0f)
-                    {
-                        num3 *= 1f + num10;
-                        num2 *= 1f - num10;
-                    }
-                    else
-                    {
-                        num11 = Math.Abs(Projectile.velocity.X) / 3f;
-                        if (num11 > 1f) num11 = 1f;
-
-                        num11 -= 0.5f;
-                        num10 *= num11;
-                        if (num10 > 0f) num10 *= 2f;
-
-                        num3 *= 1f + num10;
-                        num2 *= 1f - num10;
-                    }
-                }
-
-                counter++;
-                var num4 = (float)Math.Atan2(num3, num2) - 1.57f;
-                var position = vector - Main.screenPosition + new Vector2(6, 6) - new Vector2(6f, 0f);
-                var color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f), Color.White);
-                var colorProgress = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2f + counter * 0.3f);
-                var texture = SPladisonsYoyoMod.GetExtraTextures[10];
-
-                // Leafs
-                {
-                    num4 += (float)Math.Sin(Main.GlobalTimeWrappedHourly) * 0.25f;
-                    position += new Vector2(-7, 0).RotatedBy(num4);
-
-                    var flip = counter % 2 == 0 ? 1 : -1;
-                    var rectangle = new Rectangle(0, texture.Height() / 3 * (int)(counter % 3), texture.Width(), texture.Height() / 3);
-
-                    if (counter % 3 == 0 || counter % 4 == 0)
-                    {
-                        SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.4f * colorProgress, texture: texture.Value, position: position, sourceRectangle: rectangle, rotation: num4, origin: new Vector2(4 * flip, 0), scale: 1f, effects: effect, worthless: 0);
-                    }
-
-                    flip = -flip;
-                    if (counter % 5 == 0 || counter % 7 == 0)
-                    {
-                        SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        Main.EntitySpriteDraw(color: color * 0.15f * colorProgress, texture: texture.Value, position: position, sourceRectangle: rectangle, rotation: num4, origin: new Vector2(6 * flip, 0), scale: 0.92f, effects: effect, worthless: 0);
-                    }
-                }
+                SpriteEffects effect = flip > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                Main.EntitySpriteDraw(
+                    color: color * Math.Min(i / 12.0f, 0.15f) * colorProgress,
+                    texture: texture.Value,
+                    position: position,
+                    sourceRectangle: rectangle,
+                    rotation: rotation,
+                    origin: new Vector2(6 * flip, 0),
+                    scale: 0.92f,
+                    effects: effect,
+                    worthless: 0
+                );
             }
         }
     }

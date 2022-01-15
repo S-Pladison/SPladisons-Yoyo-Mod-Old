@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System;
 using System.IO;
 using System.Reflection;
 using Terraria;
@@ -159,14 +161,5 @@ namespace SPladisonsYoyoMod.Content.Items
         public virtual void OnActivateYoyoGlove() { }
         public virtual void ModifyYoyoLifeTime(ref float lifeTime) { }
         public virtual void ModifyYoyoMaximumRange(ref float maxRange) { }
-
-        // ...
-
-        protected static Color TryApplyingPlayerStringColor(int color)
-        {
-            return (Color)(StringColorMethodInfo?.Invoke(null, new object[] { color, Color.White }) ?? Color.White);
-        }
-
-        private static readonly MethodInfo StringColorMethodInfo = typeof(Main).GetMethod("TryApplyingPlayerStringColor", BindingFlags.NonPublic | BindingFlags.Static);
     }
 }
