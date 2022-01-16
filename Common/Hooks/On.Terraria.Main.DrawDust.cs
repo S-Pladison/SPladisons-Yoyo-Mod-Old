@@ -26,6 +26,11 @@ namespace SPladisonsYoyoMod.Common.Hooks
                         proj.active = false;
                     }
                 }
+
+                foreach (var dust in ParticleSystem.Particles)
+                {
+                    dust.Draw(Main.spriteBatch);
+                }
             }
             Main.spriteBatch.End();
         }

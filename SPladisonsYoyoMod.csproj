@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Textures\Players\" />
+    <Folder Include="Assets\Textures\Particles\" />
   </ItemGroup>
 </Project>

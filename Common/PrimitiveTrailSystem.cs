@@ -11,10 +11,10 @@ namespace SPladisonsYoyoMod.Common
 {
     public class PrimitiveTrailSystem : ModSystem
     {
-        public static readonly List<Trail> AdditiveBlendTrails = new List<Trail>();
-        public static readonly List<Trail> AlphaBlendTrails = new List<Trail>();
+        internal static readonly List<Trail> AdditiveTrails = new List<Trail>();
+        internal static readonly List<Trail> AlphaBlendTrails = new List<Trail>();
 
-        public static Asset<Effect> BasicPrimitiveEffect { get; private set; }
+        private static Asset<Effect> BasicPrimitiveEffect { get; set; }
 
         // ...
 
@@ -32,7 +32,7 @@ namespace SPladisonsYoyoMod.Common
 
         public override void PostUpdateEverything()
         {
-            foreach (var trail in AdditiveBlendTrails.ToArray()) trail.Update();
+            foreach (var trail in AdditiveTrails.ToArray()) trail.Update();
             foreach (var trail in AlphaBlendTrails.ToArray()) trail.Update();
         }
 
@@ -42,7 +42,7 @@ namespace SPladisonsYoyoMod.Common
         {
             if (Main.dedServ) return;
 
-            if (trail.Additive) AdditiveBlendTrails.Add(trail);
+            if (trail.Additive) AdditiveTrails.Add(trail);
             else AlphaBlendTrails.Add(trail);
         }
 
@@ -129,7 +129,7 @@ namespace SPladisonsYoyoMod.Common
             {
                 if (PreKill()) Active = false;
 
-                if (Additive) AdditiveBlendTrails.Remove(this);
+                if (Additive) AdditiveTrails.Remove(this);
                 else AlphaBlendTrails.Remove(this);
             }
 

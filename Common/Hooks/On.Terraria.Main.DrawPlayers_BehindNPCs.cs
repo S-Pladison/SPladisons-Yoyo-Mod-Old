@@ -21,11 +21,11 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 Main.spriteBatch.End();
             }
 
-            if (PrimitiveTrailSystem.AdditiveBlendTrails.Count > 0)
+            if (PrimitiveTrailSystem.AdditiveTrails.Count > 0)
             {
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
                 {
-                    foreach (var trail in PrimitiveTrailSystem.AdditiveBlendTrails)
+                    foreach (var trail in PrimitiveTrailSystem.AdditiveTrails)
                     {
                         trail.Draw(Main.spriteBatch, matrix);
                     }

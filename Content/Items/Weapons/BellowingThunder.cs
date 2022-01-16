@@ -42,11 +42,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public BellowingThunderProjectile() : base(lifeTime: 10f, maxRange: 220f, topSpeed: 13f) { }
 
-        public int Counter
+        public int Cooldown
         {
             get => (int)Projectile.localAI[1];
             set => Projectile.localAI[1] = value;
         }
+
+        private int _counter = 0;
 
         public override string GlowTexture => this.Texture + "_Glowmask";
 
@@ -74,17 +76,24 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override void AI()
         {
             Projectile.rotation -= 0.2f;
+            Cooldown = (int)MathHelper.Max(0, --Cooldown);
             Lighting.AddLight(Projectile.Center, _effectColor.ToVector3() * 0.2f);
 
-            Counter++;
-            if (Counter >= 20)
+            _counter++;
+            if (_counter >= 20)
             {
-                Counter = 0;
+                _counter = 0;
                 _effect.Reset();
                 return;
             }
 
-            _effect.Update(Counter);
+            if (Projectile.velocity.Length() >= 0.35f && Main.rand.NextBool(4))
+            {
+                var particle = new Particles.BellowingThunderParticle(Projectile.Center + new Vector2(Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3)));
+                ParticleSystem.NewParticle(particle);
+            }
+
+            _effect.Update(_counter);
         }
 
         public override bool PreDrawExtras()
@@ -105,8 +114,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
         {
-            if (!Main.rand.NextBool(2 + (Main.raining ? 0 : 2))) return;
+            if (Cooldown != 0 || !Main.rand.NextBool(1 + (Main.raining ? 0 : 2))) return;
 
+            Cooldown = 90;
             Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BellowingThunderLightningProjectile>(), Projectile.damage * 2, Projectile.knockBack * 3f, Projectile.owner);
         }
 
@@ -196,12 +206,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 25;
 
-            Projectile.width = 80;
-            Projectile.height = 80;
+            Projectile.width = 120;
+            Projectile.height = 120;
             Projectile.DamageType = DamageClass.Melee;
+            Projectile.friendly = true;
 
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = -2;
+            Projectile.localNPCHitCooldown = -1;
         }
 
         public override void OnSpawn()
@@ -218,11 +229,16 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             LightningProgress = ModUtils.GradientValue<float>(MathHelper.Lerp, progress, new float[] { 0f, 0f, 0f, 0.7f, 0.3f, 0f });
 
             Lighting.AddLight(Projectile.Center, new Color(90, 40, 255).ToVector3() * BeamProgress * 1.3f);
-
             if (Projectile.timeLeft != 7) return;
 
             var modifier = new PunchCameraModifier(Projectile.Center, (Main.rand.NextFloat() * 6.28318548f).ToRotationVector2(), 20f, 6f, 30, 1000f);
             Main.instance.CameraModifiers.Add(modifier);
+
+            for (int i = 0; i < 15; i++)
+            {
+                var particle = new Particles.BellowingThunderSmokeParticle(Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20), Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3));
+                ParticleSystem.NewParticle(particle);
+            }
 
             // SoundEngine.PlaySound(SoundLoader.GetSoundSlot(Mod, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);
         }
