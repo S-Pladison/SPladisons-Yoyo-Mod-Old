@@ -49,7 +49,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     public class ResidualLightProjectile : YoyoProjectile
     {
         public static Asset<Effect> ResidualLightEffect { get; private set; }
-        private static readonly float _radius = 16 * 12;
+        private static readonly float _radius = 16 * 15;
 
         // ...
 
@@ -151,7 +151,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 list.Remove(index);
 
                 var npc = Main.npc[index];
-                Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), npc.Center, Vector2.Zero, projType, (int)(Projectile.damage * 0.3f), 0f, Projectile.owner, 0.6f, 15);
+                var colorType = Main.rand.Next(ResidualLightHitProjectile.Colors.Length);
+
+                var proj = Main.projectile[Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), npc.Center, Vector2.Zero, projType, (int)(Projectile.damage * 0.3f), 0f, Projectile.owner, 0.6f, 15)];
+                proj.localAI[0] = colorType;
+                proj = Main.projectile[Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(15, 30), ModContent.ProjectileType<ResidualLightEffectProjectile>(), 0, 0f, Projectile.owner, npc.Center.X, npc.Center.Y)];
+                proj.localAI[0] = colorType;
             }
         }
 
@@ -160,7 +165,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class ResidualLightHitProjectile : PladProjectile, IDrawAdditive
     {
-        private readonly Color[] _colors = new Color[] { new Color(252, 222, 252), new Color(202, 243, 248), new Color(155, 255, 225) };
+        public static readonly Color[] Colors = new Color[] { new Color(252, 222, 252), new Color(202, 243, 248), new Color(155, 255, 225) };
         private Color _color;
 
         public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Misc/Extra_0";
@@ -183,7 +188,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.rotation += Main.rand.NextFloat(MathHelper.TwoPi);
             Projectile.timeLeft = (int)Projectile.ai[1];
 
-            _color = _colors[Main.rand.Next(_colors.Length)];
+            _color = Colors[(int)Projectile.localAI[0]];
 
             if (Projectile.ai[0] < 0.9f)
             {
@@ -218,6 +223,57 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             texture = SPladisonsYoyoMod.GetExtraTextures[3];
             Main.spriteBatch.Draw(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.3f, SpriteEffects.None, 0);
+        }
+    }
+
+    public class ResidualLightEffectProjectile : PladProjectile
+    {
+        public int ColorType { get => (int)Projectile.localAI[0]; set => Projectile.localAI[0] = value; }
+        public Vector2 TargetPos { get => new Vector2(Projectile.ai[0], Projectile.ai[1]); }
+
+        public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Misc/Extra_0";
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 8;
+            Projectile.height = 8;
+
+            Projectile.timeLeft = 5000;
+            Projectile.penetrate = -1;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+            Projectile.extraUpdates = 3;
+        }
+
+        public override void OnSpawn()
+        {
+            TriangularTrail trail = new
+            (
+                target: Projectile,
+                length: 16 * 15,
+                width: (p) => 10 * (1 - p),
+                color: (p) => ResidualLightHitProjectile.Colors[ColorType] * 0.75f,
+                additive: true
+            );
+            trail.SetMaxPoints(10);
+            trail.SetEffectTexture(SPladisonsYoyoMod.GetExtraTextures[9].Value);
+            trail.SetDissolveSpeed(0.2f);
+            PrimitiveTrailSystem.NewTrail(trail);
+        }
+
+        public override void AI()
+        {
+            Vector2 targer = this.TargetPos;
+            Vector2 vectorTo = targer - Projectile.Center;
+            float distance = vectorTo.Length();
+
+            distance = 8f / distance;
+            Projectile.velocity = vectorTo * distance;
+
+            if (Projectile.Hitbox.Contains((int)targer.X, (int)targer.Y))
+            {
+                Projectile.Kill();
+            }
         }
     }
 }

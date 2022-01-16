@@ -4,10 +4,14 @@ using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Content.Trails;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.UI;
 using Terraria.Graphics.CameraModifiers;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Weapons
@@ -35,6 +39,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             recipe.AddIngredient<WakeOfEarth>();
             recipe.AddTile(TileID.DemonAltar);
             recipe.Register();
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            var tooltip = tooltips.Find(i => i.mod == "Terraria" && i.Name.StartsWith("Tooltip") && i.text.Contains("{0}"));
+            if (tooltip != null)
+            {
+                Color color = Terraria.ID.Colors.AlphaDarken(ItemRarity.GetColor(Item.rare));
+                string value = $"[c/{color.Hex3()}:{(Main.raining ? "24" : "12")}%]";
+                string text = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.BellowingThunder", value);
+                tooltip.text = text.Split("\n").ToList().Find(i => i.Contains(value));
+            }
         }
     }
 
@@ -114,7 +130,10 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
         {
-            if (Cooldown != 0 || !Main.rand.NextBool(1 + (Main.raining ? 0 : 2))) return;
+            if (Cooldown != 0) return;
+
+            int chance = Main.rand.Next(100);
+            if (Main.raining ? chance >= 24 : chance >= 12) return;
 
             Cooldown = 90;
             Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BellowingThunderLightningProjectile>(), Projectile.damage * 2, Projectile.knockBack * 3f, Projectile.owner);
@@ -206,8 +225,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 25;
 
-            Projectile.width = 120;
-            Projectile.height = 120;
+            Projectile.width = 175;
+            Projectile.height = Projectile.width;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.friendly = true;
 
@@ -250,7 +269,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             hitbox.Height += value;
         }
 
-        public override bool? CanHitNPC(NPC target) => LightningProgress >= 0.5f;
+        public override bool? CanHitNPC(NPC target) => LightningProgress >= 0.5f && Vector2.Distance(target.Center, Projectile.Center) < Projectile.width;
 
         public override bool PreDraw(ref Color lightColor)
         {

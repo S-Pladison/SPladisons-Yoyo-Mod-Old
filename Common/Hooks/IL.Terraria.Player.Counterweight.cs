@@ -10,25 +10,22 @@ namespace SPladisonsYoyoMod.Common.Hooks
     {
         private static void IL_Terraria_Player_Counterweight(ILContext il)
         {
-            //  bool flag3 = Main.projectile[i].aiStyle == 99;
-            //  if (flag3)
-            //  {
+            // else if (Main.projectile[i].aiStyle == 99)
+            // {
             //      num2++;
             //      num = i;
-            //  }
+            // }
 
             ILCursor c = new ILCursor(il);
 
             int projectileIndex = -1;
-            int flag3Index = -1;
             if (!c.TryGotoNext(MoveType.After,
                 i => i.MatchLdsfld<Main>("projectile"),
                 i => i.MatchLdloc(out projectileIndex),
                 i => i.MatchLdelemRef(),
                 i => i.MatchLdfld<Projectile>("aiStyle"),
                 i => i.MatchLdcI4(99),
-                i => i.MatchCeq(),
-                i => i.MatchStloc(out flag3Index))) return;
+                i => i.MatchBneUn(out _))) return;
 
             int num2Index = -1;
             if (!c.TryGotoNext(MoveType.Before,

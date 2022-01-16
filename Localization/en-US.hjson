@@ -51,7 +51,7 @@ Mods: {
 			// Weapons
 			BellowingThunder:
 				'''
-				On hit, gives a chance to strike the enemy with lightning
+				On hit, gives a {0} chance to strike the enemy with lightning
 				Rainy weather drastically increases the probability
 				'''
 			Blackhole:
