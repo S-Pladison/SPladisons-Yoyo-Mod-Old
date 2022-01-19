@@ -29,7 +29,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class BlackholeProjectile : YoyoProjectile, IDrawAdditive, IBlackholeSpace
     {
+        public static Asset<Effect> BlackholeEffect { get; private set; }
         public static readonly float Radius = 16 * 9;
+
         private float RadiusProgress { get => Projectile.localAI[1]; set => Projectile.localAI[1] = value; }
 
         // ...
@@ -37,6 +39,16 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public BlackholeProjectile() : base(lifeTime: 14f, maxRange: 275f, topSpeed: 16f) { }
 
         public override bool IsSoloYoyo() => true;
+        public override void Unload() => BlackholeEffect = null;
+
+        public override void YoyoSetStaticDefaults()
+        {
+            if (Main.dedServ) return;
+
+            BlackholeEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Blackhole", AssetRequestMode.ImmediateLoad);
+            BlackholeEffect.Value.Parameters["texture1"].SetValue(ModContent.Request<Texture2D>("Terraria/Images/Misc/Perlin").Value);
+            BlackholeEffect.Value.Parameters["width"].SetValue(SPladisonsYoyoMod.GetExtraTextures[2].Width() / 4);
+        }
 
         public override void OnSpawn()
         {
