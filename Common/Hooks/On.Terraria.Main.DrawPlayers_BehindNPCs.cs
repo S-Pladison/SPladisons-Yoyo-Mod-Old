@@ -7,30 +7,26 @@ namespace SPladisonsYoyoMod.Common.Hooks
     {
         private static void On_Terraria_Main_DrawPlayers_BehindNPCs(On.Terraria.Main.orig_DrawPlayers_BehindNPCs orig, Main main)
         {
-            var matrix = PrimitiveTrailSystem.GetTransformMatrix();
+            var spriteBatch = Main.spriteBatch;
+            var pts = PrimitiveTrailSystem.Instance;
 
-            if (PrimitiveTrailSystem.AlphaBlendTrails.Count > 0)
+            if (pts != null)
             {
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-                {
-                    foreach (var trail in PrimitiveTrailSystem.AlphaBlendTrails)
-                    {
-                        trail.Draw(Main.spriteBatch, matrix);
-                    }
-                }
-                Main.spriteBatch.End();
-            }
+                pts.UpdateTransformMatrix();
 
-            if (PrimitiveTrailSystem.AdditiveTrails.Count > 0)
-            {
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+                if (PrimitiveTrailSystem.AlphaBlendTrails.Count > 0)
                 {
-                    foreach (var trail in PrimitiveTrailSystem.AdditiveTrails)
-                    {
-                        trail.Draw(Main.spriteBatch, matrix);
-                    }
+                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                    pts.DrawTrails(PrimitiveTrailSystem.AlphaBlendTrails);
+                    spriteBatch.End();
                 }
-                Main.spriteBatch.End();
+
+                if (PrimitiveTrailSystem.AdditiveTrails.Count > 0)
+                {
+                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                    pts.DrawTrails(PrimitiveTrailSystem.AdditiveTrails);
+                    spriteBatch.End();
+                }
             }
 
             orig(main);

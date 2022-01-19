@@ -14,7 +14,10 @@ namespace SPladisonsYoyoMod.Common
         internal static readonly List<Trail> AdditiveTrails = new List<Trail>();
         internal static readonly List<Trail> AlphaBlendTrails = new List<Trail>();
 
-        private static Asset<Effect> BasicPrimitiveEffect { get; set; }
+        public static PrimitiveTrailSystem Instance { get => ModContent.GetInstance<PrimitiveTrailSystem>(); }
+
+        public Asset<Effect> BasicPrimitiveEffect { get; private set; }
+        public Matrix TransformMatrix { get; private set; }
 
         // ...
 
@@ -23,6 +26,7 @@ namespace SPladisonsYoyoMod.Common
             if (Main.dedServ) return;
 
             BasicPrimitiveEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Primitive");
+            UpdateTransformMatrix();
         }
 
         public override void Unload()
@@ -36,7 +40,28 @@ namespace SPladisonsYoyoMod.Common
             foreach (var trail in AlphaBlendTrails.ToArray()) trail.Update();
         }
 
-        // ...
+        public void UpdateTransformMatrix()
+        {
+            Matrix m1 = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) * Main.GameViewMatrix.EffectMatrix * Matrix.CreateTranslation(Main.screenWidth / 2, -Main.screenHeight / 2, 0) * Matrix.CreateRotationZ(MathHelper.Pi);
+            Matrix m3 = Matrix.CreateOrthographic(Main.screenWidth, Main.screenHeight, 0, 1000);
+            TransformMatrix = m1 * Matrix.CreateScale(Main.GameViewMatrix.Zoom.X, Main.GameViewMatrix.Zoom.Y, 1) * m3;
+        }
+
+        public void DrawTrails(List<Trail> trails)
+        {
+            foreach (var trail in trails)
+            {
+                try
+                {
+                    if (!trail.CustomDraw) trail.Draw(Main.spriteBatch, TransformMatrix);
+                }
+                catch (Exception e)
+                {
+                    TimeLogger.DrawException(e);
+                    trail.Active = false;
+                }
+            }
+        }
 
         public static void NewTrail(Trail trail)
         {
@@ -44,13 +69,8 @@ namespace SPladisonsYoyoMod.Common
 
             if (trail.Additive) AdditiveTrails.Add(trail);
             else AlphaBlendTrails.Add(trail);
-        }
 
-        public static Matrix GetTransformMatrix()
-        {
-            Matrix m1 = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) * Main.GameViewMatrix.EffectMatrix * Matrix.CreateTranslation(Main.screenWidth / 2, -Main.screenHeight / 2, 0) * Matrix.CreateRotationZ(MathHelper.Pi);
-            Matrix m3 = Matrix.CreateOrthographic(Main.screenWidth, Main.screenHeight, 0, 1000);
-            return m1 * Matrix.CreateScale(Main.GameViewMatrix.Zoom.X, Main.GameViewMatrix.Zoom.Y, 1) * m3;
+            trail.OnSpawn();
         }
 
         // ...
@@ -58,6 +78,7 @@ namespace SPladisonsYoyoMod.Common
         public abstract class Trail
         {
             public bool Active { get; set; } = true;
+            public bool CustomDraw { get; set; } = false;
             public bool Additive { get; protected set; }
             public float Length { get; protected set; }
 
@@ -75,12 +96,14 @@ namespace SPladisonsYoyoMod.Common
 
             private readonly Asset<Effect> _effect;
 
+            // ...
+
             public Trail(Entity target, int length, Asset<Effect> effect = null, bool additive = false)
             {
                 _target = target;
                 _maxLength = length;
 
-                _effect = effect ?? BasicPrimitiveEffect;
+                _effect = effect ?? PrimitiveTrailSystem.Instance.BasicPrimitiveEffect;
                 _effect.Value.Parameters["texture0"].SetValue(SPladisonsYoyoMod.GetExtraTextures[6].Value);
 
                 this.Additive = additive;
@@ -138,6 +161,9 @@ namespace SPladisonsYoyoMod.Common
             public void SetDissolveSpeed(float speed = 0.1f) => _dissolveSpeed = speed;
             public void SetMaxPoints(int value = 25) => _maxPoints = Math.Max(value, 2);
             public void SetCustomPositionMethod(Func<Entity, Vector2> method) => _customPositionMethod = method;
+            public virtual void OnSpawn() { }
+
+            // ...
 
             protected void UpdateLength(int maxLength)
             {
@@ -179,6 +205,8 @@ namespace SPladisonsYoyoMod.Common
             protected virtual bool PreKill() => true;
             protected virtual void CreateMesh() { }
             protected virtual void ApplyEffectParameters(Effect effect) { }
+
+            // ...
 
             private static void ApplyGlobalEffectParameters(Effect effect, Matrix matrix)
             {

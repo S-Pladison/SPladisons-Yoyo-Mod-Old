@@ -1,7 +1,5 @@
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common.Misc;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -20,14 +18,10 @@ namespace SPladisonsYoyoMod
         public override void Load()
         {
             SPladisonsYoyoMod.LoadExtraTextures(this);
-
-            Main.OnPreDraw += DrawTargets;
         }
 
         public override void Unload()
         {
-            Main.OnPreDraw -= DrawTargets;
-
             Instance = null;
         }
 
@@ -56,11 +50,6 @@ namespace SPladisonsYoyoMod
         }
 
         // ...
-
-        private static void DrawTargets(GameTime gameTime)
-        {
-            SoulFilledFlameEffect.Instance?.Render(Main.spriteBatch);
-        }
 
         private static void LoadExtraTextures(Mod mod)
         {

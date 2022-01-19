@@ -1,4 +1,5 @@
 ﻿using SPladisonsYoyoMod.Content.Items;
+using SPladisonsYoyoMod.Content.Items.Accessories;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -21,7 +22,8 @@ namespace SPladisonsYoyoMod.Common.Globals
             var lifeTimeMult = 1f;
 
             if (projectile.ModProjectile is YoyoProjectile yoyo) yoyo.ModifyYoyoLifeTime(ref lifeTimeMult);
-            if (modPlayer.bearingEquipped) lifeTimeMult += 0.12f;
+            if (modPlayer.bearingEquipped) lifeTimeMult += 0.16f;
+            if (modPlayer.hallowedBearingEquipped) lifeTimeMult += HallowedBearing.GetBearingBonus() / 100.0f;
 
             lifeTime *= Math.Max(lifeTimeMult, 0.1f);
         }

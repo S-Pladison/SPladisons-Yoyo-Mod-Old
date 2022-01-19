@@ -4,8 +4,6 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -24,13 +22,16 @@ namespace SPladisonsYoyoMod.Common
 
         public static void NewParticle(Asset<Texture2D> texture, int timeLeft, Vector2 position, Vector2? velocity = null, float rotation = 0f, float scale = 1f)
         {
-            Particle particle = new Particle(texture, timeLeft, position, velocity, rotation, scale);
+            var particle = new Particle(texture, timeLeft, position, velocity, rotation, scale);
             ParticleSystem.NewParticle(particle);
         }
 
         public static void NewParticle(Particle particle)
         {
+            if (Main.dedServ) return;
+
             Particles.Add(particle);
+            particle.OnSpawn();
         }
 
         // ...
@@ -50,6 +51,8 @@ namespace SPladisonsYoyoMod.Common
             public int frame;
             public int frameCount = 1;
 
+            // ...
+
             public Particle(Asset<Texture2D> texture, int timeLeft, Vector2 position, Vector2? velocity = null, float rotation = 0f, float scale = 1f)
             {
                 this.Texture = texture;
@@ -60,6 +63,10 @@ namespace SPladisonsYoyoMod.Common
                 this.rotation = rotation;
                 this.scale = scale;
             }
+
+            // ...
+
+            public virtual void OnSpawn() { }
 
             public virtual void Update()
             {
@@ -81,8 +88,17 @@ namespace SPladisonsYoyoMod.Common
                 spriteBatch.Draw(Texture.Value, position - Main.screenPosition, new Rectangle(0, height * frame, Texture.Width(), height), Color.White * 0.95f, rotation, new Vector2(Texture.Width(), height) * 0.5f, scale, SpriteEffects.None, 0f);
             }
 
+            protected virtual bool PreKill() { return true; }
+
+            // ...
+
             public void Kill()
             {
+                if (this.PreKill())
+                {
+                    // ...
+                }
+
                 Particles.Remove(this);
             }
         }

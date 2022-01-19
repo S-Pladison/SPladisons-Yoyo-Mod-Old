@@ -7,6 +7,7 @@ Mods: {
 			DesecratedDice: Desecrated Dice
 			EternalConfusion: Eternal Confusion
 			FlamingFlower: Flaming Flower
+			HallowedBearing: Hallowed Bearing
 
 			// Misc
 			SpaceKey: Space Key
@@ -30,11 +31,18 @@ Mods: {
 
 		ItemTooltip: {
 			// Accessories
-			Bearing: 12% increased yoyo duration
+			Bearing: 16% increased yoyo duration
 			CandyCane: ...
 			DesecratedDice: ...
 			EternalConfusion: ...
 			FlamingFlower: ...
+			HallowedBearing:
+				'''
+				5% increased yoyo critical strike chance
+				{0} increased yoyo duration
+				Additional bonus depends on the time of day
+				'An example of another lazy way to add a new item'
+				'''
 
 			// Vanilla Accessories
 			YoyoString: Increases yoyo range by 4 tiles

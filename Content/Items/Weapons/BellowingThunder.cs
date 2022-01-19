@@ -47,7 +47,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (tooltip != null)
             {
                 Color color = Terraria.ID.Colors.AlphaDarken(ItemRarity.GetColor(Item.rare));
-                string value = $"[c/{color.Hex3()}:{(Main.raining ? "24" : "12")}%]";
+                string value = $"[c/{color.Hex3()}:{(Main.raining ? "32" : "16")}%]";
                 string text = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.BellowingThunder", value);
                 tooltip.text = text.Split("\n").ToList().Find(i => i.Contains(value));
             }
@@ -133,7 +133,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (Cooldown != 0) return;
 
             int chance = Main.rand.Next(100);
-            if (Main.raining ? chance >= 24 : chance >= 12) return;
+            if (Main.raining ? chance >= 32 : chance >= 16) return;
 
             Cooldown = 90;
             Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BellowingThunderLightningProjectile>(), Projectile.damage * 2, Projectile.knockBack * 3f, Projectile.owner);

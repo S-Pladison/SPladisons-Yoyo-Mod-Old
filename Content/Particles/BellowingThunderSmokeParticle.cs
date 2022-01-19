@@ -1,12 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -15,7 +11,7 @@ namespace SPladisonsYoyoMod.Content.Particles
     public class BellowingThunderSmokeParticle : ParticleSystem.Particle
     {
         public BellowingThunderSmokeParticle(Vector2 position, Vector2? velocity = null) :
-        base(ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Particles/BellowingThunderSmokeParticle"), 360, position, velocity, Main.rand.NextFloat(MathHelper.TwoPi), Main.rand.NextFloat(0.8f, 1.2f))
+        base(ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Particles/SmokeParticle"), 360, position, velocity, Main.rand.NextFloat(MathHelper.TwoPi), Main.rand.NextFloat(0.8f, 1.2f))
         { }
 
         public override void Update()

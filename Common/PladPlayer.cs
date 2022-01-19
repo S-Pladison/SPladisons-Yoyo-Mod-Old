@@ -13,6 +13,7 @@ namespace SPladisonsYoyoMod.Common
         public bool desecratedDiceEquipped;
         public bool eternalConfusionEquipped;
         public bool flamingFlowerEquipped;
+        public bool hallowedBearingEquipped;
 
         public int eternalConfusionDye;
         public bool eternalConfusionVisible;
@@ -26,6 +27,7 @@ namespace SPladisonsYoyoMod.Common
             desecratedDiceEquipped = false;
             eternalConfusionEquipped = false;
             flamingFlowerEquipped = false;
+            hallowedBearingEquipped = false;
 
             eternalConfusionVisible = false;
         }

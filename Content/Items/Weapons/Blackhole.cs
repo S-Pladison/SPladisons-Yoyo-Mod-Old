@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Content.Dusts;
+using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Interfaces;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -25,13 +27,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class BlackholeProjectile : YoyoProjectile
+    public class BlackholeProjectile : YoyoProjectile, IDrawAdditive, IBlackholeSpace
     {
         public static Asset<Effect> BlackholeEffect { get; private set; }
-        private static readonly float _radius = 16 * 9;
+        public static readonly float Radius = 16 * 9;
 
-        private float _radiusProgress = 0;
-        private float _pulse = 0;
+        private float RadiusProgress { get => Projectile.localAI[1]; set => Projectile.localAI[1] = value; }
 
         // ...
 
@@ -49,9 +50,20 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             BlackholeEffect.Value.Parameters["width"].SetValue(SPladisonsYoyoMod.GetExtraTextures[2].Width() / 4);
         }
 
+        public override void OnSpawn()
+        {
+            BlackholeSpaceSystem.Instance.AddMetaball(this);
+        }
+
+        public override bool PreKill(int timeLeft)
+        {
+            BlackholeSpaceSystem.Instance.RemoveMetaball(this);
+            return true;
+        }
+
         public override void AI()
         {
-            this.UpdateRadius(flag: IsReturning);
+            this.UpdateRadius();
 
             for (int i = 0; i < Main.npc.Length; i++)
             {
@@ -64,7 +76,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 float numX = Projectile.position.X - target.position.X - (float)(target.width / 2);
                 float numY = Projectile.position.Y - target.position.Y - (float)(target.height / 2);
                 float distance = (float)Math.Sqrt((double)(numX * numX + numY * numY));
-                float currentRadius = _radius * _radiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f);
+                float currentRadius = Radius * RadiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f);
 
                 if (distance < currentRadius)
                 {
@@ -78,23 +90,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 }
             }
 
-            Lighting.AddLight(Projectile.Center, new Vector3(171 / 255f, 97 / 255f, 255 / 255f) * 0.45f * _radiusProgress);
-            this._pulse = MathHelper.SmoothStep(-0.05f, 0.05f, (float)Math.Abs(Math.Sin(Projectile.localAI[0] * 0.01f)));
-
-            if (Projectile.localAI[0] % 4 == 0 && Projectile.ai[0] != -1f)
-            {
-                var vector = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi));
-                var dust = Dust.NewDustPerfect(Projectile.Center + vector * 75, ModContent.DustType<BlackholeDust>(), vector.RotatedBy(MathHelper.PiOver2) * Main.rand.NextFloat(4, 8));
-                dust.customData = this.Projectile;
-            }
+            Lighting.AddLight(Projectile.Center, new Vector3(171 / 255f, 97 / 255f, 255 / 255f) * 0.45f);
         }
 
-        public void UpdateRadius(bool flag)
+        public void UpdateRadius()
         {
-            _radiusProgress += !flag ? 0.05f : -0.1f;
-
-            if (_radiusProgress > 1) _radiusProgress = 1;
-            if (_radiusProgress < 0) _radiusProgress = 0;
+            RadiusProgress += !IsReturning ? 0.05f : -0.15f;
+            RadiusProgress = Math.Clamp(RadiusProgress, 0, 1);
         }
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -102,43 +104,142 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (this.YoyoGloveActivated) damage = (int)(damage * 1.2f);
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
         {
-            var drawPosition = GetDrawPosition();
-            var texture = SPladisonsYoyoMod.GetExtraTextures[2].Value;
-            var effect = BlackholeEffect.Value;
-            var timer = Projectile.localAI[0] * 0.025f;
-
-            SetSpriteBatch(SpriteSortMode.Immediate, BlendState.Additive, effect);
+            for (int i = 0; i < 12; i++)
             {
-                effect.Parameters["time"].SetValue(timer);
-                Main.EntitySpriteDraw(texture, drawPosition, null, new Color(95, 65, 255) * 0.75f * _radiusProgress, timer, texture.Size() * 0.5f, _radiusProgress * 0.5f - _pulse, SpriteEffects.None, 0);
+                var particle = new Particles.BlackholeSpaceParticle(Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20), Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3));
+                ParticleSystem.NewParticle(particle);
             }
-            SetSpriteBatch(SpriteSortMode.Immediate, BlendState.AlphaBlend, effect);
-            {
-                Main.EntitySpriteDraw(texture, drawPosition, null, new Color(35, 0, 100) * 0.5f * _radiusProgress, timer, texture.Size() * 0.5f, _radiusProgress * 0.35f - _pulse, SpriteEffects.None, 0);
-                Main.EntitySpriteDraw(texture, drawPosition, null, Color.Black * _radiusProgress, timer, texture.Size() * 0.5f, _radiusProgress * 0.2f - _pulse, SpriteEffects.None, 0);
-            }
-            SetSpriteBatch();
-
-            return true;
         }
 
         public override void PostDraw(Color lightColor)
         {
-            var texture = SPladisonsYoyoMod.GetExtraTextures[3];
             var drawPosition = GetDrawPosition();
-
-            SetSpriteBatch(SpriteSortMode.Deferred, BlendState.Additive);
-            {
-                Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * _radiusProgress, (float)Math.Sin(Projectile.localAI[0] * 0.0125f), texture.Size() * 0.5f, (_radiusProgress - _pulse * 5f) * 1.3f, SpriteEffects.None, 0);
-                texture = SPladisonsYoyoMod.GetExtraTextures[4];
-                Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * _radiusProgress, Projectile.rotation * 0.33f, texture.Size() * 0.5f, _radiusProgress * 0.3f, SpriteEffects.None, 0);
-            }
-            SetSpriteBatch();
-
-            texture = SPladisonsYoyoMod.GetExtraTextures[5];
-            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.Black, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * _radiusProgress, SpriteEffects.None, 0);
+            var texture = SPladisonsYoyoMod.GetExtraTextures[5];
+            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.Black, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
         }
+
+        void IDrawAdditive.DrawAdditive()
+        {
+            // ... Ok... 0.0125f?.. 0.025f... sin? 
+
+            var drawPosition = GetDrawPosition();
+            var texture = SPladisonsYoyoMod.GetExtraTextures[32];
+            var rotation = (float)Math.Sin(Projectile.localAI[0] * 0.0125f);
+            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * rotation, (float)Math.Sin(Projectile.localAI[0] * 0.025f), texture.Size() * 0.5f, (0.4f + rotation * 0.15f) * Projectile.scale, SpriteEffects.None, 0);
+
+            texture = SPladisonsYoyoMod.GetExtraTextures[31];
+            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * 0.5f, -rotation * 1.5f + MathHelper.Pi, texture.Size() * 0.5f, 0.3f * Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White, rotation, texture.Size() * 0.5f, 0.2f * Projectile.scale, SpriteEffects.None, 0);
+        }
+
+        void IBlackholeSpace.DrawBlackholeSpace(SpriteBatch spriteBatch)
+        {
+            var drawPosition = GetDrawPosition();
+            var texture = SPladisonsYoyoMod.GetExtraTextures[30];
+            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.5f * Projectile.scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.37f * Projectile.scale, SpriteEffects.None, 0f);
+
+            texture = SPladisonsYoyoMod.GetExtraTextures[2];
+            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, Main.GlobalTimeWrappedHourly * 2.5f, texture.Size() * 0.5f, 0.35f * (1 + MathF.Sin(Main.GlobalTimeWrappedHourly) * 0.1f) * Projectile.scale, SpriteEffects.None, 0f);
+        }
+    }
+
+    public sealed class BlackholeSpaceSystem : ModSystem
+    {
+        public static BlackholeSpaceSystem Instance { get => ModContent.GetInstance<BlackholeSpaceSystem>(); }
+        private static readonly Color[] Colors = new Color[]
+        {
+            new Color(8, 9, 15),
+            new Color(198, 50, 189),
+            new Color(25, 25, 76)
+        };
+
+        private List<IBlackholeSpace> _metaballs = new();
+        private RenderTarget2D _target;
+        private Asset<Effect> _spaceEffect;
+        private Asset<Texture2D> _firstTexture;
+        private Asset<Texture2D> _secondTexture;
+
+        public int MetaballsCount => _metaballs.Count;
+
+        public override void Load()
+        {
+            _firstTexture = ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_28", AssetRequestMode.ImmediateLoad);
+            _secondTexture = ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_29", AssetRequestMode.ImmediateLoad);
+
+            if (Main.dedServ) return;
+
+            _spaceEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/BlackholeSpace", AssetRequestMode.ImmediateLoad);
+            _spaceEffect.Value.Parameters["texture1"].SetValue(_firstTexture.Value);
+            _spaceEffect.Value.Parameters["texture2"].SetValue(_secondTexture.Value);
+            _spaceEffect.Value.Parameters["color0"].SetValue(Colors[0].ToVector4());
+            _spaceEffect.Value.Parameters["color1"].SetValue(Colors[1].ToVector4());
+            _spaceEffect.Value.Parameters["color2"].SetValue(Colors[2].ToVector4());
+        }
+
+        public override void Unload()
+        {
+            _metaballs.Clear();
+            _metaballs = null;
+            _target = null;
+            _spaceEffect = null;
+            _firstTexture = null;
+            _secondTexture = null;
+        }
+
+        public void AddMetaball(IBlackholeSpace metaball)
+        {
+            if (!_metaballs.Contains(metaball))
+            {
+                _metaballs.Add(metaball);
+            }
+        }
+
+        public void RemoveMetaball(IBlackholeSpace metaball)
+        {
+            _metaballs.Remove(metaball);
+        }
+
+        public void RecreateRenderTarget(int width, int height)
+        {
+            _target = new RenderTarget2D(Main.graphics.GraphicsDevice, width, height);
+        }
+
+        public void DrawToTarget(GraphicsDevice device, SpriteBatch spriteBatch)
+        {
+            if (_metaballs.Count == 0) return;
+            if (_target == null) this.RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
+
+            device.SetRenderTarget(_target);
+            device.Clear(Color.Transparent);
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            foreach (var elem in _metaballs) elem.DrawBlackholeSpace(spriteBatch);
+            spriteBatch.End();
+
+            device.SetRenderTargets(null);
+        }
+
+        public void DrawToScreen(SpriteBatch spriteBatch)
+        {
+            if (Main.gameMenu || _target == null || _metaballs.Count == 0) return;
+
+            var texture = (Texture2D)_target;
+            var effect = _spaceEffect.Value;
+            effect.Parameters["time"].SetValue((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 0.4f);
+            effect.Parameters["resolution"].SetValue(texture.Size());
+            effect.Parameters["offset"].SetValue(Main.screenPosition * 0.001f);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, effect);
+            spriteBatch.Draw(texture, Vector2.Zero, null, Colors[0]);
+            spriteBatch.End();
+        }
+    }
+
+    public interface IBlackholeSpace
+    {
+        void DrawBlackholeSpace(SpriteBatch spriteBatch);
     }
 }

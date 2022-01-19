@@ -29,6 +29,7 @@ namespace SPladisonsYoyoMod.Common.Globals
         public override void ModifyWeaponCrit(Item item, Player player, ref int crit)
         {
             if (player.GetPladPlayer().flamingFlowerEquipped) crit += 12;
+            if (player.GetPladPlayer().hallowedBearingEquipped) crit += 5;
         }
 
         public override void UseStyle(Item item, Player player, Rectangle heldItemFrame)
