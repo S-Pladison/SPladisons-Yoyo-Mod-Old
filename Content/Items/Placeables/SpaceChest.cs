@@ -14,8 +14,10 @@ using Terraria.ObjectData;
 
 namespace SPladisonsYoyoMod.Content.Items.Placeables
 {
-    public class SpaceChest : PladItem
+    public class SpaceChest : ModItem
     {
+        public override string Texture => ModAssets.ItemsPath + "SpaceChest";
+
         public override void SetDefaults()
         {
             Item.width = 32;
@@ -35,8 +37,10 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
         }
     }
 
-    public class SpaceKey : PladItem
+    public class SpaceKey : ModItem
     {
+        public override string Texture => ModAssets.ItemsPath + "SpaceKey";
+
         public override void SetDefaults()
         {
             Item.width = 14;

@@ -16,12 +16,12 @@ namespace SPladisonsYoyoMod.Content.Trails
 
         public override void OnSpawn()
         {
-            BlackholeSpaceSystem.Instance?.AddMetaball(this);
+            BlackholeSpaceSystem.Instance?.AddElement(this);
         }
 
         protected override bool PreKill()
         {
-            BlackholeSpaceSystem.Instance?.RemoveMetaball(this);
+            BlackholeSpaceSystem.Instance?.RemoveElement(this);
             return true;
         }
 

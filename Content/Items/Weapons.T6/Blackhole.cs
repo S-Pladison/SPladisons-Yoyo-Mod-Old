@@ -40,12 +40,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn()
         {
-            BlackholeSpaceSystem.Instance.AddMetaball(this);
+            BlackholeSpaceSystem.Instance.AddElement(this);
         }
 
         public override bool PreKill(int timeLeft)
         {
-            BlackholeSpaceSystem.Instance.RemoveMetaball(this);
+            BlackholeSpaceSystem.Instance.RemoveElement(this);
             return true;
         }
 
@@ -144,13 +144,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             new Color(25, 25, 76)
         };
 
-        private List<IBlackholeSpace> _metaballs = new();
+        private List<IBlackholeSpace> _elems = new();
         private RenderTarget2D _target;
         private Asset<Effect> _spaceEffect;
         private Asset<Texture2D> _firstTexture;
         private Asset<Texture2D> _secondTexture;
 
-        public int MetaballsCount => _metaballs.Count;
+        public int MetaballsCount => _elems.Count;
 
         public override void Load()
         {
@@ -169,25 +169,25 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void Unload()
         {
-            _metaballs.Clear();
-            _metaballs = null;
+            _elems.Clear();
+            _elems = null;
             _target = null;
             _spaceEffect = null;
             _firstTexture = null;
             _secondTexture = null;
         }
 
-        public void AddMetaball(IBlackholeSpace metaball)
+        public void AddElement(IBlackholeSpace elem)
         {
-            if (!_metaballs.Contains(metaball))
+            if (!_elems.Contains(elem))
             {
-                _metaballs.Add(metaball);
+                _elems.Add(elem);
             }
         }
 
-        public void RemoveMetaball(IBlackholeSpace metaball)
+        public void RemoveElement(IBlackholeSpace elem)
         {
-            _metaballs.Remove(metaball);
+            _elems.Remove(elem);
         }
 
         public void RecreateRenderTarget(int width, int height)
@@ -197,14 +197,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public void DrawToTarget(GraphicsDevice device, SpriteBatch spriteBatch)
         {
-            if (_metaballs.Count == 0) return;
+            if (_elems.Count == 0) return;
             if (_target == null) this.RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
 
             device.SetRenderTarget(_target);
             device.Clear(Color.Transparent);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (var elem in _metaballs) elem.DrawBlackholeSpace(spriteBatch);
+            foreach (var elem in _elems) elem.DrawBlackholeSpace(spriteBatch);
             spriteBatch.End();
 
             device.SetRenderTargets(null);
@@ -212,7 +212,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public void DrawToScreen(SpriteBatch spriteBatch)
         {
-            if (Main.gameMenu || _target == null || _metaballs.Count == 0) return;
+            if (Main.gameMenu || _target == null || _elems.Count == 0) return;
 
             var texture = (Texture2D)_target;
             var effect = _spaceEffect.Value;

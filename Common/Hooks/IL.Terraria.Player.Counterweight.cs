@@ -37,7 +37,11 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 i => i.MatchStloc(out _))) return;
 
             c.Emit(Ldloc, projectileIndex);
-            c.EmitDelegate<Func<int, int>>((i) => (Main.projectile[i].ModProjectile is YoyoProjectile yoyo && yoyo.IsSoloYoyo()).ToInt());
+            c.EmitDelegate<Func<int, int>>((i) =>
+            {
+                var proj = Main.projectile[i];
+                return (proj.ModProjectile is YoyoProjectile yoyo && yoyo.IsSoloYoyo() && Main.player[proj.owner].yoyoGlove).ToInt();
+            });
             c.Emit(Ldloc, num2Index);
             c.Emit(Add);
             c.Emit(Stloc, num2Index);

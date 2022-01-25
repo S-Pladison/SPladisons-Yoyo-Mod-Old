@@ -12,8 +12,10 @@ using Terraria.ObjectData;
 namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
     [AutoloadEquip(EquipType.Head)]
-    public class FlamingFlower : PladItem
+    public class FlamingFlower : ModItem
     {
+        public override string Texture => ModAssets.ItemsPath + "FlamingFlower";
+
         public override void Load()
         {
             //Mod.AddEquipTexture(this, EquipType.Shield, "SPladisonsYoyoMod/Assets/Textures/Players/FlamingFlower_Head");
@@ -32,8 +34,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            var modPlayer = player.GetPladPlayer();
-            modPlayer.flamingFlowerEquipped = true;
+            player.GetPladPlayer().flamingFlowerEquipped = true;
         }
     }
 

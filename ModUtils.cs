@@ -143,6 +143,20 @@ namespace SPladisonsYoyoMod
             return (Color)(StringColorMethodInfo?.Invoke(null, new object[] { playerStringColor, stringColor }) ?? stringColor);
         }
 
+        public static void MoveTowards(this Entity entity, Vector2 target, float speed, float resistance)
+        {
+            var move = target - entity.Center;
+            var length = move.Length();
+
+            if (length > speed) move *= speed / length;
+
+            move = (entity.velocity * resistance + move) / (resistance + 1f);
+            length = move.Length();
+
+            if (length > speed) move *= speed / length;
+            entity.velocity = move;
+        }
+
         public delegate void DrawStringDelegate(Vector2 position, float rotation, float height, Color color, int counter);
 
         // ...

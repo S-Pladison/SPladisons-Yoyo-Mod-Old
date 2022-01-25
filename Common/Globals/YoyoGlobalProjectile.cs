@@ -1,4 +1,5 @@
-﻿using SPladisonsYoyoMod.Content.Items;
+﻿using Microsoft.Xna.Framework;
+using SPladisonsYoyoMod.Content.Items;
 using SPladisonsYoyoMod.Content.Items.Accessories;
 using System;
 using Terraria;
@@ -9,7 +10,17 @@ namespace SPladisonsYoyoMod.Common.Globals
 {
     public class YoyoGlobalProjectile : GlobalProjectile
     {
-        public override bool AppliesToEntity(Projectile entity, bool lateInstantiation) => entity.IsYoyo();
+        public override bool AppliesToEntity(Projectile projectile, bool lateInstantiation) => projectile.IsYoyo();
+
+        public override bool PreDraw(Projectile projectile, ref Color lightColor)
+        {
+            /*if (!projectile.counterweight || !Main.player[projectile.owner].GetPladPlayer().flamingFlowerEquipped) return true;
+
+            var texture = ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_18");
+            Main.EntitySpriteDraw(texture.Value, projectile.Center - Main.screenPosition, null, Color.White * 0.5f, projectile.rotation, texture.Size() * 0.5f, projectile.scale * 0.5f, SpriteEffects.None, 0);
+            */
+            return true;
+        }
 
         // ...
 
@@ -36,6 +47,8 @@ namespace SPladisonsYoyoMod.Common.Globals
 
             maxRange *= Math.Max(maxRangeMult, 0.1f);
         }
+
+        // ...
 
         public static readonly int YoyoAIStyle = 99;
     }

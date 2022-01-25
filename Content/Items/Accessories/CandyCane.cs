@@ -1,10 +1,13 @@
 ﻿using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
-    public class CandyCane : PladItem
+    public class CandyCane : ModItem
     {
+        public override string Texture => ModAssets.ItemsPath + "CandyCane";
+
         public override void SetDefaults()
         {
             Item.accessory = true;

@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using SPladisonsYoyoMod.Content.Items.Accessories;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -35,6 +36,14 @@ namespace SPladisonsYoyoMod.Common
         public override void PostUpdate()
         {
             this.UpdateFlamingFlowerZoneEffect();
+        }
+
+        public override void PostUpdateEquips()
+        {
+            if (desecratedDiceEquipped)
+            {
+                Player.counterWeight = ModContent.ProjectileType<DesecratedDiceProjectile>();
+            }
         }
 
         // ...

@@ -1,5 +1,7 @@
-﻿using Terraria;
+﻿using SPladisonsYoyoMod.Common.Globals;
+using Terraria;
 using Terraria.DataStructures;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
@@ -11,7 +13,11 @@ namespace SPladisonsYoyoMod.Common.Hooks
             var index = orig(spawnSource, X, Y, SpeedX, SpeedY, Type, Damage, KnockBack, Owner, ai0, ai1);
             var proj = Main.projectile[index];
 
-            if (proj?.ModProjectile is Content.PladProjectile pladProj) pladProj.OnSpawn();
+            if (proj != null)
+            {
+                if (proj.ModProjectile is Content.PladProjectile pladProj) pladProj.OnSpawn();
+                ModContent.GetInstance<PladGlobalProjectile>().OnSpawn(proj);
+            }
 
             return index;
         }

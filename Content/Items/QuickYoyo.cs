@@ -1,5 +1,8 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.IO;
+using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -37,7 +40,7 @@ namespace SPladisonsYoyoMod.Content.Items
 
     */
 
-    public abstract class YoyoItem : PladItem
+    public abstract class YoyoItem : ModItem
     {
         private readonly int _gamepadExtraRange;
 
@@ -46,7 +49,9 @@ namespace SPladisonsYoyoMod.Content.Items
             _gamepadExtraRange = gamepadExtraRange;
         }
 
-        public sealed override void SetStaticDefaults(ref uint sacrificeCount)
+        public override string Texture => ModAssets.ItemsPath + (ModContent.RequestIfExists<Texture2D>(ModAssets.ItemsPath + this.Name, out _) ? this.Name : "UnknownYoyo");
+
+        public sealed override void SetStaticDefaults()
         {
             ItemID.Sets.Yoyo[Type] = true;
             ItemID.Sets.GamepadExtraRange[Type] = _gamepadExtraRange;
@@ -157,5 +162,90 @@ namespace SPladisonsYoyoMod.Content.Items
         public virtual void OnActivateYoyoGlove() { }
         public virtual void ModifyYoyoLifeTime(ref float lifeTime) { }
         public virtual void ModifyYoyoMaximumRange(ref float maxRange) { }
+    }
+
+    public abstract class CounterweightProjectile : PladProjectile
+    {
+        private static readonly MethodInfo AI_099_1_MethodInfo = typeof(Projectile).GetMethod("AI_099_1", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private bool Try_AI_099_1()
+        {
+            if (AI_099_1_MethodInfo != null)
+            {
+                try
+                {
+                    AI_099_1_MethodInfo.Invoke(Projectile, Array.Empty<object>());
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
+            }
+            return false;
+        }
+
+        // ...
+
+        public override void SetDefaults()
+        {
+            Projectile.extraUpdates = 0;
+            Projectile.width = 10;
+            Projectile.height = 10;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.scale = 1f;
+            Projectile.counterweight = true;
+        }
+
+        public sealed override bool PreAI()
+        {
+            if (!Try_AI_099_1())
+            {
+                Projectile.Kill();
+                return false;
+            }
+
+            return false;
+        }
+
+        public sealed override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            bool flag = false;
+
+            if (Projectile.velocity.X != oldVelocity.X)
+            {
+                flag = true;
+                Projectile.velocity.X = oldVelocity.X * -1f;
+            }
+
+            if (Projectile.velocity.Y != oldVelocity.Y)
+            {
+                flag = true;
+                Projectile.velocity.Y = oldVelocity.Y * -1f;
+            }
+
+            if (flag)
+            {
+                Vector2 vector = Main.player[Projectile.owner].Center - Projectile.Center;
+                vector.Normalize();
+                vector *= Projectile.velocity.Length();
+                vector *= 0.25f;
+
+                Projectile.velocity *= 0.75f;
+                Projectile.velocity += vector;
+
+                if (Projectile.velocity.Length() > 6f)
+                {
+                    Projectile.velocity *= 0.5f;
+                }
+            }
+
+            return CounterweightOnTileCollide(oldVelocity);
+        }
+
+        public virtual bool CounterweightOnTileCollide(Vector2 oldVelocity) { return true; }
     }
 }

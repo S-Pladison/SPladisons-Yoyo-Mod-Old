@@ -6,8 +6,10 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Pets
 {
-    public class SuspiciousLookingBeehive : PladItem
+    public class SuspiciousLookingBeehive : ModItem
     {
+        public override string Texture => ModAssets.ItemsPath + "SuspiciousLookingBeehive";
+
         public override void SetDefaults()
         {
             Item.shoot = ModContent.ProjectileType<SquareBeeProjectile>();

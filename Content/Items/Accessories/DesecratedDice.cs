@@ -1,10 +1,13 @@
 ﻿using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
-    public class DesecratedDice : PladItem
+    public class DesecratedDice : ModItem
     {
+        public override string Texture => ModAssets.ItemsPath + "DesecratedDice";
+
         public override void SetDefaults()
         {
             Item.accessory = true;
@@ -19,5 +22,10 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         {
             player.GetPladPlayer().desecratedDiceEquipped = true;
         }
+    }
+
+    public class DesecratedDiceProjectile : CounterweightProjectile
+    {
+
     }
 }

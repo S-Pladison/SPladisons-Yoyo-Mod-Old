@@ -30,14 +30,21 @@ namespace SPladisonsYoyoMod.Common.Globals
                     int index = GetTooltipsLastIndex(tooltips);
                     if (index >= 0)
                     {
-                        tooltips.Insert(index + 1, new TooltipLine(Mod, "ModTooltip", Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoYoGlove")));
+                        tooltips.Insert(index + 1, new TooltipLine(Mod, "ModTooltip0", Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoYoGlove")));
                     }
                     break;
                 case int type when type >= ItemID.RedString && type <= ItemID.BlackString:
                     index = GetTooltipsLastIndex(tooltips);
                     if (index >= 0)
                     {
-                        tooltips[index].text = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoyoString");
+                        tooltips.RemoveAt(index);
+                        var text = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoyoString").Split("\n");
+                        var n = 0;
+
+                        foreach (var elem in text)
+                        {
+                            tooltips.Insert(index++, new TooltipLine(Mod, "ModTooltip" + n++, elem));
+                        }
                     }
                     break;
             }

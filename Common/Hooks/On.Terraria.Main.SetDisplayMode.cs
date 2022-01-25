@@ -1,6 +1,5 @@
 ﻿using SPladisonsYoyoMod.Content.Items.Weapons;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {

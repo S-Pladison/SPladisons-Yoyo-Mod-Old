@@ -10,13 +10,15 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
-    public class HallowedBearing : PladItem
+    public class HallowedBearing : ModItem
     {
+        public override string Texture => ModAssets.ItemsPath + "HallowedBearing";
+
         public override void SetDefaults()
         {
             Item.accessory = true;
-            Item.width = 32;
-            Item.height = 34;
+            Item.width = 46;
+            Item.height = 50;
 
             Item.rare = ItemRarityID.Pink;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
@@ -24,12 +26,20 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            player.longInvince = true;
             player.GetPladPlayer().hallowedBearingEquipped = true;
         }
 
         public override void AddRecipes()
         {
-            CreateRecipe().AddIngredient<Bearing>().AddIngredient(ItemID.HallowedBar, 5).AddIngredient(ItemID.PixieDust, 10).AddTile(TileID.MythrilAnvil).Register();
+            var recipe = CreateRecipe();
+            recipe.AddIngredient(ItemID.CrossNecklace);
+            recipe.AddIngredient<Bearing>();
+            recipe.AddIngredient(ItemID.LargeRuby);
+            recipe.AddIngredient(ItemID.HallowedBar, 5);
+            recipe.AddIngredient(ItemID.PixieDust, 10);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
         }
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)

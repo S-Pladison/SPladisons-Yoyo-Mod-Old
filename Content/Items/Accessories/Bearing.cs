@@ -1,10 +1,13 @@
 ﻿using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
-    public class Bearing : PladItem
+    public class Bearing : ModItem
     {
+        public override string Texture => ModAssets.ItemsPath + "Bearing";
+
         public override void SetDefaults()
         {
             Item.accessory = true;

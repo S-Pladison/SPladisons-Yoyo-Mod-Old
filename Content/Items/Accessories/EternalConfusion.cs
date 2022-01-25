@@ -7,8 +7,10 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
-    public class EternalConfusion : PladItem
+    public class EternalConfusion : ModItem
     {
+        public override string Texture => ModAssets.ItemsPath + "EternalConfusion";
+
         public override void SetDefaults()
         {
             Item.accessory = true;

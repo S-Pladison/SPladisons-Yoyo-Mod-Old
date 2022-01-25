@@ -15,6 +15,7 @@ Mods: {
 			SuspiciousLookingBeehive: Suspicious Looking Beehive
 
 			// Weapons
+			AdamantiteYoyo: Adamantite Yoyo
 			BellowingThunder: Bellowing Thunder
 			Blackhole: Blackhole
 			BloomingDeath: Blooming Death
@@ -26,6 +27,7 @@ Mods: {
 			Stable: Stable
 			TheFinestHour: The Finest Hour
 			TheStellarThrow: The Stellar Throw
+			TitaniumYoyo: Titanium Yoyo
 			WakeOfEarth: Wake of Earth
 		}
 
@@ -38,14 +40,17 @@ Mods: {
 			FlamingFlower: ...
 			HallowedBearing:
 				'''
-				5% increased yoyo critical strike chance
+				Increases length of invincibility after taking damage
 				{0} increased yoyo duration
 				Additional bonus depends on the time of day
-				'An example of another lazy way to add a new item'
 				'''
 
 			// Vanilla Accessories
-			YoyoString: Increases yoyo range by 4 tiles
+			YoyoString: 
+				'''
+				Increases yoyo range by 4 tiles
+				Slightly increases the string length of counterweights
+				'''
 			YoYoGlove: Some yoyos have different effect
 
 			// Misc
@@ -57,6 +62,7 @@ Mods: {
 				'''
 
 			// Weapons
+			AdamantiteYoyo: ...
 			BellowingThunder:
 				'''
 				On hit, gives a {0} chance to strike the enemy with lightning
@@ -65,9 +71,9 @@ Mods: {
 			Blackhole:
 				'''
 				Pulls enemies to itself
+				'Sucks in undead vikings...'
 				|?|Changes the effect of «Yoyo Glove»:
-				• Increases pull radius by 25%
-				• Increases damage by 20%
+				• Increases pull radius by 25% and damage by 20%
 				'''
 			BloomingDeath: Yoyo and its string poison enemies
 			Indefinite: ...
@@ -83,6 +89,11 @@ Mods: {
 			Stable: ...
 			TheFinestHour: ...
 			TheStellarThrow: ...
+			TitaniumYoyo:
+				'''
+				Attacking generates a defensive barrier of titanium shards
+				Effect stacks with titanium armor, while increasing damage of shards by 30%
+				'''
 			WakeOfEarth: ...
 
 			// Prefixes

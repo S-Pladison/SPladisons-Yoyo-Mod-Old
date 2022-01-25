@@ -17,11 +17,13 @@ namespace SPladisonsYoyoMod
 
         public override void Load()
         {
+            ModAssets.Load(this);
             SPladisonsYoyoMod.LoadExtraTextures(this);
         }
 
         public override void Unload()
         {
+            ModAssets.Unload();
             Instance = null;
         }
 
