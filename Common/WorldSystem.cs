@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using SPladisonsYoyoMod.Content.Items.Misc;
+using SPladisonsYoyoMod.Content.Items.Weapons;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -180,7 +182,7 @@ namespace SPladisonsYoyoMod.Common
 
                 if (Main.wallDungeon[(int)Main.tile[x, y].wall] && !Main.tile[x, y].IsActive)
                 {
-                    flag = WorldGen.AddBuriedChest(x, y, ModContent.ItemType<Content.Items.Weapons.Blackhole>(), false, 1, chestTileType: (ushort)ModContent.TileType<Content.Items.Placeables.SpaceChestTile>());
+                    flag = WorldGen.AddBuriedChest(x, y, ModContent.ItemType<Blackhole>(), false, 1, chestTileType: (ushort)ModContent.TileType<SpaceChestTile>());
                 }
             }
         }

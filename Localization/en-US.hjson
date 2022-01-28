@@ -10,6 +10,7 @@ Mods: {
 			HallowedBearing: Hallowed Bearing
 
 			// Misc
+			StrangeDrink: Strange Drink
 			SpaceKey: Space Key
 			SpaceChest: Space Chest
 			SuspiciousLookingBeehive: Suspicious Looking Beehive
@@ -20,6 +21,7 @@ Mods: {
 			Blackhole: Blackhole
 			BloomingDeath: Blooming Death
 			Indefinite: Indefinite
+			MyocardialInfarction: Myocardial Infarction
 			OutburstingGust: Outbursting Gust
 			PrototypeF34: Prototype F-34
 			ResidualLight: Residual Light
@@ -41,6 +43,7 @@ Mods: {
 			HallowedBearing:
 				'''
 				Increases length of invincibility after taking damage
+				Reduces the cooldown of healing potions by 25%
 				{0} increased yoyo duration
 				Additional bonus depends on the time of day
 				'''
@@ -54,6 +57,11 @@ Mods: {
 			YoYoGlove: Some yoyos have different effect
 
 			// Misc
+			StrangeDrink:
+				'''
+				Can be gifted to a nurse
+				'Surprisingly, it smells really good'
+				'''
 			SpaceKey: Unlocks a Space Chest in the dungeon
 			SuspiciousLookingBeehive:
 				'''
@@ -62,7 +70,7 @@ Mods: {
 				'''
 
 			// Weapons
-			AdamantiteYoyo: ...
+			AdamantiteYoyo: Leaves behind dangerous metal dust
 			BellowingThunder:
 				'''
 				On hit, gives a {0} chance to strike the enemy with lightning
@@ -77,6 +85,7 @@ Mods: {
 				'''
 			BloomingDeath: Yoyo and its string poison enemies
 			Indefinite: ...
+			MyocardialInfarction: ...
 			OutburstingGust: ...
 			PrototypeF34: ...
 			ResidualLight:

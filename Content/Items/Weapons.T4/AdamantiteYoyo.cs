@@ -29,4 +29,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public AdamantiteYoyoProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
     }
+
+    /*public class AdamantiteYoyoDustProjectile : ModProjectile
+    { 
+    }*/
 }

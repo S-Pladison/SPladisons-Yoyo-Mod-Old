@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -12,7 +11,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace SPladisonsYoyoMod.Content.Items.Placeables
+namespace SPladisonsYoyoMod.Content.Items.Misc
 {
     public class SpaceChest : ModItem
     {
@@ -34,28 +33,6 @@ namespace SPladisonsYoyoMod.Content.Items.Placeables
             Item.consumable = true;
             Item.createTile = ModContent.TileType<SpaceChestTile>();
             Item.placeStyle = 1;
-        }
-    }
-
-    public class SpaceKey : ModItem
-    {
-        public override string Texture => ModAssets.ItemsPath + "SpaceKey";
-
-        public override void SetDefaults()
-        {
-            Item.width = 14;
-            Item.height = 26;
-
-            Item.rare = ItemRarityID.Yellow;
-            Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 2, silver: 0, copper: 0);
-            Item.maxStack = 99;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            var tooltip = tooltips.Find(i => i.mod == "Terraria" && i.Name.StartsWith("Tooltip"));
-
-            if (tooltip != null && !NPC.downedPlantBoss) tooltip.text = Language.GetTextValue("LegacyTooltip.59");
         }
     }
 

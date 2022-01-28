@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.ItemDropRules;
+using SPladisonsYoyoMod.Content.Items.Misc;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -21,7 +21,31 @@ namespace SPladisonsYoyoMod.Common.Globals
 
         public override void ModifyGlobalLoot(GlobalLoot globalLoot)
         {
-            globalLoot.Add(new ItemDropWithConditionRule(ModContent.ItemType<Content.Items.Placeables.SpaceKey>(), 2500, 1, 1, new SpaceKeyCondition(), 1));
+            globalLoot.Add(new ItemDropWithConditionRule(ModContent.ItemType<SpaceKey>(), 2500, 1, 1, new SpaceKeyCondition(), 1));
+        }
+
+        public override void GetChat(NPC npc, ref string chat)
+        {
+            switch (npc.type)
+            {
+                case NPCID.Nurse:
+                    NurseGiftSystem.Instance.GetChat();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public override void OnChatButtonClicked(NPC npc, bool firstButton)
+        {
+            switch (npc.type)
+            {
+                case NPCID.Nurse:
+                    NurseGiftSystem.Instance.OnChatButtonClicked(firstButton);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public override void SetupShop(int type, Chest shop, ref int nextSlot)

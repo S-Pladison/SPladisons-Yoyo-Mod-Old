@@ -29,7 +29,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class BlackholeProjectile : YoyoProjectile, IDrawAdditive, IBlackholeSpace
     {
-        public static readonly float Radius = 16 * 9;
+        public static readonly float Radius = 16 * 10;
         private float RadiusProgress { get => Projectile.localAI[1]; set => Projectile.localAI[1] = value; }
 
         // ...
@@ -57,23 +57,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             {
                 NPC target = Main.npc[i];
 
-                if (target == null || !target.active) continue;
-                if (target.friendly || target.lifeMax <= 5 || target.boss || target.dontTakeDamage || target.immortal) continue;
+                if (target == null || !target.CanBeChasedBy(Projectile, false) || target.boss) continue;
                 if (!Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, target.position, target.width, target.height)) continue;
 
-                float numX = Projectile.position.X - target.position.X - (float)(target.width / 2);
-                float numY = Projectile.position.Y - target.position.Y - (float)(target.height / 2);
-                float distance = (float)Math.Sqrt((double)(numX * numX + numY * numY));
+                Vector2 vector = Projectile.Center - target.Center;
+                float distance = vector.Length();
                 float currentRadius = Radius * RadiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f);
 
                 if (distance < currentRadius)
                 {
-                    distance = 2f / distance;
-                    numX *= distance * 3;
-                    numY *= distance * 3;
+                    vector *= 3f / distance * 7f;
 
-                    target.velocity.X = numX;
-                    target.velocity.Y = numY;
+                    target.velocity = Vector2.Lerp(vector * (1 - distance / currentRadius), target.velocity, 0.5f);
                     target.netUpdate = true;
                 }
             }
@@ -124,13 +119,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IBlackholeSpace.DrawBlackholeSpace(SpriteBatch spriteBatch)
         {
+            var scale = this.RadiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f) * Projectile.scale;
             var drawPosition = GetDrawPosition();
             var texture = SPladisonsYoyoMod.GetExtraTextures[30];
-            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.5f * Projectile.scale, SpriteEffects.None, 0f);
-            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.37f * Projectile.scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.5f * scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.37f * scale, SpriteEffects.None, 0f);
 
             texture = SPladisonsYoyoMod.GetExtraTextures[2];
-            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, Main.GlobalTimeWrappedHourly * 2.5f, texture.Size() * 0.5f, 0.35f * (1 + MathF.Sin(Main.GlobalTimeWrappedHourly) * 0.1f) * Projectile.scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, Main.GlobalTimeWrappedHourly * 2.5f, texture.Size() * 0.5f, 0.35f * (1 + MathF.Sin(Main.GlobalTimeWrappedHourly) * 0.1f) * scale, SpriteEffects.None, 0f);
         }
     }
 

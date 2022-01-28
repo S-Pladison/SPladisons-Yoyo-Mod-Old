@@ -27,6 +27,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.longInvince = true;
+            player.pStone = true;
             player.GetPladPlayer().hallowedBearingEquipped = true;
         }
 
@@ -34,8 +35,8 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         {
             var recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.CrossNecklace);
+            recipe.AddIngredient(ItemID.PhilosophersStone);
             recipe.AddIngredient<Bearing>();
-            recipe.AddIngredient(ItemID.LargeRuby);
             recipe.AddIngredient(ItemID.HallowedBar, 5);
             recipe.AddIngredient(ItemID.PixieDust, 10);
             recipe.AddTile(TileID.MythrilAnvil);

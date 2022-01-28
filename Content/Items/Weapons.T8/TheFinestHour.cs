@@ -30,6 +30,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             var recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.Terrarian);
             recipe.AddIngredient<Blackhole>();
+            recipe.AddIngredient<MyocardialInfarction>();
             recipe.AddIngredient<TheStellarThrow>();
             recipe.AddIngredient<ResidualLight>();
             recipe.AddTile(TileID.LunarCraftingStation);

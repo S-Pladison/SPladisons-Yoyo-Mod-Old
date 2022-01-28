@@ -2,12 +2,16 @@
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Terraria.UI;
 
 namespace SPladisonsYoyoMod.Content.Items.Accessories
 {
@@ -36,6 +40,34 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         {
             player.GetPladPlayer().flamingFlowerEquipped = true;
         }
+    }
+
+    public class FlamingFlowerMapLayer : IMapLayer, ILoadable
+    {
+        private const float RADIUS = 16 * 90;
+
+        public bool Visible { get; set; } = true;
+        public void Load(Mod mod) => (LayersInfo.GetValue(Main.MapIcons) as List<IMapLayer>).Add(this);
+        public void Unload() => (LayersInfo.GetValue(Main.MapIcons) as List<IMapLayer>).Remove(this);
+
+        public void Draw(ref MapOverlayDrawContext context, ref string text)
+        {
+            var player = Main.LocalPlayer;
+            var position = WorldSystem.FlamingFlowerPosition.ToWorldCoordinates() + new Vector2(16, 16);
+            var distance = (position - player.Center).Length();
+            var progress = 1f;
+
+            if (distance > RADIUS) return;
+            if (distance > (RADIUS - 400)) progress = MathHelper.SmoothStep(0, 1, (RADIUS - distance) / 400f);
+
+            position = WorldSystem.FlamingFlowerPosition.ToVector2() + Vector2.One;
+            if (context.Draw(SPladisonsYoyoMod.GetExtraTextures[1].Value, position, Color.White * progress, new SpriteFrame(1, 1), 0.75f, 0.75f, Alignment.Center).IsMouseOver && progress > 0.2f)
+            {
+                text = Language.GetTextValue("Mods.SPladisonsYoyoMod.GameUI.FlamingFlowerMapIcon");
+            }
+        }
+
+        private static readonly FieldInfo LayersInfo = typeof(MapIconOverlay).GetField("_layers", BindingFlags.NonPublic | BindingFlags.Instance);
     }
 
     public class FlamingFlowerTile : PladTile
@@ -125,38 +157,6 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             float progress = MathHelper.Lerp(0.4f, 0.9f, (float)Math.Abs(Math.Pow(Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), 4f)));
 
             spriteBatch.Draw(texture, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.frameX, tile.frameY, 16, height), Color.White * progress, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-        }
-
-        public static void DrawMapIcon(SpriteBatch spriteBatch, Vector2 mapTopLeft, Vector2 mapX2Y2AndOff, Rectangle? mapRect, float mapScale, float drawScale, ref string mouseTextString)
-        {
-            if (Main.LocalPlayer == null || WorldSystem.FlamingFlowerPosition == Point.Zero) return;
-
-            Vector2 position = WorldSystem.FlamingFlowerPosition.ToVector2() * 16 + new Vector2(16, 16);
-            float dist = (position - Main.LocalPlayer.Center).Length();
-
-            const float maxDist = 16 * 90;
-            if (dist > maxDist) return;
-
-            Vector2 value = new Vector2(0f, (float)(-(float)Main.LocalPlayer.height / 2));
-            Vector2 vec = (position + value) / 16f - mapTopLeft;
-            vec *= mapScale;
-            vec += mapX2Y2AndOff;
-            vec = vec.Floor();
-
-            if (mapRect == null || mapRect.Value.Contains(vec.ToPoint()))
-            {
-                Texture2D texture = SPladisonsYoyoMod.GetExtraTextures[1].Value;
-                Rectangle rectangle = texture.Frame(1, 1, 0, 0, 0, 0);
-
-                float progress = 1;
-                if (dist > (maxDist - 400)) progress = MathHelper.SmoothStep(0, 1, (maxDist - dist) / 400);
-
-                spriteBatch.Draw(texture, vec, new Microsoft.Xna.Framework.Rectangle?(rectangle), Color.White * progress, 0f, rectangle.Size() / 2f, drawScale * 0.8f, SpriteEffects.None, 0f);
-                if (progress > 0.2f && Utils.CenteredRectangle(vec, rectangle.Size() * drawScale).Contains(Main.MouseScreen.ToPoint()))
-                {
-                    mouseTextString = Language.GetTextValue("Mods.SPladisonsYoyoMod.GameUI.FlamingFlowerMapIcon");
-                }
-            }
         }
     }
 }

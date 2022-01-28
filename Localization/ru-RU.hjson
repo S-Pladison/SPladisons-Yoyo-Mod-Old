@@ -10,6 +10,7 @@ Mods: {
 			HallowedBearing: Освященный подшипник
 
 			// Разное
+			StrangeDrink: Странный напиток
 			SpaceKey: Космический ключ
 			SpaceChest: Космический сундук
 			SuspiciousLookingBeehive: Подозрительно выглядящий улей
@@ -20,6 +21,7 @@ Mods: {
 			Blackhole: Черная дыра
 			BloomingDeath: Цветущая смерть
 			Indefinite: Неопределенный
+			MyocardialInfarction: Инфаркт миокарда
 			OutburstingGust: Шквальный ветер
 			PrototypeF34: Прототип F-34
 			ResidualLight: Остаточный свет
@@ -41,6 +43,7 @@ Mods: {
 			HallowedBearing:
 				'''
 				Увеличивает время неуязвимости после получения урона
+				Снижает время ожидания от лечащих зелий на 25%
 				Увеличивает время полета йо-йо на {0}
 				Дополнительный бонус зависит от времени суток
 				'''
@@ -54,6 +57,11 @@ Mods: {
 			YoYoGlove: На некоторые йо-йо действует другой эффект
 
 			// Разное
+			StrangeDrink:
+				'''
+				Можно подарить медсестре
+				«Удивительно, но пахнет он восхитительно»
+				'''
 			SpaceKey: Открывает космический сундук в Темнице
 			SuspiciousLookingBeehive:
 				'''
@@ -62,7 +70,7 @@ Mods: {
 				'''
 
 			// Оружия
-			AdamantiteYoyo: ...
+			AdamantiteYoyo: Оставляет за собой опасную металлическую пыль
 			BellowingThunder:
 				'''
 				При попадании дает {0} шанс поразить врага молнией
@@ -77,6 +85,7 @@ Mods: {
 				'''
 			BloomingDeath: Йо-йо и его нить отравляют врагов
 			Indefinite: ...
+			MyocardialInfarction: ...
 			OutburstingGust: ...
 			PrototypeF34: ...
 			ResidualLight:
