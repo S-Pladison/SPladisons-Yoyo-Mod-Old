@@ -63,7 +63,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             if (distance > (RADIUS - 400)) progress = MathHelper.SmoothStep(0, 1, (RADIUS - distance) / 400f);
 
             position = WorldSystem.FlamingFlowerPosition.ToVector2() + Vector2.One;
-            if (context.Draw(SPladisonsYoyoMod.GetExtraTextures[1].Value, position, Color.White * progress, new SpriteFrame(1, 1), 0.75f, 0.75f, Alignment.Center).IsMouseOver && progress > 0.2f)
+            if (context.Draw(ModAssets.GetExtraTexture(1).Value, position, Color.White * progress, new SpriteFrame(1, 1), 0.75f, 0.75f, Alignment.Center).IsMouseOver && progress > 0.2f)
             {
                 text = Language.GetTextValue("Mods.SPladisonsYoyoMod.GameUI.FlamingFlowerMapIcon");
             }

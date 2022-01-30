@@ -25,7 +25,7 @@ namespace SPladisonsYoyoMod.Common
         {
             if (Main.dedServ) return;
 
-            BasicPrimitiveEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/Primitive");
+            BasicPrimitiveEffect = ModAssets.GetEffect("Primitive");
             UpdateTransformMatrix();
         }
 
@@ -104,7 +104,7 @@ namespace SPladisonsYoyoMod.Common
                 _maxLength = length;
 
                 _effect = effect ?? PrimitiveTrailSystem.Instance.BasicPrimitiveEffect;
-                _effect.Value.Parameters["texture0"].SetValue(SPladisonsYoyoMod.GetExtraTextures[6].Value);
+                _effect.Value.Parameters["texture0"].SetValue(ModAssets.GetExtraTexture(6).Value);
 
                 this.Additive = additive;
             }

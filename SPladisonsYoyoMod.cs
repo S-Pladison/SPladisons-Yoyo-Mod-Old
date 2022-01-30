@@ -1,5 +1,3 @@
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -11,19 +9,14 @@ namespace SPladisonsYoyoMod
     {
         public static SPladisonsYoyoMod Instance { get; private set; }
         public static IReadOnlyList<int> GetYoyos => _yoyos;
-        public static IReadOnlyList<Asset<Texture2D>> GetExtraTextures => _extraTextures;
 
-        public SPladisonsYoyoMod() => Instance = this;
-
-        public override void Load()
+        public SPladisonsYoyoMod()
         {
-            ModAssets.Load(this);
-            SPladisonsYoyoMod.LoadExtraTextures(this);
+            Instance = this;
         }
 
         public override void Unload()
         {
-            ModAssets.Unload();
             Instance = null;
         }
 
@@ -53,13 +46,6 @@ namespace SPladisonsYoyoMod
 
         // ...
 
-        private static void LoadExtraTextures(Mod mod)
-        {
-            int index = 0;
-            while (mod.RequestAssetIfExists("Assets/Textures/Misc/Extra_" + index++, out Asset<Texture2D> texture)) _extraTextures.Add(texture);
-        }
-
         private static readonly List<int> _yoyos = new List<int>();
-        private static readonly List<Asset<Texture2D>> _extraTextures = new List<Asset<Texture2D>>();
     }
 }

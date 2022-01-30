@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Dusts
 {
-    public class CircleDust : PladDust
+    public class CircleDust : ModDust
     {
+        public override string Texture => ModAssets.DustsPath + "CircleDust";
+
         public override void OnSpawn(Dust dust)
         {
             dust.noGravity = true;

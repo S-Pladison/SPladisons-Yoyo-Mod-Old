@@ -62,8 +62,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             if (Main.dedServ) return;
 
-            ResidualLightEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/ResidualLight", AssetRequestMode.ImmediateLoad);
-            ResidualLightEffect.Value.Parameters["texture1"].SetValue(SPladisonsYoyoMod.GetExtraTextures[20].Value);
+            ResidualLightEffect = ModAssets.GetEffect("ResidualLight", AssetRequestMode.ImmediateLoad);
+            ResidualLightEffect.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(20).Value);
         }
 
         public override void OnSpawn()
@@ -77,7 +77,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 additive: true,
                 smoothness: 20
             );
-            trail.SetEffectTexture(SPladisonsYoyoMod.GetExtraTextures[11].Value);
+            trail.SetEffectTexture(ModAssets.GetExtraTexture(11).Value);
             trail.SetDissolveSpeed(0.35f);
             trail.SetMaxPoints(10);
             PrimitiveTrailSystem.NewTrail(trail);
@@ -167,7 +167,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     additive: true
                 );
                 trail.SetMaxPoints(10);
-                trail.SetEffectTexture(SPladisonsYoyoMod.GetExtraTextures[9].Value);
+                trail.SetEffectTexture(ModAssets.GetExtraTexture(9).Value);
                 trail.SetDissolveSpeed(0.2f);
                 PrimitiveTrailSystem.NewTrail(trail);
             }
@@ -181,7 +181,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public static readonly Color[] Colors = new Color[] { new Color(252, 222, 252), new Color(202, 243, 248), new Color(155, 255, 225) };
         private Color _color;
 
-        public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Misc/Extra_0";
+        public override string Texture => ModAssets.InvisiblePath;
 
         public override void SetDefaults()
         {
@@ -228,13 +228,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         void IDrawAdditive.DrawAdditive()
         {
             var position = GetDrawPosition();
-            var texture = SPladisonsYoyoMod.GetExtraTextures[21];
+            var texture = ModAssets.GetExtraTexture(21);
             Main.spriteBatch.Draw(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
 
-            texture = SPladisonsYoyoMod.GetExtraTextures[23];
+            texture = ModAssets.GetExtraTexture(23);
             Main.spriteBatch.Draw(texture.Value, position, null, _color * 0.25f * Projectile.scale * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.4f, SpriteEffects.None, 0);
 
-            texture = SPladisonsYoyoMod.GetExtraTextures[3];
+            texture = ModAssets.GetExtraTexture(3);
             Main.spriteBatch.Draw(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.3f, SpriteEffects.None, 0);
         }
     }
@@ -243,7 +243,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public Vector2 TargetPos { get => new Vector2(Projectile.ai[0], Projectile.ai[1]); }
 
-        public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Misc/Extra_0";
+        public override string Texture => ModAssets.InvisiblePath;
 
         public override void SetDefaults()
         {

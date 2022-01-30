@@ -99,7 +99,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override void PostDraw(Color lightColor)
         {
             var drawPosition = GetDrawPosition();
-            var texture = SPladisonsYoyoMod.GetExtraTextures[5];
+            var texture = ModAssets.GetExtraTexture(5);
             Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.Black, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
         }
 
@@ -108,11 +108,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             // ... Ok... 0.0125f?.. 0.025f... sin? 
 
             var drawPosition = GetDrawPosition();
-            var texture = SPladisonsYoyoMod.GetExtraTextures[32];
+            var texture = ModAssets.GetExtraTexture(32);
             var rotation = (float)Math.Sin(Projectile.localAI[0] * 0.0125f);
             Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * rotation, (float)Math.Sin(Projectile.localAI[0] * 0.025f), texture.Size() * 0.5f, (0.4f + rotation * 0.15f) * Projectile.scale, SpriteEffects.None, 0);
 
-            texture = SPladisonsYoyoMod.GetExtraTextures[31];
+            texture = ModAssets.GetExtraTexture(31);
             Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * 0.5f, -rotation * 1.5f + MathHelper.Pi, texture.Size() * 0.5f, 0.3f * Projectile.scale, SpriteEffects.None, 0);
             Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White, rotation, texture.Size() * 0.5f, 0.2f * Projectile.scale, SpriteEffects.None, 0);
         }
@@ -121,11 +121,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             var scale = this.RadiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f) * Projectile.scale;
             var drawPosition = GetDrawPosition();
-            var texture = SPladisonsYoyoMod.GetExtraTextures[30];
+            var texture = ModAssets.GetExtraTexture(30);
             spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.5f * scale, SpriteEffects.None, 0f);
             spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.37f * scale, SpriteEffects.None, 0f);
 
-            texture = SPladisonsYoyoMod.GetExtraTextures[2];
+            texture = ModAssets.GetExtraTexture(2);
             spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, Main.GlobalTimeWrappedHourly * 2.5f, texture.Size() * 0.5f, 0.35f * (1 + MathF.Sin(Main.GlobalTimeWrappedHourly) * 0.1f) * scale, SpriteEffects.None, 0f);
         }
     }
@@ -146,16 +146,16 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         private Asset<Texture2D> _firstTexture;
         private Asset<Texture2D> _secondTexture;
 
-        public int MetaballsCount => _elems.Count;
+        public int ElementsCount => _elems.Count;
 
         public override void Load()
         {
-            _firstTexture = ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_28", AssetRequestMode.ImmediateLoad);
-            _secondTexture = ModContent.Request<Texture2D>("SPladisonsYoyoMod/Assets/Textures/Misc/Extra_29", AssetRequestMode.ImmediateLoad);
+            _firstTexture = ModAssets.GetExtraTexture(28, AssetRequestMode.ImmediateLoad);
+            _secondTexture = ModAssets.GetExtraTexture(29, AssetRequestMode.ImmediateLoad);
 
             if (Main.dedServ) return;
 
-            _spaceEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/BlackholeSpace", AssetRequestMode.ImmediateLoad);
+            _spaceEffect = ModAssets.GetEffect("BlackholeSpace", AssetRequestMode.ImmediateLoad);
             _spaceEffect.Value.Parameters["texture1"].SetValue(_firstTexture.Value);
             _spaceEffect.Value.Parameters["texture2"].SetValue(_secondTexture.Value);
             _spaceEffect.Value.Parameters["color0"].SetValue(Colors[0].ToVector4());

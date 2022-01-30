@@ -38,7 +38,7 @@ namespace SPladisonsYoyoMod.Common
 
         public override void PostUpdateWorld()
         {
-            if (Main.dayTime && Main.time == 0)
+            if (Main.time == 0 && Main.dayTime)
             {
                 UpdateFlamingFlower();
             }

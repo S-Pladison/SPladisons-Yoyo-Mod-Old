@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Dusts
 {
-    public class StarDust : PladDust
+    public class StarDust : ModDust
     {
+        public override string Texture => ModAssets.DustsPath + "StarDust";
+
         public override void OnSpawn(Dust dust)
         {
             dust.noGravity = true;

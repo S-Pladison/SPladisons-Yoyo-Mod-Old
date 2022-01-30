@@ -73,7 +73,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             var drawPosition = GetDrawPosition();
             var color = Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), new Color(230, 230, 230, 230));
-            var texture = SPladisonsYoyoMod.GetExtraTextures[12];
+            var texture = ModAssets.GetExtraTexture(12);
 
             for (int i = 0; i < 5; i++)
             {
@@ -89,7 +89,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             rotation += (float)Math.Sin(Main.GlobalTimeWrappedHourly) * 0.25f;
             position += new Vector2(-7, 0).RotatedBy(rotation);
 
-            var texture = SPladisonsYoyoMod.GetExtraTextures[10];
+            var texture = ModAssets.GetExtraTexture(10);
             var colorProgress = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2f + i * 0.3f);
             var flip = i % 2 == 0 ? 1 : -1;
             var rectangle = new Rectangle(0, texture.Height() / 3 * (int)(i % 3), texture.Width(), texture.Height() / 3);

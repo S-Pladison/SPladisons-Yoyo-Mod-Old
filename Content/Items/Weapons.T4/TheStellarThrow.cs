@@ -46,7 +46,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 color: (progress) => ModUtils.GradientValue<Color>(method: Color.Lerp, percent: progress, values: TrailColors) * (1 - progress),
                 additive: true
             );
-            trail.SetEffectTexture(SPladisonsYoyoMod.GetExtraTextures[7].Value);
+            trail.SetEffectTexture(ModAssets.GetExtraTexture(7).Value);
             trail.SetDissolveSpeed(0.26f);
             PrimitiveTrailSystem.NewTrail(trail);
         }
@@ -73,20 +73,20 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDrawExtras()
         {
-            Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[5].Value, GetDrawPosition(), null, Color.White, Projectile.rotation, SPladisonsYoyoMod.GetExtraTextures[5].Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(ModAssets.GetExtraTexture(5).Value, GetDrawPosition(), null, Color.White, Projectile.rotation, ModAssets.GetExtraTexture(5).Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
             return true;
         }
 
         void IDrawAdditive.DrawAdditive()
         {
             var drawPosition = GetDrawPosition();
-            var origin = SPladisonsYoyoMod.GetExtraTextures[8].Size() * 0.5f + new Vector2(0, 6);
+            var origin = ModAssets.GetExtraTexture(8).Size() * 0.5f + new Vector2(0, 6);
             var starRotation = Main.GlobalTimeWrappedHourly;
             var starScalePulse = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 3f) * 0.15f;
 
             void DrawStar(Color color, float rotation, float scale)
             {
-                Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[8].Value, drawPosition, null, color, rotation, origin, scale + starScalePulse, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(ModAssets.GetExtraTexture(8).Value, drawPosition, null, color, rotation, origin, scale + starScalePulse, SpriteEffects.None, 0);
             }
 
             DrawStar(new Color(16, 11, 25, 90), -starRotation, 0.5f);

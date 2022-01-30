@@ -50,7 +50,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             if (Main.dedServ) return;
 
-            TrailEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/TheFinestHour");
+            TrailEffect = ModAssets.GetEffect("TheFinestHour");
         }
 
         public override void Unload()
@@ -60,7 +60,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void YoyoSetStaticDefaults()
         {
-            TrailEffect?.Value.Parameters["texture1"].SetValue(SPladisonsYoyoMod.GetExtraTextures[27].Value);
+            TrailEffect?.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(27).Value);
         }
 
         public override bool IsSoloYoyo() => true;
@@ -83,7 +83,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IDrawAdditive.DrawAdditive()
         {
-            Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[8].Value, GetDrawPosition(), null, new Color(251, 239, 223), Projectile.rotation * 0.15f, SPladisonsYoyoMod.GetExtraTextures[8].Size() * 0.5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
+            var texture = ModAssets.GetExtraTexture(8);
+            Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, new Color(251, 239, 223), Projectile.rotation * 0.15f, texture.Size() * 0.5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
         }
     }
 }

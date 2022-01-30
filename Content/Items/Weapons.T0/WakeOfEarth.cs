@@ -57,7 +57,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             set => Projectile.ai[0] = value;
         }
 
-        public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Misc/Extra_0";
+        public override string Texture => ModAssets.InvisiblePath;
 
         public override void SetDefaults()
         {
@@ -107,7 +107,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class WakeOfEarthShakingTileProjectile : PladProjectile
     {
-        public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Misc/Extra_0";
+        public override string Texture => ModAssets.InvisiblePath;
 
         public override void SetDefaults()
         {

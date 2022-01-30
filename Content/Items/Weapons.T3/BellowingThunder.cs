@@ -114,7 +114,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDrawExtras()
         {
-            var texture = SPladisonsYoyoMod.GetExtraTextures[5];
+            var texture = ModAssets.GetExtraTexture(5);
 
             for (int k = 1; k < Projectile.oldPos.Length; k++)
             {
@@ -141,16 +141,16 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IDrawAdditive.DrawAdditive()
         {
-            var texture = SPladisonsYoyoMod.GetExtraTextures[21];
+            var texture = ModAssets.GetExtraTexture(21);
             var drawPosition = GetDrawPosition();
 
             Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
             _effect.Draw(drawPosition, 0.45f * Projectile.scale);
 
-            texture = SPladisonsYoyoMod.GetExtraTextures[23];
+            texture = ModAssets.GetExtraTexture(23);
             Main.EntitySpriteDraw(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, Projectile.scale * 0.1f, SpriteEffects.None, 0);
 
-            texture = SPladisonsYoyoMod.GetExtraTextures[21];
+            texture = ModAssets.GetExtraTexture(21);
             Main.EntitySpriteDraw(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.2f, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
         }
 
@@ -173,7 +173,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             {
                 if (!_active) return;
 
-                var texture = SPladisonsYoyoMod.GetExtraTextures[22];
+                var texture = ModAssets.GetExtraTexture(22);
                 var rectangle = new Rectangle(_time * 96, _frame * 96, 96, 96);
 
                 Main.EntitySpriteDraw(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, 0);
@@ -214,8 +214,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             if (Main.dedServ) return;
 
-            BellowingThunderEffect = ModContent.Request<Effect>("SPladisonsYoyoMod/Assets/Effects/BellowingThunder", AssetRequestMode.ImmediateLoad);
-            BellowingThunderEffect.Value.Parameters["texture1"].SetValue(SPladisonsYoyoMod.GetExtraTextures[24].Value);
+            BellowingThunderEffect = ModAssets.GetEffect("BellowingThunder", AssetRequestMode.ImmediateLoad);
+            BellowingThunderEffect.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(24).Value);
         }
 
         public override void SetDefaults()
@@ -304,12 +304,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
             SetSpriteBatch(sortMode: SpriteSortMode.Deferred, blendState: BlendState.Additive);
             {
-                Main.EntitySpriteDraw(SPladisonsYoyoMod.GetExtraTextures[25].Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(ModAssets.GetExtraTexture(25).Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, 0);
 
-                texture = SPladisonsYoyoMod.GetExtraTextures[26];
+                texture = ModAssets.GetExtraTexture(26);
                 Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, texture.Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, 0);
 
-                texture = SPladisonsYoyoMod.GetExtraTextures[23];
+                texture = ModAssets.GetExtraTexture(23);
                 Main.EntitySpriteDraw(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None, 0);
             }
             SetSpriteBatch();

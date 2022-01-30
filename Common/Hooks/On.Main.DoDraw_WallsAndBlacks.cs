@@ -13,7 +13,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
             var bms = BlackholeSpaceSystem.Instance;
             var sb = Main.spriteBatch;
 
-            if (bms?.MetaballsCount > 0)
+            if (bms?.ElementsCount > 0)
             {
                 sb.End();
                 bms.DrawToScreen(sb);
