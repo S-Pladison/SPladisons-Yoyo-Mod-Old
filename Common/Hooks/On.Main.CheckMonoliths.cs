@@ -5,7 +5,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 {
     public partial class HookLoader
     {
-        private static void On_Terraria_Main_CheckMonoliths(On.Terraria.Main.orig_CheckMonoliths orig)
+        private static void On_Main_CheckMonoliths(On.Terraria.Main.orig_CheckMonoliths orig)
         {
             // Main.DoDraw_UpdateCameraPosition();
             // Main.CheckMonoliths(); <- Perfect after camera updating

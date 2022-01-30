@@ -8,7 +8,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 {
     public partial class HookLoader
     {
-        private static void On_Terraria_Player_OnHit(On.Terraria.Player.orig_OnHit orig, Player player, float x, float y, Entity victim)
+        private static void On_Player_OnHit(On.Terraria.Player.orig_OnHit orig, Player player, float x, float y, Entity victim)
         {
             if (Main.myPlayer != player.whoAmI)
             {

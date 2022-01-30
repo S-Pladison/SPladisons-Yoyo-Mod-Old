@@ -8,7 +8,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 {
     public partial class HookLoader
     {
-        private static void IL_Terraria_Player_Counterweight(ILContext il)
+        private static void IL_Player_Counterweight(ILContext il)
         {
             // else if (Main.projectile[i].aiStyle == 99)
             // {

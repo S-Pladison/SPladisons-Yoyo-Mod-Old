@@ -5,7 +5,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 {
     public partial class HookLoader
     {
-        private static void On_Terraria_Main_DrawPlayers_BehindNPCs(On.Terraria.Main.orig_DrawPlayers_BehindNPCs orig, Main main)
+        private static void On_Main_DrawPlayers_BehindNPCs(On.Terraria.Main.orig_DrawPlayers_BehindNPCs orig, Main main)
         {
             var spriteBatch = Main.spriteBatch;
             var pts = PrimitiveTrailSystem.Instance;

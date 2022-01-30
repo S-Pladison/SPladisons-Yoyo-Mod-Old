@@ -6,7 +6,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 {
     public partial class HookLoader
     {
-        private static void On_Terraria_NPCLoader_SetChatButtons(orig_SetChatButtons orig, ref string button, ref string button2)
+        private static void On_NPCLoader_SetChatButtons(orig_SetChatButtons orig, ref string button, ref string button2)
         {
             orig(ref button, ref button2);
             NurseGiftSystem.Instance.SetChatButtons(ref button2);

@@ -7,40 +7,40 @@ namespace SPladisonsYoyoMod.Common.Hooks
     {
         public void Load(Mod mod)
         {
-            On.Terraria.Main.CheckMonoliths += On_Terraria_Main_CheckMonoliths;
-            On.Terraria.Main.DoDraw_WallsAndBlacks += On_Terraria_Main_DoDraw_WallsAndBlacks;
-            On.Terraria.Main.DrawDust += On_Terraria_Main_DrawDust;
-            On.Terraria.Main.DrawPlayers_BehindNPCs += On_Terraria_Main_DrawPlayers_BehindNPCs;
-            On.Terraria.Main.DrawProj_DrawYoyoString += On_Terraria_Main_DrawProj_DrawYoyoString;
-            On.Terraria.Main.SetDisplayMode += On_Terraria_Main_SetDisplayMode;
+            On.Terraria.Main.CheckMonoliths += On_Main_CheckMonoliths;
+            On.Terraria.Main.DoDraw_WallsAndBlacks += On_Main_DoDraw_WallsAndBlacks;
+            On.Terraria.Main.DrawDust += On_Main_DrawDust;
+            On.Terraria.Main.DrawPlayers_BehindNPCs += On_Main_DrawPlayers_BehindNPCs;
+            On.Terraria.Main.DrawProj_DrawYoyoString += On_Main_DrawProj_DrawYoyoString;
+            On.Terraria.Main.SetDisplayMode += On_Main_SetDisplayMode;
 
-            On.Terraria.Player.OnHit += On_Terraria_Player_OnHit;
-            On.Terraria.Projectile.NewProjectile_IProjectileSource_float_float_float_float_int_int_float_int_float_float += On_Terraria_Projectile_NewProjectile;
+            On.Terraria.Player.OnHit += On_Player_OnHit;
+            On.Terraria.Projectile.NewProjectile_IProjectileSource_float_float_float_float_int_int_float_int_float_float += On_Projectile_NewProjectile;
 
-            HookEndpointManager.Add<hook_SetChatButtons>(SetChatButtonsMethod, On_Terraria_NPCLoader_SetChatButtons);
+            HookEndpointManager.Add<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 
-            IL.Terraria.Player.Counterweight += IL_Terraria_Player_Counterweight;
-            IL.Terraria.Projectile.AI_099_1 += IL_Terraria_Projectile_AI_099_1;
-            IL.Terraria.Projectile.AI_099_2 += IL_Terraria_Projectile_AI_099_2;
+            IL.Terraria.Player.Counterweight += IL_Player_Counterweight;
+            IL.Terraria.Projectile.AI_099_1 += IL_Projectile_AI_099_1;
+            IL.Terraria.Projectile.AI_099_2 += IL_Projectile_AI_099_2;
         }
 
         public void Unload()
         {
-            On.Terraria.Main.CheckMonoliths -= On_Terraria_Main_CheckMonoliths;
-            On.Terraria.Main.DoDraw_WallsAndBlacks -= On_Terraria_Main_DoDraw_WallsAndBlacks;
-            On.Terraria.Main.DrawDust -= On_Terraria_Main_DrawDust;
-            On.Terraria.Main.DrawPlayers_BehindNPCs -= On_Terraria_Main_DrawPlayers_BehindNPCs;
-            On.Terraria.Main.DrawProj_DrawYoyoString -= On_Terraria_Main_DrawProj_DrawYoyoString;
-            On.Terraria.Main.SetDisplayMode -= On_Terraria_Main_SetDisplayMode;
+            On.Terraria.Main.CheckMonoliths -= On_Main_CheckMonoliths;
+            On.Terraria.Main.DoDraw_WallsAndBlacks -= On_Main_DoDraw_WallsAndBlacks;
+            On.Terraria.Main.DrawDust -= On_Main_DrawDust;
+            On.Terraria.Main.DrawPlayers_BehindNPCs -= On_Main_DrawPlayers_BehindNPCs;
+            On.Terraria.Main.DrawProj_DrawYoyoString -= On_Main_DrawProj_DrawYoyoString;
+            On.Terraria.Main.SetDisplayMode -= On_Main_SetDisplayMode;
 
-            On.Terraria.Player.OnHit -= On_Terraria_Player_OnHit;
-            On.Terraria.Projectile.NewProjectile_IProjectileSource_float_float_float_float_int_int_float_int_float_float -= On_Terraria_Projectile_NewProjectile;
+            On.Terraria.Player.OnHit -= On_Player_OnHit;
+            On.Terraria.Projectile.NewProjectile_IProjectileSource_float_float_float_float_int_int_float_int_float_float -= On_Projectile_NewProjectile;
 
-            HookEndpointManager.Remove<hook_SetChatButtons>(SetChatButtonsMethod, On_Terraria_NPCLoader_SetChatButtons);
+            HookEndpointManager.Remove<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 
-            IL.Terraria.Player.Counterweight -= IL_Terraria_Player_Counterweight;
-            IL.Terraria.Projectile.AI_099_1 -= IL_Terraria_Projectile_AI_099_1;
-            IL.Terraria.Projectile.AI_099_2 -= IL_Terraria_Projectile_AI_099_2;
+            IL.Terraria.Player.Counterweight -= IL_Player_Counterweight;
+            IL.Terraria.Projectile.AI_099_1 -= IL_Projectile_AI_099_1;
+            IL.Terraria.Projectile.AI_099_2 -= IL_Projectile_AI_099_2;
         }
     }
 }

@@ -38,7 +38,10 @@ namespace SPladisonsYoyoMod.Common
 
         public override void PostUpdateWorld()
         {
-            UpdateFlamingFlower();
+            if (Main.dayTime && Main.time == 0)
+            {
+                UpdateFlamingFlower();
+            }
         }
 
         public override void ResetNearbyTileEffects()
@@ -95,7 +98,7 @@ namespace SPladisonsYoyoMod.Common
 
             var items = chest.item.ToList();
 
-            Item item = new Item();
+            Item item = new();
             item.SetDefaults(itemType);
             item.stack = quantity;
 
@@ -110,58 +113,55 @@ namespace SPladisonsYoyoMod.Common
             if (FlamingFlowerPosition != Point.Zero)
             {
                 var tile = Main.tile[FlamingFlowerPosition.X, FlamingFlowerPosition.Y];
-                if (tile == null || tile.type != ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>()) FlamingFlowerPosition = Point.Zero;
+                if (tile == null || tile.type != ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>())
+                {
+                    FlamingFlowerPosition = Point.Zero;
+                }
             }
 
-            if (FlamingFlowerPosition == Point.Zero && Main.time == 0) GenerateFlamingFlower();
+            if (FlamingFlowerPosition == Point.Zero && !SearchFlamingFlower())
+            {
+                GenerateFlamingFlower();
+            }
         }
 
-        private static void GenerateFlamingFlower()
+        private static bool SearchFlamingFlower()
         {
-            bool flag = false;
-
-            // Проверяем часть мира на наличие цветка
             for (int i = 200; i < Main.maxTilesX - 200; i++)
             {
                 int j;
                 for (j = Main.maxTilesY - 355; j < Main.maxTilesY - 195; j++)
                 {
-                    if (Main.tile[i, j].type == ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>())
+                    var tile = Main.tile[i, j];
+                    if (tile.type == ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>() && tile.frameX == 0 && tile.frameY == 0)
                     {
-                        flag = true;
-                        break;
+                        FlamingFlowerPosition = new Point(i, j);
+                        return true;
                     }
-                }
-
-                // Если цветок найден, то...
-                if (flag)
-                {
-                    FlamingFlowerPosition = new Point(i, j);
-                    break;
                 }
             }
+            return false;
+        }
 
-            // Если цветок не был найден, то...
-            if (!flag)
+        private static void GenerateFlamingFlower()
+        {
+            int t = 0;
+            while (t < 1000)
             {
-                int t = 0;
-                while (t < 1000 && flag == false)
+                int x = Main.rand.Next(200, Main.maxTilesX - 200);
+                int y = Main.rand.Next(Main.maxTilesY - 350, Main.maxTilesY - 200);
+
+                if (WorldGen.SolidOrSlopedTile(x, y) && Main.tile[x, y].type == TileID.Stone && WorldGen.SolidOrSlopedTile(x + 1, y) && Main.tile[x + 1, y].type == TileID.Stone)
                 {
-                    int x = Main.rand.Next(200, Main.maxTilesX - 200);
-                    int y = Main.rand.Next(Main.maxTilesY - 350, Main.maxTilesY - 200);
+                    if (Main.tile[x - 1, y - 3].IsActive || Main.tile[x + 2, y - 3].IsActive) continue;
+                    if (WorldGen.SolidOrSlopedTile(x, y - 1) || WorldGen.SolidOrSlopedTile(x + 1, y - 1) || WorldGen.SolidOrSlopedTile(x, y - 2) || WorldGen.SolidOrSlopedTile(x + 1, y - 2)) continue;
+                    if (Main.tile[x, y - 1].LiquidAmount > 0 || Main.tile[x + 1, y - 1].LiquidAmount > 0 || Main.tile[x, y - 2].LiquidAmount > 0 || Main.tile[x + 1, y - 2].LiquidAmount > 0) continue;
+                    if (!WorldGen.SolidOrSlopedTile(x, y + 1) || Main.tile[x, y + 1].type != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 1, y + 1) || Main.tile[x + 1, y + 1].type != TileID.Stone) continue;
+                    if (!WorldGen.SolidOrSlopedTile(x - 1, y) || Main.tile[x - 1, y].type != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 2, y) || Main.tile[x + 2, y].type != TileID.Stone) continue;
 
-                    if (WorldGen.SolidOrSlopedTile(x, y) && Main.tile[x, y].type == TileID.Stone && WorldGen.SolidOrSlopedTile(x + 1, y) && Main.tile[x + 1, y].type == TileID.Stone)
-                    {
-                        if (Main.tile[x - 1, y - 3].IsActive || Main.tile[x + 2, y - 3].IsActive) continue; // Вроде как после обновы стала публичной... позже исправлю короче ( на данный момент internal а не public... )
-                        if (WorldGen.SolidOrSlopedTile(x, y - 1) || WorldGen.SolidOrSlopedTile(x + 1, y - 1) || WorldGen.SolidOrSlopedTile(x, y - 2) || WorldGen.SolidOrSlopedTile(x + 1, y - 2)) continue;
-                        if (Main.tile[x, y - 1].LiquidAmount > 0 || Main.tile[x + 1, y - 1].LiquidAmount > 0 || Main.tile[x, y - 2].LiquidAmount > 0 || Main.tile[x + 1, y - 2].LiquidAmount > 0) continue;
-                        if (!WorldGen.SolidOrSlopedTile(x, y + 1) || Main.tile[x, y + 1].type != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 1, y + 1) || Main.tile[x + 1, y + 1].type != TileID.Stone) continue;
-                        if (!WorldGen.SolidOrSlopedTile(x - 1, y) || Main.tile[x - 1, y].type != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 2, y) || Main.tile[x + 2, y].type != TileID.Stone) continue;
-
-                        WorldGen.PlaceTile(x, y - 1, (ushort)ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>());
-                        FlamingFlowerPosition = new Point(x, y - 1);
-                        flag = true;
-                    }
+                    WorldGen.PlaceTile(x, y - 1, (ushort)ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>());
+                    FlamingFlowerPosition = new Point(x, y - 1);
+                    return;
                 }
             }
         }

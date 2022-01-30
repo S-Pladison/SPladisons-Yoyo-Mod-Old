@@ -52,6 +52,8 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public void Draw(ref MapOverlayDrawContext context, ref string text)
         {
+            if (WorldSystem.FlamingFlowerPosition == Point.Zero) return;
+
             var player = Main.LocalPlayer;
             var position = WorldSystem.FlamingFlowerPosition.ToWorldCoordinates() + new Vector2(16, 16);
             var distance = (position - player.Center).Length();

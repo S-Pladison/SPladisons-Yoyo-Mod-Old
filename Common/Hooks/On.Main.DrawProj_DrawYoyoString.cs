@@ -9,7 +9,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 {
     public partial class HookLoader
     {
-        private static void On_Terraria_Main_DrawProj_DrawYoyoString(On.Terraria.Main.orig_DrawProj_DrawYoyoString orig, Main main, Projectile projectile, Vector2 mountedCenter)
+        private static void On_Main_DrawProj_DrawYoyoString(On.Terraria.Main.orig_DrawProj_DrawYoyoString orig, Main main, Projectile projectile, Vector2 mountedCenter)
         {
             if (!ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle || !projectile.IsYoyo())
             {

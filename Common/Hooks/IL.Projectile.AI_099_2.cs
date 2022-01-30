@@ -9,7 +9,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
     public partial class HookLoader
     {
         // I'm not a professional and I'm not very good at this... If you want, you can rewrite this
-        private static void IL_Terraria_Projectile_AI_099_2(ILContext il)
+        private static void IL_Projectile_AI_099_2(ILContext il)
         {
             ILCursor c = new ILCursor(il);
 
