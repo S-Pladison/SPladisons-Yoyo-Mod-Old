@@ -208,15 +208,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         // ...
 
-        public override void Unload() => BellowingThunderEffect = null;
-
-        public override void SetStaticDefaults()
+        public override void Load()
         {
             if (Main.dedServ) return;
 
             BellowingThunderEffect = ModAssets.GetEffect("BellowingThunder", AssetRequestMode.ImmediateLoad);
-            BellowingThunderEffect.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(24).Value);
+            BellowingThunderEffect.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(24, AssetRequestMode.ImmediateLoad).Value);
         }
+
+        public override void Unload() => BellowingThunderEffect = null;
 
         public override void SetDefaults()
         {

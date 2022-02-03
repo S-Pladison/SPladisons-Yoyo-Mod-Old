@@ -11,10 +11,10 @@ namespace SPladisonsYoyoMod.Common
 {
     public class PrimitiveTrailSystem : ModSystem
     {
-        internal static readonly List<Trail> AdditiveTrails = new List<Trail>();
-        internal static readonly List<Trail> AlphaBlendTrails = new List<Trail>();
-
         public static PrimitiveTrailSystem Instance { get => ModContent.GetInstance<PrimitiveTrailSystem>(); }
+
+        public readonly List<Trail> AdditiveTrails = new();
+        public readonly List<Trail> AlphaBlendTrails = new();
 
         public Asset<Effect> BasicPrimitiveEffect { get; private set; }
         public Matrix TransformMatrix { get; private set; }
@@ -67,8 +67,8 @@ namespace SPladisonsYoyoMod.Common
         {
             if (Main.dedServ) return;
 
-            if (trail.Additive) AdditiveTrails.Add(trail);
-            else AlphaBlendTrails.Add(trail);
+            if (trail.Additive) Instance.AdditiveTrails.Add(trail);
+            else Instance.AlphaBlendTrails.Add(trail);
 
             trail.OnSpawn();
         }
@@ -152,8 +152,8 @@ namespace SPladisonsYoyoMod.Common
             {
                 if (PreKill()) Active = false;
 
-                if (Additive) AdditiveTrails.Remove(this);
-                else AlphaBlendTrails.Remove(this);
+                if (Additive) Instance.AdditiveTrails.Remove(this);
+                else Instance.AlphaBlendTrails.Remove(this);
             }
 
             public void StartDissolving() => _dissolving = true;

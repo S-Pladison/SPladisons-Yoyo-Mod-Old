@@ -12,9 +12,14 @@ namespace SPladisonsYoyoMod.Common.Hooks
         {
             orig(main);
 
+            var projs = Main.projectile.ToList().FindAll(i => i.active && i.ModProjectile is IDrawAdditive);
+            var particles = ParticleSystem.Particles;
+
+            if (projs.Count == 0 && particles.Count == 0) return;
+
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             {
-                foreach (var proj in Main.projectile.ToList().FindAll(i => i.active && i.ModProjectile is IDrawAdditive))
+                foreach (var proj in projs)
                 {
                     try
                     {
@@ -27,9 +32,9 @@ namespace SPladisonsYoyoMod.Common.Hooks
                     }
                 }
 
-                foreach (var dust in ParticleSystem.Particles)
+                foreach (var particle in particles)
                 {
-                    dust.Draw(Main.spriteBatch);
+                    particle.Draw(Main.spriteBatch);
                 }
             }
             Main.spriteBatch.End();

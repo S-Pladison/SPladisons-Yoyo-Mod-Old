@@ -10,6 +10,8 @@ namespace SPladisonsYoyoMod
         public static SPladisonsYoyoMod Instance { get; private set; }
         public static IReadOnlyList<int> GetYoyos => _yoyos;
 
+        // ...
+
         public SPladisonsYoyoMod()
         {
             Instance = this;
@@ -24,7 +26,7 @@ namespace SPladisonsYoyoMod
         {
             static void TryAddYoyo(int type)
             {
-                Item item = new Item();
+                Item item = new();
                 item.SetDefaults(type, true);
 
                 if (ItemID.Sets.Yoyo[item.type])
@@ -46,6 +48,6 @@ namespace SPladisonsYoyoMod
 
         // ...
 
-        private static readonly List<int> _yoyos = new List<int>();
+        private static readonly List<int> _yoyos = new();
     }
 }

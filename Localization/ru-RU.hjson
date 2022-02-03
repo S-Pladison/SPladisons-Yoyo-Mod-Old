@@ -23,6 +23,7 @@ Mods: {
 			Indefinite: Неопределенный
 			MyocardialInfarction: Инфаркт миокарда
 			OutburstingGust: Шквальный ветер
+			PaperYoyo: Бумажный йо-йо
 			PrototypeF34: Прототип F-34
 			ResidualLight: Остаточный свет
 			SoulFilledFlame: Наполненное душой пламя
@@ -79,14 +80,19 @@ Mods: {
 			Blackhole:
 				'''
 				Притягивает к себе врагов
-				«Засасывает скелетов-викингов...»
 				|?|Изменяет эффект у «Перчатка для йо-йо»:
 				• Увеличивает радиус притягивания на 25% и урон на 20%
+				• Практически полностью убирает отскок от врагов
 				'''
 			BloomingDeath: Йо-йо и его нить отравляют врагов
 			Indefinite: ...
 			MyocardialInfarction: ...
 			OutburstingGust: ...
+			PaperYoyo: 
+				'''
+				|?|Изменяет эффект у «Перчатка для йо-йо»:
+				• Чай бы попить...
+				'''
 			PrototypeF34: ...
 			ResidualLight:
 				'''

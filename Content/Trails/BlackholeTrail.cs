@@ -1,13 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Content.Items.Weapons;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Trails
 {
     // Currently not used
-    public class BlackholeTrail : SimpleTrail, IBlackholeSpace
+    public class BlackholeTrail : SimpleTrail, IDrawOnRenderTarget
     {
         public BlackholeTrail(Entity target, int length, WidthDelegate width) : base(target, length, width, (p) => Color.White, null, false)
         {
@@ -25,7 +26,7 @@ namespace SPladisonsYoyoMod.Content.Trails
             return true;
         }
 
-        void IBlackholeSpace.DrawBlackholeSpace(SpriteBatch spriteBatch)
+        void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
             // ): I don't think there will be more than 2 trails in the world, so I hope that such a trick can be forgiven...
 

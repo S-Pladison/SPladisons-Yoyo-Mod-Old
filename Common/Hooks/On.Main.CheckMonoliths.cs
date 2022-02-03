@@ -17,6 +17,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 var spriteBatch = Main.spriteBatch;
 
                 BlackholeSpaceSystem.Instance?.DrawToTarget(device, spriteBatch);
+                PaperEffectSystem.Instance?.DrawToTarget(device, spriteBatch);
             }
 
             orig();

@@ -58,12 +58,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override bool IsSoloYoyo() => true;
         public override void Unload() => ResidualLightEffect = null;
 
-        public override void YoyoSetStaticDefaults()
+        public override void Load()
         {
             if (Main.dedServ) return;
 
             ResidualLightEffect = ModAssets.GetEffect("ResidualLight", AssetRequestMode.ImmediateLoad);
-            ResidualLightEffect.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(20).Value);
+            ResidualLightEffect.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(20, AssetRequestMode.ImmediateLoad).Value);
         }
 
         public override void OnSpawn()

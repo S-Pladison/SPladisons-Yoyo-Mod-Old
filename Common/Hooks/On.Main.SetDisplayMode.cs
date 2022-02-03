@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using SPladisonsYoyoMod.Content.Items.Weapons;
-using System;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
@@ -13,18 +12,13 @@ namespace SPladisonsYoyoMod.Common.Hooks
 
             orig(width, height, fullscreen);
 
-            if (Main.screenWidth != screen.X || Main.screenHeight != screen.Y)
+            if (Main.screenWidth == screen.X && Main.screenHeight == screen.Y)
             {
-                try
-                {
-                    var metaball = BlackholeSpaceSystem.Instance;
-                    metaball?.RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
-                }
-                catch (Exception)
-                {
-                    SPladisonsYoyoMod.Instance.Logger.Error("I think this is the beginning of a beautiful friendship");
-                }
+                return;
             }
+
+            BlackholeSpaceSystem.Instance?.RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
+            PaperEffectSystem.Instance?.RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
         }
     }
 }

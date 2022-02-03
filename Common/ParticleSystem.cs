@@ -22,7 +22,12 @@ namespace SPladisonsYoyoMod.Common
 
         public static void NewParticle(Asset<Texture2D> texture, int timeLeft, Vector2 position, Vector2? velocity = null, float rotation = 0f, float scale = 1f)
         {
-            var particle = new Particle(texture, timeLeft, position, velocity, rotation, scale);
+            var particle = new Particle(texture, position, velocity)
+            {
+                timeLeft = timeLeft,
+                rotation = rotation,
+                scale = scale
+            };
             ParticleSystem.NewParticle(particle);
         }
 
@@ -33,74 +38,75 @@ namespace SPladisonsYoyoMod.Common
             Particles.Add(particle);
             particle.OnSpawn();
         }
+    }
+
+    public class Particle
+    {
+        public Asset<Texture2D> Texture { get; protected set; }
+
+        public Color color;
+
+        public Vector2 position;
+        public Vector2 oldPosition;
+        public Vector2 velocity;
+
+        public float rotation;
+        public float scale;
+
+        public int timeLeft;
+        public int frame;
+        public int frameCount = 1;
 
         // ...
 
-        public class Particle
+        public Particle(Asset<Texture2D> texture, Vector2 position, Vector2? velocity = null)
         {
-            public Asset<Texture2D> Texture { get; protected set; }
+            this.Texture = texture;
 
-            public Vector2 position;
-            public Vector2 oldPosition;
-            public Vector2 velocity;
+            this.color = Color.White * 0.95f;
+            this.timeLeft = 60 * 3;
+            this.position = position;
+            this.velocity = velocity ?? Vector2.Zero;
+            this.rotation = 0f;
+            this.scale = 1f;
+        }
 
-            public float rotation;
-            public float scale;
+        // ...
 
-            public int timeLeft;
-            public int frame;
-            public int frameCount = 1;
+        public virtual void OnSpawn() { }
 
-            // ...
+        public virtual void Update()
+        {
+            oldPosition = position;
+            position += velocity;
 
-            public Particle(Asset<Texture2D> texture, int timeLeft, Vector2 position, Vector2? velocity = null, float rotation = 0f, float scale = 1f)
+            velocity *= 0.975f;
+            scale *= 0.975f;
+
+            if (--timeLeft <= 0 || scale <= 0.1f) this.Kill();
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            var rect = new Rectangle((int)Main.screenPosition.X - 25, (int)Main.screenPosition.Y - 25, Main.screenWidth + 25, Main.screenHeight + 25);
+            if (!rect.Contains((int)position.X, (int)position.Y)) return;
+
+            var height = (int)(Texture.Height() / frameCount);
+            spriteBatch.Draw(Texture.Value, position - Main.screenPosition, new Rectangle(0, height * frame, Texture.Width(), height), color, rotation, new Vector2(Texture.Width(), height) * 0.5f, scale, SpriteEffects.None, 0f);
+        }
+
+        protected virtual bool PreKill() { return true; }
+
+        // ...
+
+        public void Kill()
+        {
+            if (this.PreKill())
             {
-                this.Texture = texture;
-
-                this.timeLeft = timeLeft;
-                this.position = position;
-                this.velocity = velocity ?? Vector2.Zero;
-                this.rotation = rotation;
-                this.scale = scale;
+                // ...
             }
 
-            // ...
-
-            public virtual void OnSpawn() { }
-
-            public virtual void Update()
-            {
-                oldPosition = position;
-                position += velocity;
-
-                velocity *= 0.975f;
-                scale *= 0.975f;
-
-                if (--timeLeft <= 0 || scale <= 0.1f) this.Kill();
-            }
-
-            public virtual void Draw(SpriteBatch spriteBatch)
-            {
-                var rect = new Rectangle((int)Main.screenPosition.X - 25, (int)Main.screenPosition.Y - 25, Main.screenWidth + 25, Main.screenHeight + 25);
-                if (!rect.Contains((int)position.X, (int)position.Y)) return;
-
-                var height = (int)(Texture.Height() / frameCount);
-                spriteBatch.Draw(Texture.Value, position - Main.screenPosition, new Rectangle(0, height * frame, Texture.Width(), height), Color.White * 0.95f, rotation, new Vector2(Texture.Width(), height) * 0.5f, scale, SpriteEffects.None, 0f);
-            }
-
-            protected virtual bool PreKill() { return true; }
-
-            // ...
-
-            public void Kill()
-            {
-                if (this.PreKill())
-                {
-                    // ...
-                }
-
-                Particles.Remove(this);
-            }
+            ParticleSystem.Particles.Remove(this);
         }
     }
 }

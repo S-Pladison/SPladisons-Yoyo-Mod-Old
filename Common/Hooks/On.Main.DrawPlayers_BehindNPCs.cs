@@ -14,17 +14,17 @@ namespace SPladisonsYoyoMod.Common.Hooks
             {
                 pts.UpdateTransformMatrix();
 
-                if (PrimitiveTrailSystem.AlphaBlendTrails.Count > 0)
+                if (pts.AlphaBlendTrails.Count > 0)
                 {
                     spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                    pts.DrawTrails(PrimitiveTrailSystem.AlphaBlendTrails);
+                    pts.DrawTrails(pts.AlphaBlendTrails);
                     spriteBatch.End();
                 }
 
-                if (PrimitiveTrailSystem.AdditiveTrails.Count > 0)
+                if (pts.AdditiveTrails.Count > 0)
                 {
                     spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                    pts.DrawTrails(PrimitiveTrailSystem.AdditiveTrails);
+                    pts.DrawTrails(pts.AdditiveTrails);
                     spriteBatch.End();
                 }
             }

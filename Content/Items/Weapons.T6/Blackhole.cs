@@ -27,7 +27,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class BlackholeProjectile : YoyoProjectile, IDrawAdditive, IBlackholeSpace
+    public class BlackholeProjectile : YoyoProjectile, IDrawAdditive, IDrawOnRenderTarget
     {
         public static readonly float Radius = 16 * 10;
         private float RadiusProgress { get => Projectile.localAI[1]; set => Projectile.localAI[1] = value; }
@@ -94,6 +94,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var particle = new Particles.BlackholeSpaceParticle(Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20), Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3));
                 ParticleSystem.NewParticle(particle);
             }
+
+            if (!this.YoyoGloveActivated) return;
+
+            var vector = Vector2.Normalize(Projectile.Center - target.Center);
+            var scaleFactor = 12f; // Vanilla: 16f
+
+            Projectile.velocity -= vector * scaleFactor;
+            Projectile.velocity *= -2f;
         }
 
         public override void PostDraw(Color lightColor)
@@ -117,7 +125,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White, rotation, texture.Size() * 0.5f, 0.2f * Projectile.scale, SpriteEffects.None, 0);
         }
 
-        void IBlackholeSpace.DrawBlackholeSpace(SpriteBatch spriteBatch)
+        void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
             var scale = this.RadiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f) * Projectile.scale;
             var drawPosition = GetDrawPosition();
@@ -140,7 +148,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             new Color(25, 25, 76)
         };
 
-        private List<IBlackholeSpace> _elems = new();
+        private List<IDrawOnRenderTarget> _elems = new();
         private RenderTarget2D _target;
         private Asset<Effect> _spaceEffect;
         private Asset<Texture2D> _firstTexture;
@@ -173,7 +181,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             _secondTexture = null;
         }
 
-        public void AddElement(IBlackholeSpace elem)
+        public void AddElement(IDrawOnRenderTarget elem)
         {
             if (!_elems.Contains(elem))
             {
@@ -181,7 +189,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
         }
 
-        public void RemoveElement(IBlackholeSpace elem)
+        public void RemoveElement(IDrawOnRenderTarget elem)
         {
             _elems.Remove(elem);
         }
@@ -200,7 +208,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             device.Clear(Color.Transparent);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            foreach (var elem in _elems) elem.DrawBlackholeSpace(spriteBatch);
+            foreach (var elem in _elems) elem.DrawOnRenderTarget(spriteBatch);
             spriteBatch.End();
 
             device.SetRenderTargets(null);
@@ -220,10 +228,5 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             spriteBatch.Draw(texture, Vector2.Zero, null, Colors[0]);
             spriteBatch.End();
         }
-    }
-
-    public interface IBlackholeSpace
-    {
-        void DrawBlackholeSpace(SpriteBatch spriteBatch);
     }
 }

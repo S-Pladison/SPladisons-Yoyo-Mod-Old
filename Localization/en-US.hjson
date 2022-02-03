@@ -23,6 +23,7 @@ Mods: {
 			Indefinite: Indefinite
 			MyocardialInfarction: Myocardial Infarction
 			OutburstingGust: Outbursting Gust
+			PaperYoyo: Paper Yoyo
 			PrototypeF34: Prototype F-34
 			ResidualLight: Residual Light
 			SoulFilledFlame: Soul-Filled Flame
@@ -79,14 +80,15 @@ Mods: {
 			Blackhole:
 				'''
 				Pulls enemies to itself
-				'Sucks in undead vikings...'
 				|?|Changes the effect of «Yoyo Glove»:
 				• Increases pull radius by 25% and damage by 20%
+				• Almost completely removes the bounce from enemies
 				'''
 			BloomingDeath: Yoyo and its string poison enemies
 			Indefinite: ...
 			MyocardialInfarction: ...
 			OutburstingGust: ...
+			PaperYoyo: ...
 			PrototypeF34: ...
 			ResidualLight:
 				'''
@@ -118,12 +120,15 @@ Mods: {
 			SquareBeeProjectile: "{$Mods.SPladisonsYoyoMod.BuffName.SquareBeeBuff}"
 
 			// Weapons
+			AdamantiteYoyoProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.AdamantiteYoyo}"
 			BellowingThunderProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BellowingThunder}"
 			BellowingThunderLightningProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BellowingThunder}"
 			BlackholeProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Blackhole}"
 			BloomingDeathProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BloomingDeath}"
 			IndefiniteProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Indefinite}"
+			MyocardialInfarctionProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.MyocardialInfarction}"
 			OutburstingGustProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.OutburstingGust}"
+			PaperYoyoProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.PaperYoyo}"
 			PrototypeF34Projectile: "{$Mods.SPladisonsYoyoMod.ItemName.PrototypeF34}"
 			ResidualLightProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.ResidualLight}"
 			ResidualLightHitProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.ResidualLight}"
@@ -131,6 +136,7 @@ Mods: {
 			StableProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Stable}"
 			TheFinestHourProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.TheFinestHour}"
 			TheStellarThrowProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.TheStellarThrow}"
+			TitaniumYoyoProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.TitaniumYoyo}"
 			WakeOfEarthProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.WakeOfEarth}"
 		}
 
