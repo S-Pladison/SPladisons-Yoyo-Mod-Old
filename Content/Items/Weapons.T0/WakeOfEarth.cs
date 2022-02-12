@@ -136,13 +136,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Point coord = (Projectile.Center / 16).ToPoint() + new Point(0, 1);
             Tile tile = Framing.GetTileSafely(coord);
 
-            if (tile == null || !tile.IsActive || !Main.tileSolid[tile.type]) return false;
+            if (tile == null || !tile.HasTile || !Main.tileSolid[(int)tile.TileType]) return false;
 
             Vector2 position = GetDrawPosition(coord.ToVector2() * 16) - new Vector2(0, (float)Math.Sin((1 - Projectile.timeLeft / 25.0f) * MathHelper.Pi)) * 12f;
             Color color = lightColor * 0.7f;
             color.A = lightColor.A;
 
-            Main.spriteBatch.Draw(TextureAssets.Tile[tile.type].Value, position, new Rectangle(tile.frameX, tile.frameY, 16, 16), color);
+            Main.spriteBatch.Draw(TextureAssets.Tile[(int)tile.TileType].Value, position, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), color);
 
             return false;
         }

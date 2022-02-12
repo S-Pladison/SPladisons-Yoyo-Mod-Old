@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace SPladisonsYoyoMod.Common.Interfaces
+namespace SPladisonsYoyoMod.Common
 {
     public interface IDrawOnRenderTarget
     {

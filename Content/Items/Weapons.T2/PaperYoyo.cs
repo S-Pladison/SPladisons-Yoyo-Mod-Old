@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -101,7 +100,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public sealed class PaperEffectSystem : ModSystem
+    public sealed class PaperEffectSystem : ModSystem, IOnResizeScreen
     {
         public static PaperEffectSystem Instance { get => ModContent.GetInstance<PaperEffectSystem>(); }
         public static readonly string SceneName = "SPladisonsYoyoMod:Paper";
@@ -186,7 +185,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public Texture2D GetFilterTexture() => _filterElems.Count > 0 ? ((Texture2D)_filterTarget ?? ModAssets.GetExtraTexture(0).Value) : ModAssets.GetExtraTexture(0).Value;
 
-        public void RecreateRenderTarget(int width, int height)
+        public void RecreateRenderTargets(int width, int height)
         {
             _filterTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, width, height);
             _bubbleTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, width, height);
@@ -196,7 +195,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             if (_filterTarget == null || _bubbleTarget == null)
             {
-                this.RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
+                RecreateRenderTargets(Main.screenWidth, Main.screenHeight);
             }
 
             if (_filterElems.Count > 0)
@@ -236,6 +235,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, effect);
             spriteBatch.Draw(texture, Vector2.Zero, null, Color.White);
             spriteBatch.End();
+        }
+
+        void IOnResizeScreen.OnResizeScreen(int width, int height)
+        {
+            RecreateRenderTargets(width, height);
         }
     }
 }

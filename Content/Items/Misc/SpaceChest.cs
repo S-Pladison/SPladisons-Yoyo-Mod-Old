@@ -87,9 +87,9 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             b = 0.23f * 0.3f;
         }
 
-        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].frameX / 36);
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / 36);
         public override bool HasSmartInteract() => true;
-        public override bool IsLockedChest(int i, int j) => Main.tile[i, j].frameX / 36 == 1;
+        public override bool IsLockedChest(int i, int j) => Main.tile[i, j].TileFrameX / 36 == 1;
         public override void NumDust(int i, int j, bool fail, ref int num) => num = 1;
 
         public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
@@ -115,8 +115,8 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             int left = i;
             int top = j;
 
-            if (tile.frameX % 36 != 0) left--;
-            if (tile.frameY != 0) top--;
+            if (tile.TileFrameX % 36 != 0) left--;
+            if (tile.TileFrameY != 0) top--;
             if (player.sign >= 0)
             {
                 SoundEngine.PlaySound(SoundID.MenuClose);
@@ -198,8 +198,8 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             int left = i;
             int top = j;
 
-            if (tile.frameX % 36 != 0) left--;
-            if (tile.frameY != 0) top--;
+            if (tile.TileFrameX % 36 != 0) left--;
+            if (tile.TileFrameY != 0) top--;
 
             int chest = Chest.FindChest(left, top);
             if (chest < 0) player.cursorItemIconText = Language.GetTextValue("LegacyChestType.0");
@@ -209,7 +209,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
                 if (player.cursorItemIconText == "Space Chest")
                 {
                     player.cursorItemIconID = ModContent.ItemType<SpaceChest>();
-                    if (Main.tile[left, top].frameX / 36 == 1) player.cursorItemIconID = ModContent.ItemType<SpaceKey>();
+                    if (Main.tile[left, top].TileFrameX / 36 == 1) player.cursorItemIconID = ModContent.ItemType<SpaceKey>();
                     player.cursorItemIconText = "";
                 }
             }
@@ -235,7 +235,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             Tile tile = Main.tile[i, j];
             var player = Main.LocalPlayer;
 
-            if (player != null && tile != null && (tile.frameX == 18 || tile.frameX == 18 * 3) && tile.frameY == 18)
+            if (player != null && tile != null && (tile.TileFrameX == 18 || tile.TileFrameX == 18 * 3) && tile.TileFrameY == 18)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
@@ -248,7 +248,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
 
                     var texture = ModContent.Request<Texture2D>(this.Texture + "_Effect").Value;
                     var position = new Vector2(i * 32 + player.Center.X * 0.2f, j * 32 + player.Center.Y * 0.2f) + zero;
-                    var rectangle = new Rectangle((tile.frameX / 18 - 1) * 16, Main.chest[chest].frame * 34, 32, 32);
+                    var rectangle = new Rectangle((tile.TileFrameX / 18 - 1) * 16, Main.chest[chest].frame * 34, 32, 32);
 
                     var shader = GameShaders.Armor.GetShaderFromItemId(ItemID.TwilightDye);
                     shader.Apply(null, new DrawData(texture, position, rectangle, Color.White));
@@ -268,8 +268,8 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             int left = i;
             int top = j;
 
-            if (tile.frameX % 36 != 0) left--;
-            if (tile.frameY != 0) top--;
+            if (tile.TileFrameX % 36 != 0) left--;
+            if (tile.TileFrameY != 0) top--;
 
             return Chest.FindChest(left, top);
         }
@@ -280,8 +280,8 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             int top = j;
             Tile tile = Main.tile[i, j];
 
-            if (tile.frameX % 36 != 0) left--;
-            if (tile.frameY != 0) top--;
+            if (tile.TileFrameX % 36 != 0) left--;
+            if (tile.TileFrameY != 0) top--;
 
             int chest = Chest.FindChest(left, top);
 

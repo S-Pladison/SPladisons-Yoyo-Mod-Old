@@ -76,9 +76,9 @@ namespace SPladisonsYoyoMod.Common
             for (int chestIndex = 0; chestIndex < Main.chest.Length; chestIndex++)
             {
                 Chest chest = Main.chest[chestIndex];
-                if (chest == null || Main.tile[chest.x, chest.y].type != TileID.Containers) continue;
+                if (chest == null || (int)Main.tile[chest.x, chest.y].TileType != TileID.Containers) continue;
 
-                switch (Main.tile[chest.x, chest.y].frameX / 36)
+                switch (Main.tile[chest.x, chest.y].TileFrameX / 36)
                 {
                     case 12: // Living Wood Chest
                         {
@@ -113,7 +113,7 @@ namespace SPladisonsYoyoMod.Common
             if (FlamingFlowerPosition != Point.Zero)
             {
                 var tile = Main.tile[FlamingFlowerPosition.X, FlamingFlowerPosition.Y];
-                if (tile == null || tile.type != ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>())
+                if (tile == null || (int)tile.TileType != ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>())
                 {
                     FlamingFlowerPosition = Point.Zero;
                 }
@@ -133,7 +133,7 @@ namespace SPladisonsYoyoMod.Common
                 for (j = Main.maxTilesY - 355; j < Main.maxTilesY - 195; j++)
                 {
                     var tile = Main.tile[i, j];
-                    if (tile.type == ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>() && tile.frameX == 0 && tile.frameY == 0)
+                    if ((int)tile.TileType == ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>() && tile.TileFrameX == 0 && tile.TileFrameY == 0)
                     {
                         FlamingFlowerPosition = new Point(i, j);
                         return true;
@@ -151,13 +151,13 @@ namespace SPladisonsYoyoMod.Common
                 int x = Main.rand.Next(200, Main.maxTilesX - 200);
                 int y = Main.rand.Next(Main.maxTilesY - 350, Main.maxTilesY - 200);
 
-                if (WorldGen.SolidOrSlopedTile(x, y) && Main.tile[x, y].type == TileID.Stone && WorldGen.SolidOrSlopedTile(x + 1, y) && Main.tile[x + 1, y].type == TileID.Stone)
+                if (WorldGen.SolidOrSlopedTile(x, y) && (int)Main.tile[x, y].TileType == TileID.Stone && WorldGen.SolidOrSlopedTile(x + 1, y) && (int)Main.tile[x + 1, y].TileType == TileID.Stone)
                 {
-                    if (Main.tile[x - 1, y - 3].IsActive || Main.tile[x + 2, y - 3].IsActive) continue;
+                    if (Main.tile[x - 1, y - 3].HasTile || Main.tile[x + 2, y - 3].HasTile) continue;
                     if (WorldGen.SolidOrSlopedTile(x, y - 1) || WorldGen.SolidOrSlopedTile(x + 1, y - 1) || WorldGen.SolidOrSlopedTile(x, y - 2) || WorldGen.SolidOrSlopedTile(x + 1, y - 2)) continue;
                     if (Main.tile[x, y - 1].LiquidAmount > 0 || Main.tile[x + 1, y - 1].LiquidAmount > 0 || Main.tile[x, y - 2].LiquidAmount > 0 || Main.tile[x + 1, y - 2].LiquidAmount > 0) continue;
-                    if (!WorldGen.SolidOrSlopedTile(x, y + 1) || Main.tile[x, y + 1].type != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 1, y + 1) || Main.tile[x + 1, y + 1].type != TileID.Stone) continue;
-                    if (!WorldGen.SolidOrSlopedTile(x - 1, y) || Main.tile[x - 1, y].type != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 2, y) || Main.tile[x + 2, y].type != TileID.Stone) continue;
+                    if (!WorldGen.SolidOrSlopedTile(x, y + 1) || (int)Main.tile[x, y + 1].TileType != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 1, y + 1) || (int)Main.tile[x + 1, y + 1].TileType != TileID.Stone) continue;
+                    if (!WorldGen.SolidOrSlopedTile(x - 1, y) || (int)Main.tile[x - 1, y].TileType != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 2, y) || (int)Main.tile[x + 2, y].TileType != TileID.Stone) continue;
 
                     WorldGen.PlaceTile(x, y - 1, (ushort)ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>());
                     FlamingFlowerPosition = new Point(x, y - 1);
@@ -180,7 +180,7 @@ namespace SPladisonsYoyoMod.Common
                 int x = WorldGen.genRand.Next((int)dMinX, (int)dMaxX);
                 int y = WorldGen.genRand.Next((int)Main.worldSurface, (int)dMaxY);
 
-                if (Main.wallDungeon[(int)Main.tile[x, y].wall] && !Main.tile[x, y].IsActive)
+                if (Main.wallDungeon[(int)Main.tile[x, y].WallType] && !Main.tile[x, y].HasTile)
                 {
                     flag = WorldGen.AddBuriedChest(x, y, ModContent.ItemType<Blackhole>(), false, 1, chestTileType: (ushort)ModContent.TileType<SpaceChestTile>());
                 }

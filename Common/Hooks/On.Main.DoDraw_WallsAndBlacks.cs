@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Content.Items.Weapons;
-using System;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks

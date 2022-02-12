@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Interfaces;
-using SPladisonsYoyoMod.Content.Trails;
+using SPladisonsYoyoMod.Common.Primitives.Trails;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -38,17 +38,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn()
         {
-            TriangularTrail trail = new
-            (
-                target: Projectile,
-                length: 16 * 10,
-                width: (progress) => 21 * (1 - progress * 0.44f),
-                color: (progress) => ModUtils.GradientValue<Color>(method: Color.Lerp, percent: progress, values: TrailColors) * (1 - progress),
-                additive: true
-            );
-            trail.SetEffectTexture(ModAssets.GetExtraTexture(7).Value);
-            trail.SetDissolveSpeed(0.26f);
-            PrimitiveTrailSystem.NewTrail(trail);
+            PrimitiveTrail.Create(Projectile, t =>
+            {
+                t.SetColor(new GradientTrailColor(colors: TrailColors, disappearOverTime: true));
+                t.SetTip(new RoundedTrailTip(smoothness: 20));
+                t.SetWidth(p => 21 * (1 - p * 0.44f));
+                t.SetUpdate(new BoundedTrailUpdate(points: 15, length: 16 * 10));
+                t.SetEffectTexture(ModAssets.GetExtraTexture(7, AssetRequestMode.ImmediateLoad).Value);
+                t.SetDissolveSpeed(0.26f);
+            });
         }
 
         public override void AI()

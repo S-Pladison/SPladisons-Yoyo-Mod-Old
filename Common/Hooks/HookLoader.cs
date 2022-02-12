@@ -8,9 +8,9 @@ namespace SPladisonsYoyoMod.Common.Hooks
         public void Load(Mod mod)
         {
             On.Terraria.Main.CheckMonoliths += On_Main_CheckMonoliths;
+            On.Terraria.Main.DoDraw_Tiles_Solid += On_Main_DoDraw_Tiles_Solid;
             On.Terraria.Main.DoDraw_WallsAndBlacks += On_Main_DoDraw_WallsAndBlacks;
             On.Terraria.Main.DrawDust += On_Main_DrawDust;
-            On.Terraria.Main.DrawPlayers_BehindNPCs += On_Main_DrawPlayers_BehindNPCs;
             On.Terraria.Main.DrawProj_DrawYoyoString += On_Main_DrawProj_DrawYoyoString;
             On.Terraria.Main.SetDisplayMode += On_Main_SetDisplayMode;
 
@@ -27,9 +27,9 @@ namespace SPladisonsYoyoMod.Common.Hooks
         public void Unload()
         {
             On.Terraria.Main.CheckMonoliths -= On_Main_CheckMonoliths;
+            On.Terraria.Main.DoDraw_Tiles_Solid -= On_Main_DoDraw_Tiles_Solid;
             On.Terraria.Main.DoDraw_WallsAndBlacks -= On_Main_DoDraw_WallsAndBlacks;
             On.Terraria.Main.DrawDust -= On_Main_DrawDust;
-            On.Terraria.Main.DrawPlayers_BehindNPCs -= On_Main_DrawPlayers_BehindNPCs;
             On.Terraria.Main.DrawProj_DrawYoyoString -= On_Main_DrawProj_DrawYoyoString;
             On.Terraria.Main.SetDisplayMode -= On_Main_SetDisplayMode;
 

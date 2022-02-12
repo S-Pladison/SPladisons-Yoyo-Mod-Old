@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -138,7 +137,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public sealed class BlackholeSpaceSystem : ModSystem
+    public sealed class BlackholeSpaceSystem : ModSystem, IOnResizeScreen
     {
         public static BlackholeSpaceSystem Instance { get => ModContent.GetInstance<BlackholeSpaceSystem>(); }
         private static readonly Color[] Colors = new Color[]
@@ -202,7 +201,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public void DrawToTarget(GraphicsDevice device, SpriteBatch spriteBatch)
         {
             if (_elems.Count == 0) return;
-            if (_target == null) this.RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
+            if (_target == null) RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
 
             device.SetRenderTarget(_target);
             device.Clear(Color.Transparent);
@@ -227,6 +226,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, effect);
             spriteBatch.Draw(texture, Vector2.Zero, null, Colors[0]);
             spriteBatch.End();
+        }
+
+        void IOnResizeScreen.OnResizeScreen(int width, int height)
+        {
+            RecreateRenderTarget(width, height);
         }
     }
 }

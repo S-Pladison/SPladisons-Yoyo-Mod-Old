@@ -2,8 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Interfaces;
-using SPladisonsYoyoMod.Content.Trails;
+using SPladisonsYoyoMod.Common.Primitives.Trails;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -76,17 +75,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn()
         {
-            RoundedTrail trail = new
-            (
-                target: Projectile,
-                length: 16 * 10,
-                width: (p) => 6 * (1 - p),
-                color: (p) => _effectColor * (1 - p) * 0.8f,
-                additive: true,
-                smoothness: 20
-            );
-            trail.SetMaxPoints(15);
-            PrimitiveTrailSystem.NewTrail(trail);
+            PrimitiveTrail.Create(Projectile, t =>
+            {
+                t.SetColor(p => _effectColor * (1 - p) * 0.8f);
+                t.SetTip(new RoundedTrailTip(smoothness: 20));
+                t.SetWidth(new DefaultTrailWidth(width: 6, disappearOverTime: true));
+                t.SetUpdate(new BoundedTrailUpdate(points: 15, length: 16 * 10));
+            });
         }
 
         public override void AI()

@@ -2,8 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Interfaces;
-using SPladisonsYoyoMod.Content.Trails;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -67,7 +65,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn()
         {
-            SimpleTrail trail = new SimpleTrail(
+            /*SimpleTrail trail = new SimpleTrail(
                 target: Projectile,
                 length: 16 * 8,
                 width: (p) => 22,
@@ -76,7 +74,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 additive: true
             );
             trail.SetDissolveSpeed(1f);
-            PrimitiveTrailSystem.NewTrail(trail);
+            PrimitiveTrailSystem.NewTrail(trail);*/
         }
 
         public override bool PreDraw(ref Color lightColor) => false;

@@ -17,8 +17,10 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 return;
             }
 
-            BlackholeSpaceSystem.Instance?.RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
-            PaperEffectSystem.Instance?.RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
+            foreach (var system in ModUtils.GetModSystems.FindAll(i => i is IOnResizeScreen))
+            {
+                (system as IOnResizeScreen).OnResizeScreen(width, height);
+            }
         }
     }
 }

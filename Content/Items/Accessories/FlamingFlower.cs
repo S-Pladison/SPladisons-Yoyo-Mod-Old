@@ -155,10 +155,10 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             if (Main.drawToScreen) zero = Vector2.Zero;
 
             Texture2D texture = ModContent.Request<Texture2D>(this.Texture + "_Glow").Value;
-            int height = tile.frameY == 36 ? 18 : 16;
+            int height = tile.TileFrameY == 36 ? 18 : 16;
             float progress = MathHelper.Lerp(0.4f, 0.9f, (float)Math.Abs(Math.Pow(Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f), 4f)));
 
-            spriteBatch.Draw(texture, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.frameX, tile.frameY, 16, height), Color.White * progress, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, height), Color.White * progress, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿/*using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -25,4 +25,4 @@ namespace SPladisonsYoyoMod.Content.Trails
             AddVertex(_points[0] + normal, color, new Vector2(0, 1));
         }
     }
-}
+}*/

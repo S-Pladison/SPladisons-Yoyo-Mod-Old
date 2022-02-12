@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Content.Items.Weapons;
 using Terraria;
 using Terraria.ModLoader;
@@ -33,7 +32,7 @@ namespace SPladisonsYoyoMod.Content.Particles
             position += velocity;
             rotation += 0.03f;
             velocity *= 0.94f;
-            scale = ModUtils.GradientValue(MathHelper.Lerp, 1 - timeLeft / 100f, new [] { 0.3f, 1f, 1f, 1f, 1f, 1f, 1f, 0.9f, 0.75f, 0.4f, 0.1f});
+            scale = ModUtils.GradientValue(MathHelper.Lerp, 1 - timeLeft / 100f, new[] { 0.3f, 1f, 1f, 1f, 1f, 1f, 1f, 0.9f, 0.75f, 0.4f, 0.1f });
 
             //Lighting.AddLight(position, Color.LightGray.ToVector3() * 0.5f * scale);
 

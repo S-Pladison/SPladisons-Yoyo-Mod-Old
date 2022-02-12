@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Interfaces;
 using SPladisonsYoyoMod.Content.Items.Weapons;
 using Terraria;
 using Terraria.ModLoader;
