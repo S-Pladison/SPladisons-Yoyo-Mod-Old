@@ -6,7 +6,7 @@ namespace SPladisonsYoyoMod.Content.Dusts
 {
     public class PaperYoyoHitDust : ModDust
     {
-        public float ColorProgress(Dust dust) => ModUtils.GradientValue(MathHelper.Lerp, dust.fadeIn / 60f, new[] { 0f, 1f, 1f, 1f, 1f, 0f });
+        public float ColorProgress(Dust dust) => MathUtils.MultipleLerp(MathHelper.Lerp, dust.fadeIn / 60f, new[] { 0f, 1f, 1f, 1f, 1f, 0f });
 
         public override string Texture => ModAssets.DustsPath + "PaperYoyoHitDust";
 

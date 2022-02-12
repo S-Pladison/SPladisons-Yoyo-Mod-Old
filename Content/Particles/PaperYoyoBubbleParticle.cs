@@ -31,7 +31,7 @@ namespace SPladisonsYoyoMod.Content.Particles
             position += velocity;
             rotation += 0.01f;
             velocity *= 0.94f;
-            scale = ModUtils.GradientValue(MathHelper.Lerp, 1 - timeLeft / 85f, new[] { 0.3f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 0.1f });
+            scale = MathUtils.MultipleLerp(MathHelper.Lerp, 1 - timeLeft / 85f, new[] { 0.3f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 0.1f });
 
             if (--timeLeft <= 0) this.Kill();
         }

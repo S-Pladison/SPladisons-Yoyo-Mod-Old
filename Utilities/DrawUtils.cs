@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Globals;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
@@ -11,28 +8,15 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod
 {
-    internal static class ModUtils
+    public static class DrawUtils
     {
-        public static PladPlayer GetPladPlayer(this Player player) => player.GetModPlayer<PladPlayer>();
-        public static YoyoGlobalProjectile GetYoyoGlobalProjectile(this Projectile projectile) => projectile.GetGlobalProjectile<YoyoGlobalProjectile>();
-        public static YoyoGlobalItem GetYoyoGlobalItem(this Item item) => item.GetGlobalItem<YoyoGlobalItem>();
-        public static List<ModSystem> GetModSystems => ((Dictionary<Mod, List<ModSystem>>)SystemsByModInfo?.GetValue(null))[SPladisonsYoyoMod.Instance] ?? new();
-
-        public static bool IsYoyo(this Projectile projectile) => projectile.aiStyle == YoyoGlobalProjectile.YoyoAIStyle;
-        public static bool IsYoyo(this Item item) => SPladisonsYoyoMod.GetYoyos.Contains(item.type);
+        public delegate void DrawStringDelegate(Vector2 position, float rotation, float height, Color color, int counter);
 
         // ...
 
-        public static T GradientValue<T>(Func<T, T, float, T> method, float percent, params T[] values)
+        public static Vector2 GetYoyoStringDrawOffset()
         {
-            if (method == null) throw new ArgumentNullException(nameof(method));
-            if (percent >= 1) return values.Last();
-
-            percent = Math.Max(percent, 0);
-            float num = 1f / (values.Length - 1);
-            int index = Math.Max(0, (int)(percent / num));
-
-            return method.Invoke(values[index], values[index + 1], (percent - num * index) / num) ?? throw new Exception();
+            return Vector2.UnitY * (ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle ? -4 : 0);
         }
 
         public static void DrawYoyoString(Projectile projectile, Vector2 startPos, DrawStringDelegate method)
@@ -125,44 +109,22 @@ namespace SPladisonsYoyoMod
                 }
 
                 num4 = (float)Math.Atan2(num3, num2) - 1.57f;
-                Color color = Microsoft.Xna.Framework.Color.White;
-                color.A = (byte)((float)(int)color.A * 0.4f);
-                color = ModUtils.TryApplyingPlayerStringColor(owner.stringColor, color);
+                Color color = Color.White;
+                color.A = (byte)(color.A * 0.4f);
+                color = TryApplyingPlayerStringColor(owner.stringColor, color);
                 color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f), color);
 
                 method.Invoke(vector - Main.screenPosition + TextureAssets.FishingLine.Size() * 0.5f - new Vector2(6f, 0f), num4, num7, color, ++counter);
             }
+
+            static Color TryApplyingPlayerStringColor(int playerStringColor, Color stringColor)
+            {
+                return (Color)(StringColorMethodInfo?.Invoke(null, new object[] { playerStringColor, stringColor }) ?? stringColor);
+            }
         }
-
-        public static Vector2 GetYoyoStringOffset()
-        {
-            return Vector2.UnitY * (ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle ? -4 : 0);
-        }
-
-        public static Color TryApplyingPlayerStringColor(int playerStringColor, Color stringColor)
-        {
-            return (Color)(StringColorMethodInfo?.Invoke(null, new object[] { playerStringColor, stringColor }) ?? stringColor);
-        }
-
-        public static void MoveTowards(this Entity entity, Vector2 target, float speed, float resistance)
-        {
-            var move = target - entity.Center;
-            var length = move.Length();
-
-            if (length > speed) move *= speed / length;
-
-            move = (entity.velocity * resistance + move) / (resistance + 1f);
-            length = move.Length();
-
-            if (length > speed) move *= speed / length;
-            entity.velocity = move;
-        }
-
-        public delegate void DrawStringDelegate(Vector2 position, float rotation, float height, Color color, int counter);
 
         // ...
 
         private static readonly MethodInfo StringColorMethodInfo = typeof(Main).GetMethod("TryApplyingPlayerStringColor", BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly FieldInfo SystemsByModInfo = typeof(SystemLoader).GetField("SystemsByMod", BindingFlags.NonPublic | BindingFlags.Static);
     }
 }

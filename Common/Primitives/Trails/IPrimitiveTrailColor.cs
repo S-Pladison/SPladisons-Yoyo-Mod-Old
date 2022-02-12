@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,7 +42,7 @@ namespace SPladisonsYoyoMod.Common.Primitives.Trails
 
         Color IPrimitiveTrailColor.GetColor(float progress)
         {
-            Color color = ModUtils.GradientValue(Color.Lerp, progress, colors.ToArray());
+            Color color = MathUtils.MultipleLerp(Color.Lerp, progress, colors.ToArray());
             return disappearOverTime ? (color * (1 - progress)) : color;
         }
     }

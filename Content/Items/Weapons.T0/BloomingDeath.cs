@@ -68,8 +68,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDraw(ref Color lightColor)
         {
-            var stringPosition = Main.player[Projectile.owner].MountedCenter + Vector2.UnitY * Main.player[Projectile.owner].gfxOffY + ModUtils.GetYoyoStringOffset();
-            ModUtils.DrawYoyoString(Projectile, stringPosition, this.DrawStrangeString);
+            var stringPosition = Main.player[Projectile.owner].MountedCenter + Vector2.UnitY * Main.player[Projectile.owner].gfxOffY + DrawUtils.GetYoyoStringDrawOffset();
+            DrawUtils.DrawYoyoString(Projectile, stringPosition, this.DrawStrangeString);
 
             var drawPosition = GetDrawPosition();
             var color = Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), new Color(230, 230, 230, 230));

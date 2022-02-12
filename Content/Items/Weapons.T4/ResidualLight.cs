@@ -206,7 +206,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.friendly = Projectile.timeLeft == 10;
 
             Projectile.rotation += 0.05f;
-            Projectile.scale = ModUtils.GradientValue<float>(MathHelper.Lerp, 1 - Projectile.timeLeft / Projectile.ai[1], new float[] { 1f, 1.2f, 0.6f, 0f }) * Projectile.ai[0];
+            Projectile.scale = MathUtils.MultipleLerp<float>(MathHelper.Lerp, 1 - Projectile.timeLeft / Projectile.ai[1], new float[] { 1f, 1.2f, 0.6f, 0f }) * Projectile.ai[0];
 
             Lighting.AddLight(Projectile.Center, Color.White.ToVector3() * 0.3f * Projectile.scale);
         }

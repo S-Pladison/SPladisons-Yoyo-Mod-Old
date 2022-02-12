@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Content.Items.Weapons;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
@@ -17,7 +16,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 return;
             }
 
-            foreach (var system in ModUtils.GetModSystems.FindAll(i => i is IOnResizeScreen))
+            foreach (var system in PladUtils.GetModSystems.FindAll(i => i is IOnResizeScreen))
             {
                 (system as IOnResizeScreen).OnResizeScreen(Main.screenWidth, Main.screenHeight);
             }

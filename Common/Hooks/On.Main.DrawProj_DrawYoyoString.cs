@@ -18,10 +18,10 @@ namespace SPladisonsYoyoMod.Common.Hooks
             }
 
             Player owner = Main.player[projectile.owner];
-            mountedCenter += ModUtils.GetYoyoStringOffset();
+            mountedCenter += DrawUtils.GetYoyoStringDrawOffset();
             mountedCenter.Y += owner.gfxOffY;
 
-            ModUtils.DrawYoyoString(projectile, mountedCenter, (position, rotation, height, color, i) =>
+            DrawUtils.DrawYoyoString(projectile, mountedCenter, (position, rotation, height, color, i) =>
             {
                 Main.EntitySpriteDraw(
                     color: color * Math.Min(i / 12.0f, 0.5f),

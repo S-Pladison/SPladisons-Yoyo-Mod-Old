@@ -239,8 +239,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             var progress = 1 - Projectile.timeLeft / 25f;
 
             Timer += 0.01f;
-            BeamProgress = ModUtils.GradientValue<float>(MathHelper.Lerp, progress, new float[] { 0f, 0.1f, 0.2f, 0.9f, 0.45f, 0f });
-            LightningProgress = ModUtils.GradientValue<float>(MathHelper.Lerp, progress, new float[] { 0f, 0f, 0f, 0.7f, 0.3f, 0f });
+            BeamProgress = MathUtils.MultipleLerp<float>(MathHelper.Lerp, progress, new float[] { 0f, 0.1f, 0.2f, 0.9f, 0.45f, 0f });
+            LightningProgress = MathUtils.MultipleLerp<float>(MathHelper.Lerp, progress, new float[] { 0f, 0f, 0f, 0.7f, 0.3f, 0f });
 
             Lighting.AddLight(Projectile.Center, new Color(90, 40, 255).ToVector3() * BeamProgress * 1.3f);
             if (Projectile.timeLeft != 7) return;
