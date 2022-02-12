@@ -19,7 +19,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 
             foreach (var system in ModUtils.GetModSystems.FindAll(i => i is IOnResizeScreen))
             {
-                (system as IOnResizeScreen).OnResizeScreen(width, height);
+                (system as IOnResizeScreen).OnResizeScreen(Main.screenWidth, Main.screenHeight);
             }
         }
     }
