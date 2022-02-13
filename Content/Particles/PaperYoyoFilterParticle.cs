@@ -32,8 +32,6 @@ namespace SPladisonsYoyoMod.Content.Particles
             velocity *= 0.94f;
             scale = MathUtils.MultipleLerp(MathHelper.Lerp, 1 - timeLeft / 100f, new[] { 0.3f, 1f, 1f, 1f, 1f, 1f, 1f, 0.9f, 0.75f, 0.4f, 0.1f });
 
-            //Lighting.AddLight(position, Color.LightGray.ToVector3() * 0.5f * scale);
-
             if (--timeLeft <= 0) this.Kill();
         }
 

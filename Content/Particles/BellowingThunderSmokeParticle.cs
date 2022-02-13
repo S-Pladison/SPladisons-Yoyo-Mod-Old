@@ -33,14 +33,5 @@ namespace SPladisonsYoyoMod.Content.Particles
             scaleMult = 0.5f;
             return true;
         }
-
-        /*public override void Draw(SpriteBatch spriteBatch)
-        {
-            var rect = new Rectangle((int)Main.screenPosition.X - 25, (int)Main.screenPosition.Y - 25, Main.screenWidth + 25, Main.screenHeight + 25);
-            if (!rect.Contains((int)position.X, (int)position.Y)) return;
-
-            Color color = new Color(55, 35, 170) * scale * 0.35f;
-            spriteBatch.Draw(Texture.Value, position - Main.screenPosition, null, color, rotation, Texture.Size() * 0.5f, scale * 0.5f, SpriteEffects.None, 0f);
-        }*/
     }
 }
