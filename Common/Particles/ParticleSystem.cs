@@ -36,6 +36,11 @@ namespace SPladisonsYoyoMod.Common.Particles
 
         public override void OnWorldUnload()
         {
+            foreach (var particle in particles.ToArray())
+            {
+                particle.Kill();
+            }
+
             particles.Clear();
         }
 

@@ -32,6 +32,16 @@ namespace SPladisonsYoyoMod.Common.Primitives
             }
         }
 
+        public override void OnWorldUnload()
+        {
+            foreach (var trail in trails.ToArray())
+            {
+                trail.Kill();
+            }
+
+            trails.Clear();
+        }
+
         public void DrawPrimitives(PrimitiveDrawLayer drawLayer)
         {
             foreach (var trail in trails.FindAll(i => i.PrimitiveDrawLayer == drawLayer))

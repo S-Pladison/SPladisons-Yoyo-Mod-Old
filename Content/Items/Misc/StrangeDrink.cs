@@ -49,7 +49,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
 
     public class NurseGiftSystem : ModSystem
     {
-        private static bool buttonWasPressed = false;
+        private bool buttonWasPressed = false;
 
         // ...
 

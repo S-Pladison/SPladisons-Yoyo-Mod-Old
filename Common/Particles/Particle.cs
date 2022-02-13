@@ -10,6 +10,12 @@ namespace SPladisonsYoyoMod.Common.Particles
 {
     public abstract class Particle : ModTexturedType, IDrawAdditive
     {
+        public static Particle NewParticle<T>(Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f) where T : Particle
+        {
+            int type = ParticleSystem.ParticleType<T>();
+            return NewParticle(type, position, velocity, color, alpha, rotation, scale);
+        }
+
         public static Particle NewParticle(int type, Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f)
         {
             if (Main.dedServ) return null;
