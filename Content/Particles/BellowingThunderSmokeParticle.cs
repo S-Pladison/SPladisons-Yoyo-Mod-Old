@@ -1,15 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Particles;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
     public class BellowingThunderSmokeParticle : Particle
     {
-        public BellowingThunderSmokeParticle(Vector2 position, Vector2? velocity = null) : base(ModContent.Request<Texture2D>(ModAssets.ParticlesPath + "SmokeParticle"), position, velocity)
-        { }
+        public override string Texture => ModAssets.ParticlesPath + "SmokeParticle";
 
         public override void OnSpawn()
         {
@@ -29,13 +26,21 @@ namespace SPladisonsYoyoMod.Content.Particles
             if (--timeLeft <= 0 || scale <= 0.2f) this.Kill();
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override Color GetAlpha(Color lightColor) => new Color(55, 35, 170) * scale * 0.35f;
+
+        protected override bool PreDraw(ref Color lightColor, ref float scaleMult)
+        {
+            scaleMult = 0.5f;
+            return true;
+        }
+
+        /*public override void Draw(SpriteBatch spriteBatch)
         {
             var rect = new Rectangle((int)Main.screenPosition.X - 25, (int)Main.screenPosition.Y - 25, Main.screenWidth + 25, Main.screenHeight + 25);
             if (!rect.Contains((int)position.X, (int)position.Y)) return;
 
             Color color = new Color(55, 35, 170) * scale * 0.35f;
             spriteBatch.Draw(Texture.Value, position - Main.screenPosition, null, color, rotation, Texture.Size() * 0.5f, scale * 0.5f, SpriteEffects.None, 0f);
-        }
+        }*/
     }
 }

@@ -1,29 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Content.Items.Weapons;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
     public class PaperYoyoFilterParticle : Particle, IDrawOnRenderTarget
     {
-        public PaperYoyoFilterParticle(Vector2 position, Vector2? velocity = null) : base(ModContent.Request<Texture2D>(ModAssets.ParticlesPath + "SmokeParticle"), position, velocity)
-        { }
+        public override string Texture => ModAssets.ParticlesPath + "SmokeParticle";
 
         public override void OnSpawn()
         {
             timeLeft = 100;
             rotation = Main.rand.NextFloat(MathHelper.TwoPi);
 
-            PaperEffectSystem.Instance?.AddFilterElement(this);
+            PaperEffectSystem.Instance.AddFilterElement(this);
         }
 
-        protected override bool PreKill()
+        protected override void OnKill()
         {
-            PaperEffectSystem.Instance?.RemoveFilterElement(this);
-            return true;
+            PaperEffectSystem.Instance.RemoveFilterElement(this);
         }
 
         public override void Update()
@@ -39,11 +37,11 @@ namespace SPladisonsYoyoMod.Content.Particles
             if (--timeLeft <= 0) this.Kill();
         }
 
-        public override void Draw(SpriteBatch spriteBatch) { }
+        protected override bool PreDraw(ref Color lightColor, ref float scaleMult) => false;
 
         void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture.Value, position - Main.screenPosition, null, Color.White * scale, rotation, Texture.Size() * 0.5f, scale * 0.9f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture2D.Value, position - Main.screenPosition, null, Color.White * scale, rotation, Texture2D.Size() * 0.5f, scale * 0.9f, SpriteEffects.None, 0f);
         }
     }
 }

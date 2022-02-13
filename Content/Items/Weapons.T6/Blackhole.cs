@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Content.Particles;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -90,8 +92,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             for (int i = 0; i < 12; i++)
             {
-                var particle = new Particles.BlackholeSpaceParticle(Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20), Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3));
-                ParticleSystem.NewParticle(particle);
+                var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
+                var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3);
+                Particle.NewParticle(ParticleSystem.ParticleType<BlackholeSpaceParticle>(), position, velocity, Color.White);
             }
 
             if (!this.YoyoGloveActivated) return;

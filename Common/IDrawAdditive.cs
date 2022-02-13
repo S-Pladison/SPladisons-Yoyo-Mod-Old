@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Common.Particles;
 using System;
 using System.Linq;
 using Terraria;
@@ -14,9 +15,8 @@ namespace SPladisonsYoyoMod.Common
         public static void Draw()
         {
             var projs = Main.projectile.ToList().FindAll(i => i.active && i.ModProjectile is IDrawAdditive);
-            var particles = ParticleSystem.Particles;
 
-            if (projs.Count == 0 && particles.Count == 0) return;
+            if (projs.Count == 0 && ParticleSystem.ActiveParticles == 0) return;
 
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             {
@@ -33,10 +33,7 @@ namespace SPladisonsYoyoMod.Common
                     }
                 }
 
-                foreach (var particle in particles)
-                {
-                    particle.Draw(Main.spriteBatch);
-                }
+                ParticleSystem.DrawParticles();
             }
             Main.spriteBatch.End();
         }

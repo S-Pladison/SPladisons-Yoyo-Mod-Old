@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Content.Items.Weapons;
 using Terraria;
 
@@ -8,21 +9,19 @@ namespace SPladisonsYoyoMod.Content.Particles
 {
     public class PaperYoyoBubbleParticle : Particle, IDrawOnRenderTarget
     {
-        public PaperYoyoBubbleParticle(Vector2 position, Vector2? velocity = null) : base(ModAssets.GetExtraTexture(33), position, velocity)
-        { }
+        public override string Texture => ModAssets.MiscPath + "Extra_33";
 
         public override void OnSpawn()
         {
             timeLeft = 85;
             rotation = Main.rand.NextFloat(MathHelper.TwoPi);
 
-            PaperEffectSystem.Instance?.AddBubbleElement(this);
+            PaperEffectSystem.Instance.AddBubbleElement(this);
         }
 
-        protected override bool PreKill()
+        protected override void OnKill()
         {
-            PaperEffectSystem.Instance?.RemoveBubbleElement(this);
-            return true;
+            PaperEffectSystem.Instance.RemoveBubbleElement(this);
         }
 
         public override void Update()
@@ -36,11 +35,11 @@ namespace SPladisonsYoyoMod.Content.Particles
             if (--timeLeft <= 0) this.Kill();
         }
 
-        public override void Draw(SpriteBatch spriteBatch) { }
+        protected override bool PreDraw(ref Color lightColor, ref float scaleMult) => false;
 
         void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture.Value, position - Main.screenPosition, null, Color.White, rotation, Texture.Size() * 0.5f, scale * 0.9f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture2D.Value, position - Main.screenPosition, null, Color.White, rotation, Texture2D.Size() * 0.5f, scale * 0.9f, SpriteEffects.None, 0f);
         }
     }
 }

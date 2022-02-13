@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Common.Primitives.Trails;
+using SPladisonsYoyoMod.Content.Particles;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -100,8 +102,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             if (Projectile.velocity.Length() >= 0.35f && Main.rand.NextBool(4))
             {
-                var particle = new Particles.BellowingThunderParticle(Projectile.Center + new Vector2(Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3)));
-                ParticleSystem.NewParticle(particle);
+                var position = Projectile.Center + new Vector2(Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3));
+                var rotation = Main.rand.NextFloat(0, MathHelper.TwoPi);
+                var scale = Main.rand.NextFloat(0.8f, 1.2f);
+
+                Particle.NewParticle(ParticleSystem.ParticleType<BellowingThunderParticle>(), position, Vector2.Zero, Color.White, 70, rotation, scale);
             }
 
             _effect.Update(_counter);
@@ -250,8 +255,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             for (int i = 0; i < 15; i++)
             {
-                var particle = new Particles.BellowingThunderSmokeParticle(Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20), Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3));
-                ParticleSystem.NewParticle(particle);
+                var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
+                var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3);
+                Particle.NewParticle(ParticleSystem.ParticleType<BellowingThunderSmokeParticle>(), position, velocity, Color.White);
             }
 
             // SoundEngine.PlaySound(SoundLoader.GetSoundSlot(Mod, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);

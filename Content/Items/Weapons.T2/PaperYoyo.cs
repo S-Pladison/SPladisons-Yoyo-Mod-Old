@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Content.Particles;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -68,14 +70,16 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             for (int i = 0; i < 8; i++)
             {
-                var particle = new Particles.PaperYoyoFilterParticle(Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(15), Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3));
-                ParticleSystem.NewParticle(particle);
+                var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(15);
+                var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3);
+                Particle.NewParticle(ParticleSystem.ParticleType<PaperYoyoFilterParticle>(), position, velocity, Color.White);
             }
 
             for (int i = 0; i < 5; i++)
             {
-                var particle = new Particles.PaperYoyoBubbleParticle(Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(15), Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(1f, 2.5f));
-                ParticleSystem.NewParticle(particle);
+                var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(15);
+                var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(1f, 2.5f);
+                Particle.NewParticle(ParticleSystem.ParticleType<PaperYoyoBubbleParticle>(), position, velocity, Color.White);
             }
         }
 
