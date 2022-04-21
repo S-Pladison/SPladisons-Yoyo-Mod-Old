@@ -179,6 +179,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void Unload()
         {
+            Main.OnResolutionChanged -= RecreateRenderTarget;
+
             _elems.Clear();
             _elems = null;
             _target = null;

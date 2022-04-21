@@ -13,7 +13,6 @@ namespace SPladisonsYoyoMod.Common.Hooks
 
             if (!Main.gameMenu && !Main.dedServ)
             {
-                AdditiveDrawSystem.GetDataFromEntities();
                 SPladisonsYoyoMod.PostUpdateCameraPosition();
             }
 

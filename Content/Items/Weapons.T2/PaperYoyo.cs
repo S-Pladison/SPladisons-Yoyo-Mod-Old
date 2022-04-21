@@ -133,6 +133,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void Unload()
         {
+            Main.OnResolutionChanged -= RecreateRenderTargets;
+
             _filterElems.Clear();
             _filterElems = null;
             _bubbleElems.Clear();

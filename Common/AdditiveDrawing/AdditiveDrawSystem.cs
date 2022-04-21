@@ -25,24 +25,6 @@ namespace SPladisonsYoyoMod.Common.AdditiveDrawing
             }
         }
 
-        public static void GetDataFromEntities()
-        {
-            List<AdditiveDrawData> list = new();
-
-            foreach (var proj in Main.projectile)
-            {
-                if (proj.ModProjectile is IDrawAdditive elem && proj.active)
-                {
-                    elem.DrawAdditive(list);
-                }
-            }
-
-            foreach (var data in list)
-            {
-                dataCache[data.Pixilated].Add(data);
-            }
-        }
-
         public static void RecreateRenderTarget(Vector2 screenSize)
         {
             var size = (screenSize / 2).ToPoint();
@@ -82,7 +64,25 @@ namespace SPladisonsYoyoMod.Common.AdditiveDrawing
             }
         }
 
-        public static void DrawToTarget()
+        private static void GetDataFromEntities()
+        {
+            List<AdditiveDrawData> list = new();
+
+            foreach (var proj in Main.projectile)
+            {
+                if (proj.ModProjectile is IDrawAdditive elem && proj.active)
+                {
+                    elem.DrawAdditive(list);
+                }
+            }
+
+            foreach (var data in list)
+            {
+                dataCache[data.Pixilated].Add(data);
+            }
+        }
+
+        private static void DrawToTarget()
         {
             if (dataCache[true].Count == 0) return;
 
@@ -117,7 +117,12 @@ namespace SPladisonsYoyoMod.Common.AdditiveDrawing
             dataCache.Add(true, new());
             dataCache.Add(false, new());
 
-            SPladisonsYoyoMod.PostUpdateCameraPositionEvent += DrawToTarget;
+            SPladisonsYoyoMod.PostUpdateCameraPositionEvent += () =>
+            {
+                GetDataFromEntities();
+                DrawToTarget();
+            };
+
             Main.OnResolutionChanged += RecreateRenderTarget;
             Main.OnPreDraw += PreDraw;
         }
@@ -125,6 +130,7 @@ namespace SPladisonsYoyoMod.Common.AdditiveDrawing
         public override void Unload()
         {
             Main.OnPreDraw -= PreDraw;
+            Main.OnResolutionChanged -= RecreateRenderTarget;
 
             ClearDataCache();
             dataCache.Clear();
