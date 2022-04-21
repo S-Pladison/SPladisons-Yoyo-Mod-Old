@@ -13,7 +13,6 @@ Mods: {
 			StrangeDrink: Странный напиток
 			SpaceKey: Космический ключ
 			SpaceChest: Космический сундук
-			SuspiciousLookingBeehive: Подозрительно выглядящий улей
 
 			// Оружия
 			AdamantiteYoyo: Адамантитовый йо-йо
@@ -64,11 +63,6 @@ Mods: {
 				«Удивительно, но пахнет он восхитительно»
 				'''
 			SpaceKey: Открывает космический сундук в Темнице
-			SuspiciousLookingBeehive:
-				'''
-				Призывает квадратную пчелу
-				Отлично подходит, чтобы впечатлить разработчиков!
-				'''
 
 			// Оружия
 			AdamantiteYoyo: Оставляет за собой опасную металлическую пыль
@@ -126,11 +120,9 @@ Mods: {
 
 		BuffName: {
 			ImprovedPoisoning: Улучшенное отравление
-			SquareBeeBuff: Квадратная пчела
 		}
 
 		BuffDescription: {
-			SquareBeeBuff: Она из этого мира?
 		}
 
 		GameUI: {

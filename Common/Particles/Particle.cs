@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Particles
 {
-    public abstract class Particle : ModTexturedType, IDrawAdditive
+    public abstract class Particle : ModTexturedType
     {
         public static Particle NewParticle<T>(Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f) where T : Particle
         {
@@ -156,7 +156,5 @@ namespace SPladisonsYoyoMod.Common.Particles
         {
             Texture2D ??= (!string.IsNullOrEmpty(this.Texture)) ? ModContent.Request<Texture2D>(this.Texture, AssetRequestMode.ImmediateLoad) : TextureAssets.MagicPixel;
         }
-
-        void IDrawAdditive.DrawAdditive() => this.Draw();
     }
 }

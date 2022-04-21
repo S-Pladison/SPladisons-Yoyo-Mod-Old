@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -36,7 +35,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class TheFinestHourProjectile : YoyoProjectile, IDrawAdditive
+    public class TheFinestHourProjectile : YoyoProjectile
     {
         public static Asset<Effect> TrailEffect { get; private set; }
 
@@ -78,11 +77,5 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
 
         public override bool PreDraw(ref Color lightColor) => false;
-
-        void IDrawAdditive.DrawAdditive()
-        {
-            var texture = ModAssets.GetExtraTexture(8);
-            Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, new Color(251, 239, 223), Projectile.rotation * 0.15f, texture.Size() * 0.5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
-        }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.AdditiveDrawing;
 using SPladisonsYoyoMod.Common.Primitives.Trails;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -75,20 +76,21 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return true;
         }
 
-        void IDrawAdditive.DrawAdditive()
+        void IDrawAdditive.DrawAdditive(List<AdditiveDrawData> list)
         {
             var drawPosition = GetDrawPosition();
-            var origin = ModAssets.GetExtraTexture(8).Size() * 0.5f + new Vector2(0, 6);
+            var origin = ModAssets.GetExtraTexture(8).Size() * 0.5f + new Vector2(0, 7);
             var starRotation = Main.GlobalTimeWrappedHourly;
             var starScalePulse = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 3f) * 0.15f;
 
             void DrawStar(Color color, float rotation, float scale)
             {
-                Main.EntitySpriteDraw(ModAssets.GetExtraTexture(8).Value, drawPosition, null, color, rotation, origin, scale + starScalePulse, SpriteEffects.None, 0);
+                var additiveData = new AdditiveDrawData(ModAssets.GetExtraTexture(8).Value, drawPosition, null, color, rotation, origin, (scale + starScalePulse) * Vector2.One, SpriteEffects.None, true);
+                list.Add(additiveData);
             }
 
-            DrawStar(new Color(16, 11, 25, 90), -starRotation, 0.5f);
-            DrawStar(new Color(16, 11, 25, 210), starRotation, 0.3f);
+            DrawStar(new Color(16, 11, 25, 170), -starRotation, 0.55f);
+            DrawStar(new Color(16, 11, 25, 210), starRotation, 0.35f);
         }
     }
 }

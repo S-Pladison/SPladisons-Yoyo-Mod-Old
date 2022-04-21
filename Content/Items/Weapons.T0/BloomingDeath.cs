@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -66,21 +67,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public override bool PreDrawExtras()
         {
             var stringPosition = Main.player[Projectile.owner].MountedCenter + Vector2.UnitY * Main.player[Projectile.owner].gfxOffY + DrawUtils.GetYoyoStringDrawOffset();
             DrawUtils.DrawYoyoString(Projectile, stringPosition, this.DrawStrangeString);
-
-            var drawPosition = GetDrawPosition();
-            var color = Lighting.GetColor((int)Projectile.Center.X / 16, (int)(Projectile.Center.Y / 16f), new Color(230, 230, 230, 230));
-            var texture = ModAssets.GetExtraTexture(12);
-
-            for (int i = 0; i < 5; i++)
-            {
-                Main.EntitySpriteDraw(texture.Value, drawPosition, null, color * 0.15f, Projectile.rotation * 0.05f + (MathHelper.TwoPi / 5 * i), new Vector2(texture.Width() * 0.5f, texture.Height()), 1f, SpriteEffects.None, 0);
-            }
-
             return true;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            var texture = TextureAssets.Projectile[Type];
+            Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, lightColor, Projectile.rotation, new Vector2(10, 14), Projectile.scale * 0.9f, SpriteEffects.None, 0);
+            return false;
         }
 
         private void DrawStrangeString(Vector2 position, float rotation, float height, Color color, int i)
@@ -103,8 +101,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     position: position,
                     sourceRectangle: rectangle,
                     rotation: rotation,
-                    origin: new Vector2(4 * flip, 0),
-                    scale: 1f,
+                    origin: new Vector2(7 * flip, 0),
+                    scale: 0.85f,
                     effects: effect,
                     worthless: 0
                 );
@@ -121,8 +119,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     position: position,
                     sourceRectangle: rectangle,
                     rotation: rotation,
-                    origin: new Vector2(6 * flip, 0),
-                    scale: 0.92f,
+                    origin: new Vector2(8.5f * flip, 0),
+                    scale: 0.72f,
                     effects: effect,
                     worthless: 0
                 );

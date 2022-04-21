@@ -106,7 +106,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
                                        "(Откуда у нее йо-йо?..)";
 
                     player.inventory[item] = new Item();
-                    player.QuickSpawnItem(GiftType);
+                    player.QuickSpawnItem(player.GetItemSource_Misc(ItemID.None), GiftType);
                 }
 
                 Main.npcChatCornerItem = 0;

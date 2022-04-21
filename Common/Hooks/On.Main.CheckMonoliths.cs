@@ -1,4 +1,4 @@
-﻿using SPladisonsYoyoMod.Content.Items.Weapons;
+﻿using SPladisonsYoyoMod.Common.AdditiveDrawing;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
@@ -13,11 +13,8 @@ namespace SPladisonsYoyoMod.Common.Hooks
 
             if (!Main.gameMenu && !Main.dedServ)
             {
-                var device = Main.graphics.GraphicsDevice;
-                var spriteBatch = Main.spriteBatch;
-
-                BlackholeSpaceSystem.Instance?.DrawToTarget(device, spriteBatch);
-                PaperEffectSystem.Instance?.DrawToTarget(device, spriteBatch);
+                AdditiveDrawSystem.GetDataFromEntities();
+                SPladisonsYoyoMod.PostUpdateCameraPosition();
             }
 
             orig();

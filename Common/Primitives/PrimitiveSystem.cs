@@ -11,8 +11,26 @@ namespace SPladisonsYoyoMod.Common.Primitives
     {
         public static PrimitiveSystem Instance { get => ModContent.GetInstance<PrimitiveSystem>(); }
 
-        private List<PrimitiveTrail> trails = new();
+        public static void DrawPrimitives(PrimitiveDrawData drawData)
+        {
+            Instance.drawDatas.Add(drawData);
+        }
+
+        // ...
+
+        private readonly List<PrimitiveDrawData> drawDatas = new();
+        private readonly List<PrimitiveTrail> trails = new();
         private Matrix transformMatrix;
+
+        public override void Load()
+        {
+            Main.OnPreDraw += PreDraw;
+        }
+
+        public override void Unload()
+        {
+            Main.OnPreDraw -= PreDraw;
+        }
 
         public override void ModifyTransformMatrix(ref SpriteViewMatrix Transform)
         {
@@ -24,14 +42,6 @@ namespace SPladisonsYoyoMod.Common.Primitives
             transformMatrix *= Matrix.CreateOrthographic(Main.screenWidth, Main.screenHeight, 0, 1000);
         }
 
-        public override void PostUpdateEverything()
-        {
-            foreach (var trail in trails.ToArray())
-            {
-                trail.Update();
-            }
-        }
-
         public override void OnWorldUnload()
         {
             foreach (var trail in trails.ToArray())
@@ -40,21 +50,39 @@ namespace SPladisonsYoyoMod.Common.Primitives
             }
 
             trails.Clear();
+            drawDatas.Clear();
+        }
+
+        public void PreDraw(GameTime time)
+        {
+            foreach (var trail in trails.ToArray())
+            {
+                trail.Update();
+                trail.Draw();
+            }
         }
 
         public void DrawPrimitives(PrimitiveDrawLayer drawLayer)
         {
-            foreach (var trail in trails.FindAll(i => i.PrimitiveDrawLayer == drawLayer))
+            foreach (var data in drawDatas.FindAll(i => i.Layer == drawLayer))
             {
-                trail.DrawPrimitives(Main.spriteBatch, transformMatrix);
-            }
+                foreach (var param in data.Effect.Value.Parameters)
+                {
+                    switch (param.Name)
+                    {
+                        case "time":
+                            param.SetValue(Main.GlobalTimeWrappedHourly);
+                            break;
+                        case "transformMatrix":
+                            param.SetValue(transformMatrix);
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
-            for (int i = 0; i < Main.maxProjectiles; i++)
-            {
-                var proj = Main.projectile[i];
-                if (!proj.active || proj.ModProjectile is not IDrawPrimitives modProj || modProj.PrimitiveDrawLayer != drawLayer) continue;
-
-                modProj.DrawPrimitives(Main.spriteBatch, transformMatrix);
+                data.Draw(Main.spriteBatch);
+                drawDatas.Remove(data);
             }
         }
 

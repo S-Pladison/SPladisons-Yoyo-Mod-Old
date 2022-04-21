@@ -13,7 +13,6 @@ Mods: {
 			StrangeDrink: Strange Drink
 			SpaceKey: Space Key
 			SpaceChest: Space Chest
-			SuspiciousLookingBeehive: Suspicious Looking Beehive
 
 			// Weapons
 			AdamantiteYoyo: Adamantite Yoyo
@@ -64,11 +63,6 @@ Mods: {
 				'Surprisingly, it smells really good'
 				'''
 			SpaceKey: Unlocks a Space Chest in the dungeon
-			SuspiciousLookingBeehive:
-				'''
-				Summons a Square Bee
-				'Great for impersonating devs!'
-				'''
 
 			// Weapons
 			AdamantiteYoyo: Leaves behind dangerous metal dust
@@ -116,9 +110,6 @@ Mods: {
 		}
 
 		ProjectileName: {
-			// Misc
-			SquareBeeProjectile: "{$Mods.SPladisonsYoyoMod.BuffName.SquareBeeBuff}"
-
 			// Weapons
 			AdamantiteYoyoProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.AdamantiteYoyo}"
 			BellowingThunderProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BellowingThunder}"
@@ -142,11 +133,10 @@ Mods: {
 
 		BuffName: {
 			ImprovedPoisoning: Improved Poisoning
-			SquareBeeBuff: Square Bee
 		}
 
 		BuffDescription: {
-			SquareBeeBuff: She's from this world?
+			
 		}
 
 		GameUI: {

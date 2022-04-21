@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.AdditiveDrawing;
 using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Common.Primitives.Trails;
 using SPladisonsYoyoMod.Content.Particles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -114,6 +115,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDrawExtras()
         {
+
+            /*VertexPositionColorTexture[] vertices = new[]
+            {
+                new VertexPositionColorTexture(new Vector3(Projectile.Center - Main.screenPosition + Projectile.gfxOffY * Vector2.UnitY, 0), Color.Gold, Vector2.One),
+                new VertexPositionColorTexture(new Vector3(Projectile.Center - Main.screenPosition + Projectile.gfxOffY * Vector2.UnitY+ new Vector2(50, 0), 0), Color.Gold, Vector2.One),
+                new VertexPositionColorTexture(new Vector3(Projectile.Center - Main.screenPosition + Projectile.gfxOffY * Vector2.UnitY+ new Vector2(50, 50), 0), Color.Gold, Vector2.One)
+            };
+            PrimitiveSystem.DrawPrimitives(new PrimitiveDrawData(PrimitiveDrawLayer.SolidTiles, PrimitiveType.TriangleList, 1, vertices));*/
+
             var texture = ModAssets.GetExtraTexture(5);
 
             for (int k = 1; k < Projectile.oldPos.Length; k++)
@@ -139,23 +149,27 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BellowingThunderLightningProjectile>(), Projectile.damage * 2, Projectile.knockBack * 3f, Projectile.owner);
         }
 
-        void IDrawAdditive.DrawAdditive()
+        void IDrawAdditive.DrawAdditive(List<AdditiveDrawData> list)
         {
             var texture = ModAssets.GetExtraTexture(21);
             var drawPosition = GetDrawPosition();
+            var scale = Projectile.scale * Vector2.One;
+            var additiveData = new AdditiveDrawData(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, scale * 0.25f, SpriteEffects.None, true);
+            list.Add(additiveData);
 
-            Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, Projectile.scale * 0.25f, SpriteEffects.None, 0);
-            _effect.Draw(drawPosition, 0.45f * Projectile.scale);
+            _effect.Draw(list, drawPosition, 0.45f * scale);
 
             texture = ModAssets.GetExtraTexture(23);
-            Main.EntitySpriteDraw(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, Projectile.scale * 0.1f, SpriteEffects.None, 0);
+            additiveData = new AdditiveDrawData(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, scale * 0.1f, SpriteEffects.None, false);
+            list.Add(additiveData);
 
             texture = ModAssets.GetExtraTexture(21);
-            Main.EntitySpriteDraw(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.2f, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
+            additiveData = new AdditiveDrawData(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.35f, Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None, false);
+            list.Add(additiveData);
         }
 
         private readonly LightningEffect _effect = new();
-        private static readonly Color _effectColor = new Color(137, 90, 248);
+        private static readonly Color _effectColor = new(137, 90, 248);
 
         // ...
 
@@ -169,14 +183,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             public LightningEffect() => this.Reset();
 
-            public void Draw(Vector2 position, float scale)
+            public void Draw(List<AdditiveDrawData> list, Vector2 position, Vector2 scale)
             {
                 if (!_active) return;
 
                 var texture = ModAssets.GetExtraTexture(22);
                 var rectangle = new Rectangle(_time * 96, _frame * 96, 96, 96);
-
-                Main.EntitySpriteDraw(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, 0);
+                var additiveData = new AdditiveDrawData(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, true);
+                list.Add(additiveData);
             }
 
             public void Update(int counter)
@@ -196,7 +210,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class BellowingThunderLightningProjectile : PladProjectile
+    public class BellowingThunderLightningProjectile : PladProjectile, IDrawAdditive
     {
         // TODO: Доделать звук удара молнии...
 
@@ -270,7 +284,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             hitbox.Height += value;
         }
 
-        public override bool? CanHitNPC(NPC target) => LightningProgress >= 0.5f && Vector2.Distance(target.Center, Projectile.Center) < Projectile.width;
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            hitDirection = Math.Sign(target.Center.X - Projectile.Center.X);
+        }
+
+        public override bool? CanHitNPC(NPC target) => (target.type == NPCID.TargetDummy || target.CanBeChasedBy()) && LightningProgress >= 0.5f && Vector2.Distance(target.Center, Projectile.Center) < Projectile.width;
 
         public override bool PreDraw(ref Color lightColor)
         {
@@ -303,21 +322,29 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     }
                 }
             }
-            SetSpriteBatch(sortMode: SpriteSortMode.Deferred, blendState: BlendState.Additive);
-            {
-                Main.EntitySpriteDraw(ModAssets.GetExtraTexture(25).Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, 0);
-
-                texture = ModAssets.GetExtraTexture(26);
-                Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, texture.Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, 0);
-
-                texture = ModAssets.GetExtraTexture(23);
-                Main.EntitySpriteDraw(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None, 0);
-            }
             SetSpriteBatch();
 
             return false;
         }
 
-        private static readonly Color _effectColor = new Color(90, 40, 255);
+        void IDrawAdditive.DrawAdditive(List<AdditiveDrawData> list)
+        {
+            var drawPosition = GetDrawPosition();
+            var scale = Projectile.scale * 3 * Vector2.One;
+            var texture = ModAssets.GetExtraTexture(25);
+            var offset = Vector2.UnitY * texture.Height() * scale;
+            var additiveData = new AdditiveDrawData(texture.Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, false);
+            list.Add(additiveData);
+
+            texture = ModAssets.GetExtraTexture(26);
+            additiveData = new AdditiveDrawData(texture.Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, texture.Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, false);
+            list.Add(additiveData);
+
+            texture = ModAssets.GetExtraTexture(23);
+            additiveData = new AdditiveDrawData(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None, false);
+            list.Add(additiveData);
+        }
+
+        private static readonly Color _effectColor = new(90, 40, 255);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.AdditiveDrawing;
 using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Content.Particles;
 using System;
@@ -28,7 +29,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class BlackholeProjectile : YoyoProjectile, IDrawAdditive, IDrawOnRenderTarget
+    public class BlackholeProjectile : YoyoProjectile, IDrawOnRenderTarget, IDrawAdditive
     {
         public static readonly float Radius = 16 * 10;
         private float RadiusProgress { get => Projectile.localAI[1]; set => Projectile.localAI[1] = value; }
@@ -113,34 +114,34 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.Black, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
         }
 
-        void IDrawAdditive.DrawAdditive()
-        {
-            // ... Ok... 0.0125f?.. 0.025f... sin? 
-
-            var drawPosition = GetDrawPosition();
-            var texture = ModAssets.GetExtraTexture(32);
-            var rotation = (float)Math.Sin(Projectile.localAI[0] * 0.0125f);
-            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * rotation, (float)Math.Sin(Projectile.localAI[0] * 0.025f), texture.Size() * 0.5f, (0.4f + rotation * 0.15f) * Projectile.scale, SpriteEffects.None, 0);
-
-            texture = ModAssets.GetExtraTexture(31);
-            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White * 0.5f, -rotation * 1.5f + MathHelper.Pi, texture.Size() * 0.5f, 0.3f * Projectile.scale, SpriteEffects.None, 0);
-            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.White, rotation, texture.Size() * 0.5f, 0.2f * Projectile.scale, SpriteEffects.None, 0);
-        }
-
         void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
             var scale = this.RadiusProgress * (this.YoyoGloveActivated ? 1.25f : 1f) * Projectile.scale;
             var drawPosition = GetDrawPosition();
             var texture = ModAssets.GetExtraTexture(30);
-            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.5f * scale, SpriteEffects.None, 0f);
-            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.37f * scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.45f * scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.40f * scale, SpriteEffects.None, 0f);
 
             texture = ModAssets.GetExtraTexture(2);
             spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, Main.GlobalTimeWrappedHourly * 2.5f, texture.Size() * 0.5f, 0.35f * (1 + MathF.Sin(Main.GlobalTimeWrappedHourly) * 0.1f) * scale, SpriteEffects.None, 0f);
         }
+
+        void IDrawAdditive.DrawAdditive(List<AdditiveDrawData> list)
+        {
+            var drawPosition = GetDrawPosition();
+            var texture = ModAssets.GetExtraTexture(32);
+            var rotation = (float)Math.Sin(Projectile.localAI[0] * 0.0125f);
+            var scale = Projectile.scale * Vector2.One;
+            var additiveData = new AdditiveDrawData(texture.Value, drawPosition, null, Color.White * rotation, (float)Math.Sin(Projectile.localAI[0] * 0.025f), texture.Size() * 0.5f, (0.4f + rotation * 0.15f) * scale, SpriteEffects.None, true);
+            list.Add(additiveData);
+
+            texture = ModAssets.GetExtraTexture(31);
+            additiveData = new AdditiveDrawData(texture.Value, drawPosition, null, Color.White, rotation, texture.Size() * 0.5f, 0.28f * scale, SpriteEffects.None, true);
+            list.Add(additiveData);
+        }
     }
 
-    public sealed class BlackholeSpaceSystem : ModSystem, IOnResizeScreen
+    public sealed class BlackholeSpaceSystem : ModSystem
     {
         public static BlackholeSpaceSystem Instance { get => ModContent.GetInstance<BlackholeSpaceSystem>(); }
         private static readonly Color[] Colors = new Color[]
@@ -171,6 +172,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             _spaceEffect.Value.Parameters["color0"].SetValue(Colors[0].ToVector4());
             _spaceEffect.Value.Parameters["color1"].SetValue(Colors[1].ToVector4());
             _spaceEffect.Value.Parameters["color2"].SetValue(Colors[2].ToVector4());
+
+            SPladisonsYoyoMod.PostUpdateCameraPositionEvent += DrawToTarget;
+            Main.OnResolutionChanged += RecreateRenderTarget;
         }
 
         public override void Unload()
@@ -196,20 +200,24 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             _elems.Remove(elem);
         }
 
-        public void RecreateRenderTarget(int width, int height)
+        public void RecreateRenderTarget(Vector2 screenSize)
         {
-            _target = new RenderTarget2D(Main.graphics.GraphicsDevice, width, height);
+            var size = (screenSize / 2).ToPoint();
+            _target = new RenderTarget2D(Main.graphics.GraphicsDevice, size.X, size.Y);
         }
 
-        public void DrawToTarget(GraphicsDevice device, SpriteBatch spriteBatch)
+        public void DrawToTarget()
         {
             if (_elems.Count == 0) return;
-            if (_target == null) RecreateRenderTarget(Main.screenWidth, Main.screenHeight);
+            if (_target == null) RecreateRenderTarget(new Vector2(Main.screenWidth, Main.screenHeight));
+
+            var spriteBatch = Main.spriteBatch;
+            var device = spriteBatch.GraphicsDevice;
 
             device.SetRenderTarget(_target);
             device.Clear(Color.Transparent);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Matrix.CreateScale(0.5f) * Main.GameViewMatrix.EffectMatrix);
             foreach (var elem in _elems) elem.DrawOnRenderTarget(spriteBatch);
             spriteBatch.End();
 
@@ -226,14 +234,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             effect.Parameters["resolution"].SetValue(texture.Size());
             effect.Parameters["offset"].SetValue(Main.screenPosition * 0.001f);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, effect);
-            spriteBatch.Draw(texture, Vector2.Zero, null, Colors[0]);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, effect, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Draw(texture, Vector2.Zero, null, Colors[0], 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
             spriteBatch.End();
-        }
-
-        void IOnResizeScreen.OnResizeScreen(int width, int height)
-        {
-            RecreateRenderTarget(width, height);
         }
     }
 }

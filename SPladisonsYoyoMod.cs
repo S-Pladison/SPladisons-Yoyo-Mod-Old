@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod
 {
-    public class SPladisonsYoyoMod : Mod
+    public partial class SPladisonsYoyoMod : Mod
     {
         public static SPladisonsYoyoMod Instance { get; private set; }
         public static IReadOnlyList<int> GetYoyos => _yoyos;
@@ -19,6 +19,7 @@ namespace SPladisonsYoyoMod
 
         public override void Unload()
         {
+            UnloadEvents();
             Instance = null;
         }
 

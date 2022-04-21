@@ -33,11 +33,6 @@ namespace SPladisonsYoyoMod.Common
             eternalConfusionVisible = false;
         }
 
-        public override void PostUpdate()
-        {
-            this.UpdateFlamingFlowerZoneEffect();
-        }
-
         public override void PostUpdateEquips()
         {
             if (desecratedDiceEquipped)
@@ -47,19 +42,6 @@ namespace SPladisonsYoyoMod.Common
         }
 
         // ...
-
-        private void UpdateFlamingFlowerZoneEffect()
-        {
-            bool flag = Main.UseHeatDistortion && this.ZoneFlamingFlower;
-            if (flag)
-            {
-                Player.ManageSpecialBiomeVisuals("HeatDistortion", flag);
-                if (!Player.ZoneDesert && !Player.ZoneUndergroundDesert && !Player.ZoneUnderworldHeight)
-                {
-                    Terraria.Graphics.Effects.Filters.Scene["HeatDistortion"].GetShader().UseIntensity(0.85f);
-                }
-            }
-        }
 
         public override void UpdateDyes()
         {

@@ -2,8 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -42,15 +40,11 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         }
     }
 
-    public class FlamingFlowerMapLayer : IMapLayer, ILoadable
+    public class FlamingFlowerMapLayer : ModMapLayer
     {
         private const float RADIUS = 16 * 90;
 
-        public bool Visible { get; set; } = true;
-        public void Load(Mod mod) => (LayersInfo.GetValue(Main.MapIcons) as List<IMapLayer>).Add(this);
-        public void Unload() => (LayersInfo.GetValue(Main.MapIcons) as List<IMapLayer>).Remove(this);
-
-        public void Draw(ref MapOverlayDrawContext context, ref string text)
+        public override void Draw(ref MapOverlayDrawContext context, ref string text)
         {
             if (WorldSystem.FlamingFlowerPosition == Point.Zero) return;
 
@@ -68,8 +62,23 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
                 text = Language.GetTextValue("Mods.SPladisonsYoyoMod.GameUI.FlamingFlowerMapIcon");
             }
         }
+    }
 
-        private static readonly FieldInfo LayersInfo = typeof(MapIconOverlay).GetField("_layers", BindingFlags.NonPublic | BindingFlags.Instance);
+    public class FlamingFlowerSceneEffect : ModSceneEffect
+    {
+        public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+        public override bool IsSceneEffectActive(Player player) => player.GetPladPlayer().ZoneFlamingFlower;
+        public override void SpecialVisuals(Player player)
+        {
+            if (!Main.UseHeatDistortion) return;
+
+            player.ManageSpecialBiomeVisuals("HeatDistortion", true);
+
+            if (!player.ZoneDesert && !player.ZoneUndergroundDesert && !player.ZoneUnderworldHeight)
+            {
+                Terraria.Graphics.Effects.Filters.Scene["HeatDistortion"].GetShader().UseIntensity(0.85f);
+            }
+        }
     }
 
     public class FlamingFlowerTile : PladTile
@@ -94,7 +103,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i * 16, j * 16, 32, 48, ModContent.ItemType<FlamingFlower>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 48, ModContent.ItemType<FlamingFlower>());
 
             WorldSystem.FlamingFlowerPosition = Point.Zero;
         }

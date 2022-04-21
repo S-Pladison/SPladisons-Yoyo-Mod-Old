@@ -8,17 +8,17 @@ using Terraria.GameContent;
 
 namespace SPladisonsYoyoMod.Common.Primitives.Trails
 {
-    public class PrimitiveTrail : IDrawPrimitives
+    public class PrimitiveTrail
     {
-        public static PrimitiveTrail Create(Entity entity)
+        public static PrimitiveTrail Create(Entity entity, PrimitiveDrawLayer layer = PrimitiveDrawLayer.SolidTiles)
         {
-            PrimitiveTrail trail = new(entity);
+            PrimitiveTrail trail = new(entity, layer);
             return AddTrailToList(trail);
         }
 
-        public static PrimitiveTrail Create(Entity entity, Action<PrimitiveTrail> action)
+        public static PrimitiveTrail Create(Entity entity, Action<PrimitiveTrail> action, PrimitiveDrawLayer layer = PrimitiveDrawLayer.SolidTiles)
         {
-            PrimitiveTrail trail = new(entity);
+            PrimitiveTrail trail = new(entity, layer);
             action?.Invoke(trail);
             return AddTrailToList(trail);
         }
@@ -47,10 +47,10 @@ namespace SPladisonsYoyoMod.Common.Primitives.Trails
         protected bool dissolving = false;
         protected float dissolveSpeed = 0.2f;
 
-        private PrimitiveTrail(Entity entity)
+        private PrimitiveTrail(Entity entity, PrimitiveDrawLayer layer)
         {
             Target = entity;
-            PrimitiveDrawLayer = PrimitiveDrawLayer.SolidTiles;
+            PrimitiveDrawLayer = layer;
             Positions = new();
             DissolveProgress = 1f;
 
@@ -143,6 +143,8 @@ namespace SPladisonsYoyoMod.Common.Primitives.Trails
             return this;
         }
 
+        // ...
+
         public void StartDissolving()
         {
             dissolving = true;
@@ -167,6 +169,15 @@ namespace SPladisonsYoyoMod.Common.Primitives.Trails
             }
 
             update.UpdatePoints(this);
+        }
+
+        public void Draw()
+        {
+            if (Positions.Count < 2) return;
+
+            CreateMesh();
+            PrimitiveSystem.DrawPrimitives(new PrimitiveDrawData(PrimitiveDrawLayer, PrimitiveType.TriangleList, (Positions.Count - 1) * 2 + tip.ExtraTriangles, vertices.ToArray(), Effect));
+            vertices.Clear();
         }
 
         public void Kill()
@@ -225,40 +236,5 @@ namespace SPladisonsYoyoMod.Common.Primitives.Trails
         }
 
         protected virtual void OnKill() { }
-
-        private void ApplyEffectGlobalParameters(Matrix matrix)
-        {
-            foreach (var param in Effect.Value.Parameters)
-            {
-                switch (param.Name)
-                {
-                    case "time":
-                        param.SetValue(Main.GlobalTimeWrappedHourly);
-                        break;
-                    case "transformMatrix":
-                        param.SetValue(matrix);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        public void DrawPrimitives(SpriteBatch spriteBatch, Matrix matrix)
-        {
-            if (Positions.Count <= 1) return;
-
-            CreateMesh();
-            ApplyEffectGlobalParameters(matrix);
-
-            var graphics = spriteBatch.GraphicsDevice;
-            foreach (var pass in Effect.Value.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                graphics.DrawUserPrimitives(PrimitiveType.TriangleList, vertices.ToArray(), 0, (Positions.Count - 1) * 2 + tip.ExtraTriangles);
-            }
-
-            vertices.Clear();
-        }
     }
 }

@@ -12,10 +12,9 @@ namespace SPladisonsYoyoMod.Common.Hooks
             On.Terraria.Main.DoDraw_WallsAndBlacks += On_Main_DoDraw_WallsAndBlacks;
             On.Terraria.Main.DrawDust += On_Main_DrawDust;
             On.Terraria.Main.DrawProj_DrawYoyoString += On_Main_DrawProj_DrawYoyoString;
-            On.Terraria.Main.SetDisplayMode += On_Main_SetDisplayMode;
 
             On.Terraria.Player.OnHit += On_Player_OnHit;
-            On.Terraria.Projectile.NewProjectile_IProjectileSource_float_float_float_float_int_int_float_int_float_float += On_Projectile_NewProjectile;
+            On.Terraria.Projectile.NewProjectile_IEntitySource_float_float_float_float_int_int_float_int_float_float += On_Projectile_NewProjectile;
 
             HookEndpointManager.Add<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 
@@ -31,10 +30,9 @@ namespace SPladisonsYoyoMod.Common.Hooks
             On.Terraria.Main.DoDraw_WallsAndBlacks -= On_Main_DoDraw_WallsAndBlacks;
             On.Terraria.Main.DrawDust -= On_Main_DrawDust;
             On.Terraria.Main.DrawProj_DrawYoyoString -= On_Main_DrawProj_DrawYoyoString;
-            On.Terraria.Main.SetDisplayMode -= On_Main_SetDisplayMode;
 
             On.Terraria.Player.OnHit -= On_Player_OnHit;
-            On.Terraria.Projectile.NewProjectile_IProjectileSource_float_float_float_float_int_int_float_int_float_float -= On_Projectile_NewProjectile;
+            On.Terraria.Projectile.NewProjectile_IEntitySource_float_float_float_float_int_int_float_int_float_float -= On_Projectile_NewProjectile;
 
             HookEndpointManager.Remove<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.AdditiveDrawing;
 using SPladisonsYoyoMod.Common.Primitives.Trails;
 using System;
 using System.Collections.Generic;
@@ -213,23 +213,27 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDraw(ref Color lightColor) => false;
 
-        void IDrawAdditive.DrawAdditive()
+        void IDrawAdditive.DrawAdditive(List<AdditiveDrawData> list)
         {
             var position = GetDrawPosition();
             var texture = ModAssets.GetExtraTexture(21);
-            Main.spriteBatch.Draw(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0);
+            var scale = Projectile.scale * Vector2.One;
+            var additiveData = new AdditiveDrawData(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None, true);
+            list.Add(additiveData);
 
             texture = ModAssets.GetExtraTexture(23);
-            Main.spriteBatch.Draw(texture.Value, position, null, _color * 0.25f * Projectile.scale * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.4f, SpriteEffects.None, 0);
+            additiveData = new AdditiveDrawData(texture.Value, position, null, _color * 0.25f * Projectile.scale * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 0.4f, SpriteEffects.None, true);
+            list.Add(additiveData);
 
             texture = ModAssets.GetExtraTexture(3);
-            Main.spriteBatch.Draw(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.3f, SpriteEffects.None, 0);
+            additiveData = new AdditiveDrawData(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 1.3f, SpriteEffects.None, true);
+            list.Add(additiveData);
         }
     }
 
     public class ResidualLightEffectProjectile : PladProjectile
     {
-        public Vector2 TargetPos { get => new Vector2(Projectile.ai[0], Projectile.ai[1]); }
+        public Vector2 TargetPos { get => new(Projectile.ai[0], Projectile.ai[1]); }
 
         public override string Texture => ModAssets.InvisiblePath;
 

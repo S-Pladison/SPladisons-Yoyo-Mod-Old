@@ -104,7 +104,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public sealed class PaperEffectSystem : ModSystem, IOnResizeScreen
+    public sealed class PaperEffectSystem : ModSystem
     {
         public static PaperEffectSystem Instance { get => ModContent.GetInstance<PaperEffectSystem>(); }
         public static readonly string SceneName = "SPladisonsYoyoMod:Paper";
@@ -126,6 +126,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             Filters.Scene[SceneName] = new(new ScreenShaderData(new Ref<Effect>(_effect.Value), "Paper"), EffectPriority.VeryHigh);
             Filters.Scene[SceneName].GetShader().Shader.Parameters["contrast"].SetValue(0.1f);
+
+            SPladisonsYoyoMod.PostUpdateCameraPositionEvent += DrawToTarget;
+            Main.OnResolutionChanged += RecreateRenderTargets;
         }
 
         public override void Unload()
@@ -189,18 +192,22 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public Texture2D GetFilterTexture() => _filterElems.Count > 0 ? ((Texture2D)_filterTarget ?? ModAssets.GetExtraTexture(0).Value) : ModAssets.GetExtraTexture(0).Value;
 
-        public void RecreateRenderTargets(int width, int height)
+        public void RecreateRenderTargets(Vector2 screenSize)
         {
-            _filterTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, width, height);
-            _bubbleTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, width, height);
+            var size = screenSize.ToPoint();
+            _filterTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, size.X, size.Y);
+            _bubbleTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, size.X, size.Y);
         }
 
-        public void DrawToTarget(GraphicsDevice device, SpriteBatch spriteBatch)
+        public void DrawToTarget()
         {
             if (_filterTarget == null || _bubbleTarget == null)
             {
-                RecreateRenderTargets(Main.screenWidth, Main.screenHeight);
+                RecreateRenderTargets(new Vector2(Main.screenWidth, Main.screenHeight));
             }
+
+            var spriteBatch = Main.spriteBatch;
+            var device = spriteBatch.GraphicsDevice;
 
             if (_filterElems.Count > 0)
             {
@@ -239,11 +246,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, effect);
             spriteBatch.Draw(texture, Vector2.Zero, null, Color.White);
             spriteBatch.End();
-        }
-
-        void IOnResizeScreen.OnResizeScreen(int width, int height)
-        {
-            RecreateRenderTargets(width, height);
         }
     }
 }
