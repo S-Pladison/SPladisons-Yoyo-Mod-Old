@@ -1,14 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common.AdditiveDrawing;
-using SPladisonsYoyoMod.Common.Particles;
-using SPladisonsYoyoMod.Common.Primitives.Trails;
+using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Drawing;
+using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
+using SPladisonsYoyoMod.Common.Drawing.Particles;
 using SPladisonsYoyoMod.Content.Particles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.UI;
 using Terraria.Graphics.CameraModifiers;
@@ -45,18 +47,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            var tooltip = tooltips.Find(i => i.mod == "Terraria" && i.Name.StartsWith("Tooltip") && i.text.Contains("{0}"));
+            var tooltip = tooltips.Find(i => i.Mod == "Terraria" && i.Name.StartsWith("Tooltip") && i.Text.Contains("{0}"));
             if (tooltip != null)
             {
                 Color color = Terraria.ID.Colors.AlphaDarken(ItemRarity.GetColor(Item.rare));
                 string value = $"[c/{color.Hex3()}:{(Main.raining ? "32" : "16")}%]";
                 string text = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.BellowingThunder", value);
-                tooltip.text = text.Split("\n").ToList().Find(i => i.Contains(value));
+                tooltip.Text = text.Split("\n").ToList().Find(i => i.Contains(value));
             }
         }
     }
 
-    public class BellowingThunderProjectile : YoyoProjectile, IDrawAdditive
+    public class BellowingThunderProjectile : YoyoProjectile, IPostUpdateCameraPosition
     {
         public BellowingThunderProjectile() : base(lifeTime: 10f, maxRange: 220f, topSpeed: 13f) { }
 
@@ -76,15 +78,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
         }
 
-        public override void OnSpawn()
+        public override void OnSpawn(IEntitySource source)
         {
-            PrimitiveTrail.Create(Projectile, t =>
+            /*PrimitiveTrail.Create(Projectile, t =>
             {
                 t.SetColor(p => _effectColor * (1 - p) * 0.8f);
                 t.SetTip(new RoundedTrailTip(smoothness: 20));
                 t.SetWidth(new DefaultTrailWidth(width: 6, disappearOverTime: true));
                 t.SetUpdate(new BoundedTrailUpdate(points: 15, length: 16 * 10));
-            });
+            });*/
         }
 
         public override void AI()
@@ -146,26 +148,23 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (Main.raining ? chance >= 32 : chance >= 16) return;
 
             Cooldown = 90;
-            Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BellowingThunderLightningProjectile>(), Projectile.damage * 2, Projectile.knockBack * 3f, Projectile.owner);
+            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BellowingThunderLightningProjectile>(), Projectile.damage * 2, Projectile.knockBack * 3f, Projectile.owner);
         }
 
-        void IDrawAdditive.DrawAdditive(List<AdditiveDrawData> list)
+        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
             var texture = ModAssets.GetExtraTexture(21);
             var drawPosition = GetDrawPosition();
             var scale = Projectile.scale * Vector2.One;
-            var additiveData = new AdditiveDrawData(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, scale * 0.25f, SpriteEffects.None, true);
-            list.Add(additiveData);
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, scale * 0.25f, SpriteEffects.None));
 
-            _effect.Draw(list, drawPosition, 0.45f * scale);
+            _effect.Draw(drawPosition, 0.45f * scale);
 
             texture = ModAssets.GetExtraTexture(23);
-            additiveData = new AdditiveDrawData(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, scale * 0.1f, SpriteEffects.None, false);
-            list.Add(additiveData);
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, scale * 0.1f, SpriteEffects.None));
 
             texture = ModAssets.GetExtraTexture(21);
-            additiveData = new AdditiveDrawData(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.35f, Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None, false);
-            list.Add(additiveData);
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.35f, Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None));
         }
 
         private readonly LightningEffect _effect = new();
@@ -183,14 +182,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             public LightningEffect() => this.Reset();
 
-            public void Draw(List<AdditiveDrawData> list, Vector2 position, Vector2 scale)
+            public void Draw(Vector2 position, Vector2 scale)
             {
                 if (!_active) return;
 
                 var texture = ModAssets.GetExtraTexture(22);
                 var rectangle = new Rectangle(_time * 96, _frame * 96, 96, 96);
-                var additiveData = new AdditiveDrawData(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, true);
-                list.Add(additiveData);
+                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects));
             }
 
             public void Update(int counter)
@@ -210,7 +208,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class BellowingThunderLightningProjectile : PladProjectile, IDrawAdditive
+    public class BellowingThunderLightningProjectile : PladProjectile, IPostUpdateCameraPosition
     {
         // TODO: Доделать звук удара молнии...
 
@@ -248,7 +246,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.localNPCHitCooldown = -1;
         }
 
-        public override void OnSpawn()
+        public override void OnSpawn(Terraria.DataStructures.IEntitySource source)
         {
             Timer += Main.rand.Next(2000);
         }
@@ -327,22 +325,19 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return false;
         }
 
-        void IDrawAdditive.DrawAdditive(List<AdditiveDrawData> list)
+        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
             var drawPosition = GetDrawPosition();
             var scale = Projectile.scale * 3 * Vector2.One;
             var texture = ModAssets.GetExtraTexture(25);
             var offset = Vector2.UnitY * texture.Height() * scale;
-            var additiveData = new AdditiveDrawData(texture.Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, false);
-            list.Add(additiveData);
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None));
 
             texture = ModAssets.GetExtraTexture(26);
-            additiveData = new AdditiveDrawData(texture.Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, texture.Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, false);
-            list.Add(additiveData);
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, texture.Size() * 0.5f, scale * BeamProgress, SpriteEffects.None));
 
             texture = ModAssets.GetExtraTexture(23);
-            additiveData = new AdditiveDrawData(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None, false);
-            list.Add(additiveData);
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None));
         }
 
         private static readonly Color _effectColor = new(90, 40, 255);

@@ -26,9 +26,15 @@ namespace SPladisonsYoyoMod.Common.Globals
             return myClone;
         }
 
-        public override void ModifyWeaponCrit(Item item, Player player, ref int crit)
+        public override void ModifyWeaponCrit(Item item, Player player, ref float crit)
         {
             if (player.GetPladPlayer().flamingFlowerEquipped) crit += 12;
+        }
+
+        public override void ModifyShootStats(Item item, Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+            // Should fix ridiculous 1 tick player direction
+            position += Vector2.Normalize(velocity);
         }
 
         public override void UseStyle(Item item, Player player, Rectangle heldItemFrame)
@@ -56,8 +62,8 @@ namespace SPladisonsYoyoMod.Common.Globals
                     string text = (lifeTimeMult < 1 ? "-" : "+") + ((Math.Abs(lifeTimeMult - 1)) * 100) + Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.PrefixYoyoLifeTime");
                     tooltips.Insert(index, new TooltipLine(Mod, "PrefixYoyoLifeTime", text)
                     {
-                        isModifier = true,
-                        isModifierBad = lifeTimeMult < 1
+                        IsModifier = true,
+                        IsModifierBad = lifeTimeMult < 1
                     });
                 }
 
@@ -66,8 +72,8 @@ namespace SPladisonsYoyoMod.Common.Globals
                     string text = (maxRangeMult < 1 ? "-" : "+") + ((Math.Abs(maxRangeMult - 1)) * 100) + Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.PrefixYoyoMaxRange");
                     tooltips.Insert(index, new TooltipLine(Mod, "PrefixYoyoMaxRange", text)
                     {
-                        isModifier = true,
-                        isModifierBad = maxRangeMult < 1
+                        IsModifier = true,
+                        IsModifierBad = maxRangeMult < 1
                     });
                 }
 
@@ -77,10 +83,10 @@ namespace SPladisonsYoyoMod.Common.Globals
                 }
             }
 
-            foreach (var line in tooltips.FindAll(i => i.text.Contains("|?|") && (i.mod == "Terraria" || i.mod == nameof(SPladisonsYoyoMod))))
+            foreach (var line in tooltips.FindAll(i => i.Text.Contains("|?|") && (i.Mod == "Terraria" || i.Mod == nameof(SPladisonsYoyoMod))))
             {
-                line.text = line.text.Replace("|?|", "");
-                line.overrideColor = ItemRarity.GetColor(item.rare);
+                line.Text = line.Text.Replace("|?|", "");
+                line.OverrideColor = ItemRarity.GetColor(item.rare);
             }
         }
 

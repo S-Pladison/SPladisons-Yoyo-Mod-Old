@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,7 +29,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public BloomingDeathProjectile() : base(lifeTime: 7f, maxRange: 170f, topSpeed: 11f) { }
 
-        public override void OnSpawn()
+        public override void OnSpawn(IEntitySource source)
         {
             Projectile.localAI[1] = Main.rand.Next(1337);
         }
@@ -90,7 +91,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             var texture = ModAssets.GetExtraTexture(10);
             var colorProgress = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2f + i * 0.3f);
             var flip = i % 2 == 0 ? 1 : -1;
-            var rectangle = new Rectangle(0, texture.Height() / 3 * (int)(i % 3), texture.Width(), texture.Height() / 3);
+            var rectangle = new Rectangle(0, texture.Height() / 3 * (i % 3), texture.Width(), texture.Height() / 3);
 
             if (i % 3 == 0 || i % 4 == 0)
             {

@@ -45,13 +45,13 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            var tooltip = tooltips.Find(i => i.mod == "Terraria" && i.Name.StartsWith("Tooltip") && i.text.Contains("{0}"));
+            var tooltip = tooltips.Find(i => i.Mod == "Terraria" && i.Name.StartsWith("Tooltip") && i.Text.Contains("{0}"));
             if (tooltip != null)
             {
                 Color color = Terraria.ID.Colors.AlphaDarken(ItemRarity.GetColor(Item.rare));
                 string value = $"[c/{color.Hex3()}:{HallowedBearing.GetBearingBonus()}%]";
                 string text = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.HallowedBearing", value);
-                tooltip.text = text.Split("\n").ToList().Find(i => i.Contains(value));
+                tooltip.Text = text.Split("\n").ToList().Find(i => i.Contains(value));
             }
         }
 

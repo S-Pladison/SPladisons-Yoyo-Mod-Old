@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Common.Drawing;
+using SPladisonsYoyoMod.Common.Drawing.Particles;
 using SPladisonsYoyoMod.Content.Items.Weapons;
 using Terraria;
 
@@ -13,33 +13,34 @@ namespace SPladisonsYoyoMod.Content.Particles
 
         public override void OnSpawn()
         {
-            timeLeft = 100;
-            rotation = Main.rand.NextFloat(MathHelper.TwoPi);
+            TimeLeft = 100;
+            Rotation = Main.rand.NextFloat(MathHelper.TwoPi);
 
             PaperEffectSystem.Instance.AddFilterElement(this);
         }
 
-        protected override void OnKill()
+        public override void OnKill()
         {
             PaperEffectSystem.Instance.RemoveFilterElement(this);
         }
 
-        public override void Update()
+        public override bool PreUpdate(ref float minScaleForDeath)
         {
-            oldPosition = position;
-            position += velocity;
-            rotation += 0.03f;
-            velocity *= 0.94f;
-            scale = MathUtils.MultipleLerp(MathHelper.Lerp, 1 - timeLeft / 100f, new[] { 0.3f, 1f, 1f, 1f, 1f, 1f, 1f, 0.9f, 0.75f, 0.4f, 0.1f });
+            OldPosition = Position;
+            Position += Velocity;
+            Rotation += 0.03f;
+            Velocity *= 0.94f;
+            Scale = MathUtils.MultipleLerp(MathHelper.Lerp, 1 - TimeLeft / 100f, new[] { 0.3f, 1f, 1f, 1f, 1f, 1f, 1f, 0.9f, 0.75f, 0.4f, 0.1f });
 
-            if (--timeLeft <= 0) this.Kill();
+            minScaleForDeath = 0f;
+            return false;
         }
 
-        protected override bool PreDraw(ref Color lightColor, ref float scaleMult) => false;
+        public override bool PreDraw(ref Color lightColor, ref float scaleMult) => false;
 
         void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture2D.Value, position - Main.screenPosition, null, Color.White * scale, rotation, Texture2D.Size() * 0.5f, scale * 0.9f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture2D.Value, Position - Main.screenPosition, null, Color.White * Scale, Rotation, Texture2D.Size() * 0.5f, Scale * 0.9f, SpriteEffects.None, 0f);
         }
     }
 }

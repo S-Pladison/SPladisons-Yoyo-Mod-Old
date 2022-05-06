@@ -23,9 +23,9 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            var tooltip = tooltips.Find(i => i.mod == "Terraria" && i.Name.StartsWith("Tooltip"));
+            var tooltip = tooltips.Find(i => i.Mod == "Terraria" && i.Name.StartsWith("Tooltip"));
 
-            if (tooltip != null && !NPC.downedPlantBoss) tooltip.text = Language.GetTextValue("LegacyTooltip.59");
+            if (tooltip != null && !NPC.downedPlantBoss) tooltip.Text = Language.GetTextValue("LegacyTooltip.59");
         }
     }
 

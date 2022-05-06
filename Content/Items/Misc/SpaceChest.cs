@@ -5,6 +5,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent.Achievements;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
@@ -88,7 +89,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
         }
 
         public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / 36);
-        public override bool HasSmartInteract() => true;
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
         public override bool IsLockedChest(int i, int j) => Main.tile[i, j].TileFrameX / 36 == 1;
         public override void NumDust(int i, int j, bool fail, ref int num) => num = 1;
 

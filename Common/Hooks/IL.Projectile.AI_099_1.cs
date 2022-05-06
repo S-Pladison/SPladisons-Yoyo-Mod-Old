@@ -33,7 +33,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 i => i.MatchLdloc(out iIndex),
                 i => i.MatchLdelemRef(),
                 i => i.MatchLdfld<Projectile>("aiStyle"),
-                i => i.MatchLdcI4((sbyte)99),
+                i => i.MatchLdcI4(99),
                 i => i.MatchBneUn(out label))) return;
 
             c.Emit(Ldloc, iIndex);

@@ -19,6 +19,7 @@ Mods: {
 			BellowingThunder: Раскаты грома
 			Blackhole: Черная дыра
 			BloomingDeath: Цветущая смерть
+			EmbraceOfRain: Объятья дождя
 			Indefinite: Неопределенный
 			MyocardialInfarction: Инфаркт миокарда
 			OutburstingGust: Шквальный ветер
@@ -79,6 +80,7 @@ Mods: {
 				• Практически полностью убирает отскок от врагов
 				'''
 			BloomingDeath: Йо-йо и его нить отравляют врагов
+			EmbraceOfRain: ...
 			Indefinite: ...
 			MyocardialInfarction: ...
 			OutburstingGust: ...
@@ -87,7 +89,11 @@ Mods: {
 				|?|Изменяет эффект у «Перчатка для йо-йо»:
 				• Чай бы попить...
 				'''
-			PrototypeF34: ...
+			PrototypeF34:
+				'''
+				Способен проходить сквозь блоки
+				Наносит на 20% больше урона, если враг за стеной
+				'''
 			ResidualLight:
 				'''
 				Ночью длина нити увеличена на 20%

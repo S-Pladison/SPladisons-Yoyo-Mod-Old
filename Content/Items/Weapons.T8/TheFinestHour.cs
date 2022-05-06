@@ -62,7 +62,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool IsSoloYoyo() => true;
 
-        public override void OnSpawn()
+        public override void OnSpawn(Terraria.DataStructures.IEntitySource source)
         {
             /*SimpleTrail trail = new SimpleTrail(
                 target: Projectile,

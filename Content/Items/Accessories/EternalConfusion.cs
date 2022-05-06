@@ -26,7 +26,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         {
             if (Main.LocalPlayer.GetPladPlayer().eternalConfusionDye != 0)
             {
-                var index = tooltips.FindIndex(i => i.mod == "Terraria" && (i.Name.StartsWith("Social") || i.Name.StartsWith("Vanity")));
+                var index = tooltips.FindIndex(i => i.Mod == "Terraria" && (i.Name.StartsWith("Social") || i.Name.StartsWith("Vanity")));
 
                 if (index != -1) tooltips.Insert(index + 1, new TooltipLine(Mod, "EternalConfusionDye", Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.EternalConfusionDye")));
             }

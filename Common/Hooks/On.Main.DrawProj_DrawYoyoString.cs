@@ -29,7 +29,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
                     position: position,
                     sourceRectangle: new Rectangle(0, 0, TextureAssets.FishingLine.Width(), (int)height),
                     rotation: rotation,
-                    origin: new Vector2((float)TextureAssets.FishingLine.Width() * 0.5f, 0f),
+                    origin: new Vector2(TextureAssets.FishingLine.Width() * 0.5f, 0f),
                     scale: 1f,
                     effects: SpriteEffects.None,
                     worthless: 0
@@ -42,13 +42,13 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 Vector2 vec = projectile.Center - mountedCenter;
                 int num5 = -1;
 
-                if (projectile.position.X + (float)(projectile.width / 2) < owner.position.X + (float)(owner.width / 2))
+                if (projectile.position.X + projectile.width / 2 < owner.position.X + owner.width / 2)
                 {
                     num5 = 1;
                 }
 
                 num5 *= -1;
-                owner.itemRotation = (float)Math.Atan2(vec.Y * (float)num5, vec.X * (float)num5);
+                owner.itemRotation = (float)Math.Atan2(vec.Y * num5, vec.X * num5);
             }
         }
     }

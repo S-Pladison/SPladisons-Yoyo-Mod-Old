@@ -16,13 +16,6 @@ namespace SPladisonsYoyoMod.Content
 
         // ...
 
-        /// <summary>
-        /// This code is called after calling <see cref="Projectile.NewProjectile(Terraria.DataStructures.IProjectileSource, float, float, float, float, int, int, float, int, float, float)"/>.
-        /// </summary>
-        public virtual void OnSpawn() { }
-
-        // ...
-
         public static void SetSpriteBatch(SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState blendState = null, Effect effect = null, bool end = true)
         {
             if (end) Main.spriteBatch.End();

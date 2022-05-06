@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Common.Drawing;
+using SPladisonsYoyoMod.Common.Drawing.Particles;
 using SPladisonsYoyoMod.Content.Particles;
 using System;
 using System.Collections.Generic;
@@ -88,7 +88,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             for (int k = 1; k < Projectile.oldPos.Length; k++)
             {
                 var texture = TextureAssets.Projectile[Type];
-                var progress = ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                var progress = ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 var drawPosTrail = Projectile.oldPos[k] - Main.screenPosition + Projectile.Size * 0.5f + new Vector2(0f, Projectile.gfxOffY);
 
                 Main.EntitySpriteDraw(texture.Value, drawPosTrail, null, lightColor * 0.3f * progress, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * (0.95f - (1 - progress) * 0.2f), SpriteEffects.None, 0);

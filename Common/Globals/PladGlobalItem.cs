@@ -50,6 +50,6 @@ namespace SPladisonsYoyoMod.Common.Globals
             }
         }
 
-        private static int GetTooltipsLastIndex(List<TooltipLine> tooltips) => tooltips.FindLastIndex(i => i.mod == "Terraria" && i.Name.StartsWith("Tooltip"));
+        private static int GetTooltipsLastIndex(List<TooltipLine> tooltips) => tooltips.FindLastIndex(i => i.Mod == "Terraria" && i.Name.StartsWith("Tooltip"));
     }
 }

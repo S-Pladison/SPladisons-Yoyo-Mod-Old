@@ -29,7 +29,7 @@ namespace SPladisonsYoyoMod.Content.Sounds
             SoundEngine.LegacySoundPlayer.SoundInstanceThunder[num] = SoundEngine.LegacySoundPlayer.SoundThunder[num].Value.CreateInstance();
             SoundEngine.LegacySoundPlayer.SoundInstanceThunder[num].Volume = volume;
             SoundEngine.LegacySoundPlayer.SoundInstanceThunder[num].Pan = pan;
-            SoundEngine.LegacySoundPlayer.SoundInstanceThunder[num].Pitch = (float)Main.rand.Next(-10, 11) * 0.01f;
+            SoundEngine.LegacySoundPlayer.SoundInstanceThunder[num].Pitch = Main.rand.Next(-10, 11) * 0.01f;
             soundInstance = SoundEngine.LegacySoundPlayer.SoundInstanceThunder[num];
 
             return soundInstance;

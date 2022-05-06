@@ -19,6 +19,7 @@ Mods: {
 			BellowingThunder: Bellowing Thunder
 			Blackhole: Blackhole
 			BloomingDeath: Blooming Death
+			EmbraceOfRain: Embrace of Rain
 			Indefinite: Indefinite
 			MyocardialInfarction: Myocardial Infarction
 			OutburstingGust: Outbursting Gust
@@ -79,6 +80,7 @@ Mods: {
 				• Almost completely removes the bounce from enemies
 				'''
 			BloomingDeath: Yoyo and its string poison enemies
+			EmbraceOfRain: ...
 			Indefinite: ...
 			MyocardialInfarction: ...
 			OutburstingGust: ...
@@ -116,6 +118,7 @@ Mods: {
 			BellowingThunderLightningProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BellowingThunder}"
 			BlackholeProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Blackhole}"
 			BloomingDeathProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BloomingDeath}"
+			EmbraceOfRainProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.EmbraceOfRain}"
 			IndefiniteProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Indefinite}"
 			MyocardialInfarctionProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.MyocardialInfarction}"
 			OutburstingGustProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.OutburstingGust}"

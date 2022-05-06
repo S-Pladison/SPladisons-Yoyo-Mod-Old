@@ -41,7 +41,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (target.life > 0) return;
 
             var type = ModContent.ProjectileType<WakeOfEarthSpawnerProjectile>();
-            var source = Projectile.GetProjectileSource_FromThis();
+            var source = Projectile.GetSource_FromThis();
             var position = target.position + new Vector2(target.Hitbox.Width * 0.5f, -20);
 
             Projectile.NewProjectile(source, position + new Vector2(16, 0), Vector2.Zero, type, 0, 0f, Projectile.owner, 5);
@@ -70,7 +70,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.height = 16;
         }
 
-        public override void OnSpawn()
+        public override void OnSpawn(Terraria.DataStructures.IEntitySource source)
         {
             Point point = (Projectile.Center / 16f).ToPoint();
             int maxY = point.Y + 10;
@@ -83,7 +83,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (point.Y <= maxY)
             {
                 var position = (point + new Point(0, -1)).ToVector2() * 16 + new Vector2(8, 8);
-                Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), position, Vector2.Zero, ModContent.ProjectileType<WakeOfEarthShakingTileProjectile>(), 0, 0f, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), position, Vector2.Zero, ModContent.ProjectileType<WakeOfEarthShakingTileProjectile>(), 0, 0f, Projectile.owner);
             }
 
             if (SpawnCounter == 0) return;
@@ -97,7 +97,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (SpawnCounter == 0 || Projectile.timeLeft != 18) return;
 
             var type = ModContent.ProjectileType<WakeOfEarthSpawnerProjectile>();
-            var source = Projectile.GetProjectileSource_FromThis();
+            var source = Projectile.GetSource_FromThis();
 
             Projectile.NewProjectile(source, Projectile.Center + new Vector2(16 * (Math.Sign(SpawnCounter) >= 0 ? 1 : -1), 0), Vector2.Zero, type, 0, 0f, Projectile.owner, SpawnCounter);
         }
@@ -121,7 +121,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.height = 16;
         }
 
-        public override void OnSpawn()
+        public override void OnSpawn(Terraria.DataStructures.IEntitySource source)
         {
             //ScreenShakeSystem.NewScreenShake(position: Projectile.Center, power: 0.65f, range: 16 * 25, time: 50);
         }
@@ -136,13 +136,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Point coord = (Projectile.Center / 16).ToPoint() + new Point(0, 1);
             Tile tile = Framing.GetTileSafely(coord);
 
-            if (tile == null || !tile.HasTile || !Main.tileSolid[(int)tile.TileType]) return false;
+            if (tile == null || !tile.HasTile || !Main.tileSolid[tile.TileType]) return false;
 
             Vector2 position = GetDrawPosition(coord.ToVector2() * 16) - new Vector2(0, (float)Math.Sin((1 - Projectile.timeLeft / 25.0f) * MathHelper.Pi)) * 12f;
             Color color = lightColor * 0.7f;
             color.A = lightColor.A;
 
-            Main.spriteBatch.Draw(TextureAssets.Tile[(int)tile.TileType].Value, position, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), color);
+            Main.spriteBatch.Draw(TextureAssets.Tile[tile.TileType].Value, position, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), color);
 
             return false;
         }

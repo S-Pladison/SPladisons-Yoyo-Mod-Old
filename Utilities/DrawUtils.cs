@@ -43,8 +43,8 @@ namespace SPladisonsYoyoMod
                 num3 *= num6;
                 vector.X -= num2 * 0.1f;
                 vector.Y -= num3 * 0.1f;
-                num2 = projectile.position.X + (float)projectile.width * 0.5f - vector.X;
-                num3 = projectile.position.Y + (float)projectile.height * 0.5f - vector.Y;
+                num2 = projectile.position.X + projectile.width * 0.5f - vector.X;
+                num3 = projectile.position.Y + projectile.height * 0.5f - vector.Y;
             }
 
             int counter = 0;
@@ -70,8 +70,8 @@ namespace SPladisonsYoyoMod
                 num3 *= num8;
                 vector.X += num2;
                 vector.Y += num3;
-                num2 = projectile.position.X + (float)projectile.width * 0.5f - vector.X;
-                num3 = projectile.position.Y + (float)projectile.height * 0.1f - vector.Y;
+                num2 = projectile.position.X + projectile.width * 0.5f - vector.X;
+                num3 = projectile.position.Y + projectile.height * 0.1f - vector.Y;
 
                 if (num9 > 12f)
                 {

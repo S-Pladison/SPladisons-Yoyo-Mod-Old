@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Common.Drawing;
+using SPladisonsYoyoMod.Common.Drawing.Particles;
 using SPladisonsYoyoMod.Content.Items.Weapons;
 using Terraria;
 
@@ -13,31 +13,32 @@ namespace SPladisonsYoyoMod.Content.Particles
 
         public override void OnSpawn()
         {
-            timeLeft = 180;
-            BlackholeSpaceSystem.Instance.AddElement(this);
+            TimeLeft = 180;
+            BlackholeEffectSystem.AddElement(this);
         }
 
-        protected override void OnKill()
+        public override void OnKill()
         {
-            BlackholeSpaceSystem.Instance.RemoveElement(this);
+            BlackholeEffectSystem.RemoveElement(this);
         }
 
-        public override void Update()
+        public override bool PreUpdate(ref float minScaleForDeath)
         {
-            oldPosition = position;
-            position += velocity;
-            rotation += 0.05f;
-            velocity *= 0.94f;
-            scale *= 0.98f;
+            OldPosition = Position;
+            Position += Velocity;
+            Rotation += 0.05f;
+            Velocity *= 0.94f;
+            Scale *= 0.98f;
 
-            if (--timeLeft <= 0 || scale <= 0.15f) this.Kill();
+            minScaleForDeath = 0.15f;
+            return false;
         }
 
-        protected override bool PreDraw(ref Color lightColor, ref float scaleMult) => false;
+        public override bool PreDraw(ref Color lightColor, ref float scaleMult) => false;
 
         void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture2D.Value, position - Main.screenPosition, null, Color.White * scale, rotation, Texture2D.Size() * 0.5f, scale * 0.5f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture2D.Value, Position - Main.screenPosition, null, Color.White * Scale, Rotation, Texture2D.Size() * 0.5f, Scale * 0.5f, SpriteEffects.None, 0f);
         }
     }
 }

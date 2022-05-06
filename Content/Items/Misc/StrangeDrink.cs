@@ -11,6 +11,8 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
         public override void SetDefaults()
         {
             Item.rare = ItemRarityID.Quest;
+            Item.width = 22;
+            Item.height = 46;
         }
 
         public override void AddRecipes()
@@ -106,7 +108,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
                                        "(Откуда у нее йо-йо?..)";
 
                     player.inventory[item] = new Item();
-                    player.QuickSpawnItem(player.GetItemSource_Misc(ItemID.None), GiftType);
+                    player.QuickSpawnItem(player.GetSource_GiftOrReward(), GiftType);
                 }
 
                 Main.npcChatCornerItem = 0;
@@ -115,6 +117,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             buttonWasPressed = !buttonWasPressed;
         }
 
+        // А нужно ли это?... Можт ModSystem в ILoadable бахнуть
         public override void OnWorldLoad()
         {
             buttonWasPressed = false;

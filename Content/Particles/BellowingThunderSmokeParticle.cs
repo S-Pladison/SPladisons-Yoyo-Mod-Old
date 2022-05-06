@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Common.Drawing.Particles;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Particles
@@ -10,25 +10,26 @@ namespace SPladisonsYoyoMod.Content.Particles
 
         public override void OnSpawn()
         {
-            timeLeft = 360;
-            rotation = Main.rand.NextFloat(MathHelper.TwoPi);
-            scale = Main.rand.NextFloat(0.8f, 1.2f);
+            TimeLeft = 360;
+            Rotation = Main.rand.NextFloat(MathHelper.TwoPi);
+            Scale = Main.rand.NextFloat(0.8f, 1.2f);
         }
 
-        public override void Update()
+        public override bool PreUpdate(ref float minScaleForDeath)
         {
-            oldPosition = position;
-            position += velocity;
-            rotation += Main.rand.NextFloat(-0.5f, 0.5f);
-            velocity *= 0.975f;
-            scale *= 0.99f;
+            OldPosition = Position;
+            Position += Velocity;
+            Rotation += Main.rand.NextFloat(-0.5f, 0.5f);
+            Velocity *= 0.975f;
+            Scale *= 0.99f;
 
-            if (--timeLeft <= 0 || scale <= 0.2f) this.Kill();
+            minScaleForDeath = 0.2f;
+            return false;
         }
 
-        public override Color GetAlpha(Color lightColor) => new Color(55, 35, 170) * scale * 0.35f;
+        public override Color GetAlpha(Color lightColor) => new Color(55, 35, 170) * Scale * 0.35f;
 
-        protected override bool PreDraw(ref Color lightColor, ref float scaleMult)
+        public override bool PreDraw(ref Color lightColor, ref float scaleMult)
         {
             scaleMult = 0.5f;
             return true;

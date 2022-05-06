@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -23,5 +24,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     public class MyocardialInfarctionProjectile : YoyoProjectile
     {
         public MyocardialInfarctionProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
+
+        public override bool IsSoloYoyo() => true;
+
+        public override void OnSpawn(IEntitySource source)
+        {
+
+        }
+
+        public override void AI()
+        {
+
+        }
+
     }
 }

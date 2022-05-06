@@ -1,5 +1,4 @@
-﻿using SPladisonsYoyoMod.Common.AdditiveDrawing;
-using SPladisonsYoyoMod.Common.Primitives;
+﻿using SPladisonsYoyoMod.Common.Drawing;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
@@ -10,8 +9,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
         {
             orig(main);
 
-            PrimitiveSystem.Instance.DrawPrimitives(PrimitiveDrawLayer.Dusts);
-            AdditiveDrawSystem.DrawToScreen(Main.spriteBatch);
+            DrawingManager.DrawLayer(DrawLayers.OverDusts);
         }
     }
 }

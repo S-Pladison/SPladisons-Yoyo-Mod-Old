@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using SPladisonsYoyoMod.Content.Items.Weapons;
+using SPladisonsYoyoMod.Common.Drawing;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
@@ -10,23 +10,12 @@ namespace SPladisonsYoyoMod.Common.Hooks
         {
             orig(main);
 
-            var sb = Main.spriteBatch;
-            var bms = BlackholeSpaceSystem.Instance;
-            var pes = PaperEffectSystem.Instance;
-
-            if (bms?.ElementsCount > 0)
+            var spriteBatch = Main.spriteBatch;
+            spriteBatch.End();
             {
-                sb.End();
-                bms.DrawToScreen(sb);
-                sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
+                DrawingManager.DrawLayer(DrawLayers.OverWalls);
             }
-
-            if (pes?.BubbleElementsCount > 0)
-            {
-                sb.End();
-                pes.DrawToScreen(sb);
-                sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
-            }
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
         }
     }
 }

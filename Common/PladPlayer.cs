@@ -10,7 +10,6 @@ namespace SPladisonsYoyoMod.Common
         public bool ZoneFlamingFlower { get; set; }
 
         public bool bearingEquipped;
-        public bool candyCaneEquipped;
         public bool desecratedDiceEquipped;
         public bool eternalConfusionEquipped;
         public bool flamingFlowerEquipped;
@@ -24,7 +23,6 @@ namespace SPladisonsYoyoMod.Common
         public override void ResetEffects()
         {
             bearingEquipped = false;
-            candyCaneEquipped = false;
             desecratedDiceEquipped = false;
             eternalConfusionEquipped = false;
             flamingFlowerEquipped = false;
