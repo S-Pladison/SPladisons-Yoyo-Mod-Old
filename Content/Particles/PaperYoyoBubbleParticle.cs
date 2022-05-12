@@ -9,7 +9,7 @@ namespace SPladisonsYoyoMod.Content.Particles
 {
     public class PaperYoyoBubbleParticle : Particle, IDrawOnRenderTarget
     {
-        public override string Texture => ModAssets.MiscPath + "Extra_33";
+        public override string Texture => ModAssets.MiscPath + "Extra_1";
 
         public override void OnSpawn()
         {

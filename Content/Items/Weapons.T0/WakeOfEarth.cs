@@ -49,7 +49,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class WakeOfEarthSpawnerProjectile : PladProjectile
+    public class WakeOfEarthSpawnerProjectile : ModProjectile
     {
         public int SpawnCounter
         {
@@ -105,7 +105,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override bool PreDraw(ref Color lightColor) => false;
     }
 
-    public class WakeOfEarthShakingTileProjectile : PladProjectile
+    public class WakeOfEarthShakingTileProjectile : ModProjectile
     {
         public override string Texture => ModAssets.InvisiblePath;
 
@@ -138,7 +138,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             if (tile == null || !tile.HasTile || !Main.tileSolid[tile.TileType]) return false;
 
-            Vector2 position = GetDrawPosition(coord.ToVector2() * 16) - new Vector2(0, (float)Math.Sin((1 - Projectile.timeLeft / 25.0f) * MathHelper.Pi)) * 12f;
+            Vector2 position = coord.ToVector2() * 16 - Main.screenPosition - new Vector2(0, (float)Math.Sin((1 - Projectile.timeLeft / 25.0f) * MathHelper.Pi)) * 12f;
             Color color = lightColor * 0.7f;
             color.A = lightColor.A;
 

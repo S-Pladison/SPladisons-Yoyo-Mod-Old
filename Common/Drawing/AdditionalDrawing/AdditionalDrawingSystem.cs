@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing
@@ -10,7 +11,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing
     [Autoload(Side = ModSide.Client)]
     public class AdditionalDrawingSystem : ModSystem
     {
-        private static readonly Dictionary<DrawKey, List<AdditionalDrawingData>> dataCache = new();
+        private static readonly Dictionary<DrawKey, List<DrawData>> dataCache = new();
 
         // ...
 
@@ -23,7 +24,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing
         {
             foreach (var key in DrawingManager.GetAllPossibleKeys())
             {
-                dataCache.Add(key, new List<AdditionalDrawingData>());
+                dataCache.Add(key, new List<DrawData>());
             }
 
             DrawingManager.AddToEachExistingVariant(Any, Draw);
@@ -46,7 +47,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing
 
         public static bool Any(DrawKey key) => dataCache[key].Any();
 
-        public static void AddToDataCache(DrawLayers layer, DrawTypeFlags flags, AdditionalDrawingData data)
+        public static void AddToDataCache(DrawLayers layer, DrawTypeFlags flags, DrawData data)
         {
             dataCache[new DrawKey(layer, flags)].Add(data);
         }

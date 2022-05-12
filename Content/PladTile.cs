@@ -1,11 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using Terraria.Localization;
-using Terraria.ModLoader;
-
-namespace SPladisonsYoyoMod.Content
+﻿namespace SPladisonsYoyoMod.Content
 {
-    public abstract class PladTile : ModTile
+    /*public abstract class PladTile : ModTile
     {
         public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Tiles/" + this.Name;
 
@@ -23,5 +18,5 @@ namespace SPladisonsYoyoMod.Content
             if (nameFunc == null) AddMapEntry(color, name);
             else AddMapEntry(color, name, nameFunc);
         }
-    }
+    }*/
 }

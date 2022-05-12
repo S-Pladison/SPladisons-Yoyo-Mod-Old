@@ -4,6 +4,8 @@ using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Drawing;
 using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
+using SPladisonsYoyoMod.Common.Drawing.Primitives;
+using SPladisonsYoyoMod.Utilities;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -47,15 +49,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override Color? GetAlpha(Color lightColor) => Color.White;
     }
 
-    public class ResidualLightProjectile : YoyoProjectile
+    public class ResidualLightProjectile : YoyoProjectile, IPostUpdateCameraPosition
     {
-        public static Asset<Effect> ResidualLightEffect { get; private set; }
+        public static Effect ResidualLightEffect { get; private set; }
         private static readonly float _radius = 16 * 15;
+
+        private PrimitiveStrip trail;
 
         // ...
 
         public ResidualLightProjectile() : base(lifeTime: 12f, maxRange: 275f, topSpeed: 15f) { }
 
+        public override string Texture => ModAssets.ProjectilesPath + nameof(ResidualLightProjectile);
         public override bool IsSoloYoyo() => true;
         public override void Unload() => ResidualLightEffect = null;
 
@@ -63,9 +68,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             if (Main.dedServ) return;
 
-            ResidualLightEffect = ModAssets.GetEffect("ResidualLight", AssetRequestMode.ImmediateLoad);
-            ResidualLightEffect.Value.Parameters["texture0"].SetValue(ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad).Value);
-            ResidualLightEffect.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(20, AssetRequestMode.ImmediateLoad).Value);
+            ResidualLightEffect = ModAssets.GetEffect("ResidualLight", AssetRequestMode.ImmediateLoad).Value;
+            ResidualLightEffect.Parameters["texture0"].SetValue(ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad).Value);
+            ResidualLightEffect.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(20, AssetRequestMode.ImmediateLoad).Value);
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -89,6 +94,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 t.SetEffect(ResidualLightEffect);
                 t.SetDissolveSpeed(0.35f);
             });*/
+
+            trail = new PrimitiveStrip(p => 20, p => new Color(230, 230, 230, 230) * (1 - p), ResidualLightEffect);
+            trail.OnUpdateEffectParameters += e => e.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
         }
 
         public override void AI()
@@ -164,9 +172,35 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
 
         public override Color? GetAlpha(Color lightColor) => Color.White;
+
+        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        {
+            /*PrimitiveTrail.Create(Projectile, t =>
+            {
+                t.SetColor(new DefaultTrailColor(color: new Color(255, 115, 250), disappearOverTime: true));
+                t.SetTip(new RoundedTrailTip(smoothness: 20));
+                t.SetWidth(p => 25 * Math.Min(Vector2.Distance(Projectile.position, Projectile.oldPosition) * 0.075f, 1) * (1 - p * 0.5f));
+                t.SetUpdate(new BoundedTrailUpdate(points: 10, length: 16 * 3));
+                t.SetEffectTexture(ModAssets.GetExtraTexture(11).Value);
+                t.SetDissolveSpeed(0.35f);
+            });
+
+            PrimitiveTrail.Create(Projectile, t =>
+            {
+                t.SetColor(new DefaultTrailColor(color: new Color(230, 230, 230, 230), disappearOverTime: true));
+                t.SetTip(new TriangularTrailTip(length: 3));
+                t.SetWidth(new DefaultTrailWidth(width: 20));
+                t.SetUpdate(new BoundedTrailUpdate(points: 20, length: 16 * 10));
+                t.SetEffect(ResidualLightEffect);
+                t.SetDissolveSpeed(0.35f);
+            });*/
+
+            trail.UpdatePointsAsSimpleTrail(Projectile.Center, 20, 16 * 10);
+            PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.None, trail);
+        }
     }
 
-    public class ResidualLightHitProjectile : PladProjectile, IPostUpdateCameraPosition
+    public class ResidualLightHitProjectile : ModProjectile, IPostUpdateCameraPosition
     {
         public static readonly Color[] Colors = new Color[] { new Color(252, 222, 252), new Color(202, 243, 248), new Color(155, 255, 225) };
         private Color _color;
@@ -217,20 +251,20 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            var position = GetDrawPosition();
+            var position = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(21);
-            var scale = Projectile.scale * Vector2.One;
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None));
+            var scale = Projectile.scale;
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None, 0));
 
             texture = ModAssets.GetExtraTexture(23);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * 0.25f * Projectile.scale * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 0.4f, SpriteEffects.None));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * 0.25f * Projectile.scale * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 0.4f, SpriteEffects.None, 0));
 
             texture = ModAssets.GetExtraTexture(3);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 1.3f, SpriteEffects.None));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 1.3f, SpriteEffects.None, 0));
         }
     }
 
-    public class ResidualLightEffectProjectile : PladProjectile
+    public class ResidualLightEffectProjectile : ModProjectile
     {
         public Vector2 TargetPos { get => new(Projectile.ai[0], Projectile.ai[1]); }
 

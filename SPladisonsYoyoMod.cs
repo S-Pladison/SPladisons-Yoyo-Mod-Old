@@ -8,6 +8,7 @@ namespace SPladisonsYoyoMod
     public partial class SPladisonsYoyoMod : Mod
     {
         public static SPladisonsYoyoMod Instance { get; private set; }
+
         public static IReadOnlyList<int> GetYoyos => _yoyos;
 
         // ...
@@ -19,6 +20,7 @@ namespace SPladisonsYoyoMod
 
         public override void Unload()
         {
+            Sets.Unload();
             UnloadEvents();
             Instance = null;
         }

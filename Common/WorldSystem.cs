@@ -18,13 +18,14 @@ namespace SPladisonsYoyoMod.Common
 {
     public class WorldSystem : ModSystem
     {
-        public static Point FlamingFlowerPosition { get; set; }
+        public static Point FlamingFlowerPosition { get; private set; }
 
         // ...
 
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
             int index = tasks.FindIndex(genpass => genpass.Name.Equals("Dungeon"));
+
             if (index != -1)
             {
                 tasks.Insert(index + 1, new PassLegacy(Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest"), GenerateSpaceChest));
@@ -71,11 +72,19 @@ namespace SPladisonsYoyoMod.Common
 
         // ...
 
+        public static void ResetFlamingFlowerPosition()
+        {
+            FlamingFlowerPosition = Point.Zero;
+        }
+
+        // ...
+
         private static void ChangeLootInChests()
         {
             for (int chestIndex = 0; chestIndex < Main.chest.Length; chestIndex++)
             {
-                Chest chest = Main.chest[chestIndex];
+                var chest = Main.chest[chestIndex];
+
                 if (chest == null || Main.tile[chest.x, chest.y].TileType != TileID.Containers) continue;
 
                 switch (Main.tile[chest.x, chest.y].TileFrameX / 36)
@@ -113,6 +122,7 @@ namespace SPladisonsYoyoMod.Common
             if (FlamingFlowerPosition != Point.Zero)
             {
                 var tile = Main.tile[FlamingFlowerPosition.X, FlamingFlowerPosition.Y];
+
                 if (tile == null || tile.TileType != ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>())
                 {
                     FlamingFlowerPosition = Point.Zero;
@@ -129,23 +139,26 @@ namespace SPladisonsYoyoMod.Common
         {
             for (int i = 200; i < Main.maxTilesX - 200; i++)
             {
-                int j;
-                for (j = Main.maxTilesY - 355; j < Main.maxTilesY - 195; j++)
+                for (int j = Main.maxTilesY - 355; j < Main.maxTilesY - 195; j++)
                 {
                     var tile = Main.tile[i, j];
+
                     if (tile.TileType == ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>() && tile.TileFrameX == 0 && tile.TileFrameY == 0)
                     {
                         FlamingFlowerPosition = new Point(i, j);
+
                         return true;
                     }
                 }
             }
+
             return false;
         }
 
         private static void GenerateFlamingFlower()
         {
             int t = 0;
+
             while (t < 1000)
             {
                 int x = Main.rand.Next(200, Main.maxTilesX - 200);
@@ -171,6 +184,7 @@ namespace SPladisonsYoyoMod.Common
             progress.Message = Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest_0");
 
             bool flag = false;
+
             while (!flag)
             {
                 object dMinX = typeof(WorldGen).GetField("dMinX", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(null);

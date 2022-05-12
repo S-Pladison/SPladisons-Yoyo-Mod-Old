@@ -8,14 +8,16 @@ namespace SPladisonsYoyoMod
     {
         public const string Path = "SPladisonsYoyoMod/Assets/";
 
-        public const string ItemsPath = "SPladisonsYoyoMod/Assets/Textures/Items/";
-        public const string ProjectilesPath = "SPladisonsYoyoMod/Assets/Textures/Projectiles/";
-        public const string DustsPath = "SPladisonsYoyoMod/Assets/Textures/Dusts/";
-        public const string ParticlesPath = "SPladisonsYoyoMod/Assets/Textures/Particles/";
-        public const string MiscPath = "SPladisonsYoyoMod/Assets/Textures/Misc/";
-        public const string InvisiblePath = "SPladisonsYoyoMod/Assets/Textures/Misc/Extra_0";
+        public const string TexturesPath = Path + "Textures/";
+        public const string EffectsPath = Path + "Effects/";
 
-        public const string EffectsPath = "SPladisonsYoyoMod/Assets/Effects/";
+        public const string ItemsPath = TexturesPath + "Items/";
+        public const string ProjectilesPath = TexturesPath + "Projectiles/";
+        public const string DustsPath = TexturesPath + "Dusts/";
+        public const string ParticlesPath = TexturesPath + "Particles/";
+        public const string TilesPath = TexturesPath + "Tiles/";
+        public const string MiscPath = TexturesPath + "Misc/";
+        public const string InvisiblePath = TexturesPath + "Misc/Extra_0";
 
         // ...
 

@@ -3,7 +3,6 @@ Mods: {
 		ItemName: {
 			// Accessories
 			Bearing: Bearing
-			CandyCane: Candy Cane
 			DesecratedDice: Desecrated Dice
 			EternalConfusion: Eternal Confusion
 			FlamingFlower: Flaming Flower
@@ -20,6 +19,7 @@ Mods: {
 			Blackhole: Blackhole
 			BloomingDeath: Blooming Death
 			EmbraceOfRain: Embrace of Rain
+			Ignis: Ignis
 			Indefinite: Indefinite
 			MyocardialInfarction: Myocardial Infarction
 			OutburstingGust: Outbursting Gust
@@ -37,7 +37,6 @@ Mods: {
 		ItemTooltip: {
 			// Accessories
 			Bearing: 16% increased yoyo duration
-			CandyCane: ...
 			DesecratedDice: ...
 			EternalConfusion: ...
 			FlamingFlower: ...
@@ -81,8 +80,16 @@ Mods: {
 				'''
 			BloomingDeath: Yoyo and its string poison enemies
 			EmbraceOfRain: ...
+			Ignis: Leaves behind dangerous suffocating smoke
 			Indefinite: ...
-			MyocardialInfarction: ...
+			MyocardialInfarction:
+				'''
+				Charms nearest enemies
+				Hitting a charmed enemy also deals damage to others
+				|?|Changes the effect of «Yoyo Glove»:
+				• Increases the maximum amount of charmed enemies by 2
+				• You gain additional 0.5 HP regeneration per second for every charmed enemy
+				'''
 			OutburstingGust: ...
 			PaperYoyo: ...
 			PrototypeF34: ...
@@ -119,6 +126,8 @@ Mods: {
 			BlackholeProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Blackhole}"
 			BloomingDeathProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.BloomingDeath}"
 			EmbraceOfRainProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.EmbraceOfRain}"
+			IgnisProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Ignis}"
+			IgnisSmokeProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Ignis}"
 			IndefiniteProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Indefinite}"
 			MyocardialInfarctionProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.MyocardialInfarction}"
 			OutburstingGustProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.OutburstingGust}"
@@ -138,11 +147,34 @@ Mods: {
 			ImprovedPoisoning: Improved Poisoning
 		}
 
-		BuffDescription: {
-			
+		MapObject: {
+			FlamingFlowerTile: Flaming Flower
+			SpaceChestTile: Space Chest
+			SpaceChestTile_Locked: Locked Space Chest
+		}
+
+		Containers: {
+			SpaceChestTile: Space Chest
 		}
 
 		GameUI: {
+			// NPCs
+			NurseButton_1: Gift
+			NurseButton_2: Gift
+			NurseText_1:
+				'''
+				How can I help you?
+
+				(If you want, you can gift this item)
+				'''
+			NurseText_2:
+				'''
+				Ah.. it wasn’t necessary, thank you. In exchange take this. I think, this will be more of worth to you than me.
+
+				(How did she get that yoyo?..)
+				'''
+
+			// Misc
 			FlamingFlowerMapIcon: Strange Flower
 		}
 

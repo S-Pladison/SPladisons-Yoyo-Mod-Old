@@ -1,5 +1,6 @@
 ﻿using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Content.Items.Misc
@@ -76,8 +77,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
                     buttonWasPressed = false;
                 }
 
-                if (!buttonWasPressed) button2 = "Подарок";
-                else button2 = "Подарить";
+                button2 = Language.GetTextValue($"Mods.SPladisonsYoyoMod.GameUI.NurseButton_{(buttonWasPressed ? 2 : 1)}");
             }
         }
 
@@ -94,8 +94,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             if (!buttonWasPressed)
             {
                 Main.npcChatCornerItem = strangeDrinkType;
-                Main.npcChatText = "Чем могу помочь?\n\n" +
-                                   "(Если хотите, можете подарить данный предмет)";
+                Main.npcChatText = Language.GetTextValue($"Mods.SPladisonsYoyoMod.GameUI.NurseText_1");
             }
             else
             {
@@ -104,8 +103,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
 
                 if (item != -1)
                 {
-                    Main.npcChatText = "Ах, не стоило... Спасибо. Взамен возьми вот это. Думаю, тебе он пригодится больше, чем мне.\n\n" +
-                                       "(Откуда у нее йо-йо?..)";
+                    Main.npcChatText = Language.GetTextValue($"Mods.SPladisonsYoyoMod.GameUI.NurseText_2");
 
                     player.inventory[item] = new Item();
                     player.QuickSpawnItem(player.GetSource_GiftOrReward(), GiftType);
@@ -117,7 +115,6 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             buttonWasPressed = !buttonWasPressed;
         }
 
-        // А нужно ли это?... Можт ModSystem в ILoadable бахнуть
         public override void OnWorldLoad()
         {
             buttonWasPressed = false;

@@ -57,7 +57,8 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             if (distance > (RADIUS - 400)) progress = MathHelper.SmoothStep(0, 1, (RADIUS - distance) / 400f);
 
             position = WorldSystem.FlamingFlowerPosition.ToVector2() + Vector2.One;
-            if (context.Draw(ModAssets.GetExtraTexture(1).Value, position, Color.White * progress, new SpriteFrame(1, 1), 0.75f, 0.75f, Alignment.Center).IsMouseOver && progress > 0.2f)
+
+            if (context.Draw(ModContent.Request<Texture2D>(ModAssets.ItemsPath + nameof(FlamingFlower) + "_Map").Value, position, Color.White * progress, new SpriteFrame(1, 1), 0.75f, 0.75f, Alignment.Center).IsMouseOver && progress > 0.2f)
             {
                 text = Language.GetTextValue("Mods.SPladisonsYoyoMod.GameUI.FlamingFlowerMapIcon");
             }
@@ -81,8 +82,10 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         }
     }
 
-    public class FlamingFlowerTile : PladTile
+    public class FlamingFlowerTile : ModTile
     {
+        public override string Texture => ModAssets.TilesPath + nameof(FlamingFlowerTile);
+
         public override void SetStaticDefaults()
         {
             Main.tileLighted[Type] = true;
@@ -95,17 +98,16 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             TileObjectData.newTile.Origin = new Point16(0, 1);
             TileObjectData.addTile(Type);
 
-            this.CreateMapEntry(color: new Color(238, 145, 105), eng: "Flaming Flower", rus: "Пылающий цветок");
+            AddMapEntry(new Color(238, 145, 105), CreateMapEntryName());
 
-            this.DustType = ModContent.DustType<Dusts.VaporDust>();
-            this.SoundType = SoundID.Grass;
+            DustType = ModContent.DustType<Dusts.VaporDust>();
+            SoundType = SoundID.Grass;
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 48, ModContent.ItemType<FlamingFlower>());
-
-            WorldSystem.FlamingFlowerPosition = Point.Zero;
+            WorldSystem.ResetFlamingFlowerPosition();
         }
 
         public override void NearbyEffects(int i, int j, bool closer)

@@ -42,22 +42,22 @@ namespace SPladisonsYoyoMod.Content.Items
 
     public abstract class YoyoItem : ModItem
     {
-        private readonly int _gamepadExtraRange;
+        private readonly int gamepadExtraRange;
 
         public YoyoItem(int gamepadExtraRange)
         {
-            _gamepadExtraRange = gamepadExtraRange;
+            this.gamepadExtraRange = gamepadExtraRange;
         }
 
-        public override string Texture => ModAssets.ItemsPath + (ModContent.RequestIfExists<Texture2D>(ModAssets.ItemsPath + this.Name, out _) ? this.Name : "UnknownYoyo");
+        public override string Texture => ModAssets.ItemsPath + (ModContent.RequestIfExists<Texture2D>(ModAssets.ItemsPath + Name, out _) ? Name : "UnknownYoyo");
 
         public sealed override void SetStaticDefaults()
         {
             ItemID.Sets.Yoyo[Type] = true;
-            ItemID.Sets.GamepadExtraRange[Type] = _gamepadExtraRange;
+            ItemID.Sets.GamepadExtraRange[Type] = gamepadExtraRange;
             ItemID.Sets.GamepadSmartQuickReach[Type] = true;
 
-            this.YoyoSetStaticDefaults();
+            YoyoSetStaticDefaults();
         }
 
         public sealed override void SetDefaults()
@@ -76,40 +76,43 @@ namespace SPladisonsYoyoMod.Content.Items
             Item.noMelee = true;
             Item.noUseGraphic = true;
 
-            this.YoyoSetDefaults();
+            YoyoSetDefaults();
         }
 
         public virtual void YoyoSetStaticDefaults() { }
         public virtual void YoyoSetDefaults() { }
     }
 
-    public abstract class YoyoProjectile : PladProjectile
+    public abstract class YoyoProjectile : ModProjectile
     {
         public bool YoyoGloveActivated { get; private set; }
         public bool IsReturning { get => Projectile.ai[0] == -1; }
+        public float ReturningProgress { get; private set; } = 1f; // 1 -> 0
 
-        private readonly float _lifeTime;
-        private readonly float _maxRange;
-        private readonly float _topSpeed;
+        private readonly float lifeTime;
+        private readonly float maxRange;
+        private readonly float topSpeed;
+
+        private Vector2? positionBeforeReturning;
 
         public YoyoProjectile(float lifeTime, float maxRange, float topSpeed)
         {
-            _lifeTime = lifeTime;
-            _maxRange = maxRange;
-            _topSpeed = topSpeed;
+            this.lifeTime = lifeTime;
+            this.maxRange = maxRange;
+            this.topSpeed = topSpeed;
         }
 
-        public override string Texture => ModContent.RequestIfExists<Texture2D>(base.Texture, out _) ? base.Texture : "SPladisonsYoyoMod/Assets/Textures/Projectiles/UnknownYoyoProjectile";
+        public override string Texture => ModAssets.ProjectilesPath + (ModContent.RequestIfExists<Texture2D>(ModAssets.ProjectilesPath + Name, out _) ? Name : "UnknownYoyoProjectile");
 
         // ...
 
         public sealed override void SetStaticDefaults()
         {
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[Type] = _lifeTime;
-            ProjectileID.Sets.YoyosMaximumRange[Type] = _maxRange;
-            ProjectileID.Sets.YoyosTopSpeed[Type] = _topSpeed;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Type] = lifeTime;
+            ProjectileID.Sets.YoyosMaximumRange[Type] = maxRange;
+            ProjectileID.Sets.YoyosTopSpeed[Type] = topSpeed;
 
-            this.YoyoSetStaticDefaults();
+            YoyoSetStaticDefaults();
         }
 
         public sealed override void SetDefaults()
@@ -123,35 +126,57 @@ namespace SPladisonsYoyoMod.Content.Items
             Projectile.friendly = true;
             Projectile.penetrate = -1;
 
-            this.YoyoSetDefaults();
+            YoyoSetDefaults();
+        }
+
+        public sealed override bool PreAI()
+        {
+            var owner = Main.player[Projectile.owner];
+
+            if (!YoyoPreAI(owner)) return false;
+
+            if (IsReturning)
+            {
+                if (!positionBeforeReturning.HasValue)
+                {
+                    positionBeforeReturning = Projectile.Center;
+                }
+
+                var progress = Vector2.DistanceSquared(owner.Center, Projectile.Center) / Vector2.DistanceSquared(owner.Center, positionBeforeReturning.Value);
+                ReturningProgress = MathHelper.Clamp(progress, 0f, 1f);
+            }
+
+            return true;
         }
 
         public sealed override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             var owner = Main.player[Projectile.owner];
-            if (owner.yoyoGlove && !this.YoyoGloveActivated)
+
+            if (owner.yoyoGlove && !YoyoGloveActivated)
             {
-                this.YoyoGloveActivated = true;
-                this.OnActivateYoyoGlove();
+                YoyoGloveActivated = true;
+                OnActivateYoyoGlove();
             }
 
-            this.YoyoOnHitNPC(owner, target, damage, knockback, crit);
+            YoyoOnHitNPC(owner, target, damage, knockback, crit);
         }
 
         public sealed override void SendExtraAI(BinaryWriter writer)
         {
-            writer.Write(this.YoyoGloveActivated);
-            this.YoyoSendExtraAI(writer);
+            writer.Write(YoyoGloveActivated);
+            YoyoSendExtraAI(writer);
         }
 
         public sealed override void ReceiveExtraAI(BinaryReader reader)
         {
-            this.YoyoGloveActivated = reader.ReadBoolean();
-            this.YoyoReceiveExtraAI(reader);
+            YoyoGloveActivated = reader.ReadBoolean();
+            YoyoReceiveExtraAI(reader);
         }
 
         // ...
 
+        public virtual bool YoyoPreAI(Player owner) => true;
         public virtual void YoyoSetStaticDefaults() { }
         public virtual void YoyoSetDefaults() { }
         public virtual void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit) { }
@@ -164,7 +189,7 @@ namespace SPladisonsYoyoMod.Content.Items
         public virtual void ModifyYoyoMaximumRange(ref float maxRange) { }
     }
 
-    public abstract class CounterweightProjectile : PladProjectile
+    public abstract class CounterweightProjectile : ModProjectile
     {
         private static readonly MethodInfo AI_099_1_MethodInfo = typeof(Projectile).GetMethod("AI_099_1", BindingFlags.NonPublic | BindingFlags.Instance);
 

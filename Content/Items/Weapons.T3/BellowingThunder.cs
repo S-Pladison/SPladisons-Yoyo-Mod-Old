@@ -130,7 +130,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             for (int k = 1; k < Projectile.oldPos.Length; k++)
             {
-                var position = GetDrawPosition(Projectile.oldPos[k] + Projectile.Size * 0.5f);
+                var position = Projectile.oldPos[k] + Projectile.Size * 0.5f + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
                 var num = (Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length;
                 var color = _effectColor * num * 0.3f;
 
@@ -154,17 +154,17 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
             var texture = ModAssets.GetExtraTexture(21);
-            var drawPosition = GetDrawPosition();
-            var scale = Projectile.scale * Vector2.One;
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, GetDrawPosition(), null, _effectColor * 0.6f, 0f, texture.Size() * .5f, scale * 0.25f, SpriteEffects.None));
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            var scale = Projectile.scale;
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, drawPosition, null, _effectColor * 0.6f, 0f, texture.Size() * .5f, scale * 0.25f, SpriteEffects.None, 0));
 
             _effect.Draw(drawPosition, 0.45f * scale);
 
             texture = ModAssets.GetExtraTexture(23);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, scale * 0.1f, SpriteEffects.None));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, scale * 0.1f, SpriteEffects.None, 0));
 
             texture = ModAssets.GetExtraTexture(21);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition, null, _effectColor * 0.35f, Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * 0.35f, Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None, 0));
         }
 
         private readonly LightningEffect _effect = new();
@@ -182,13 +182,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             public LightningEffect() => this.Reset();
 
-            public void Draw(Vector2 position, Vector2 scale)
+            public void Draw(Vector2 position, float scale)
             {
                 if (!_active) return;
 
                 var texture = ModAssets.GetExtraTexture(22);
                 var rectangle = new Rectangle(_time * 96, _frame * 96, 96, 96);
-                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects));
+                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, 0));
             }
 
             public void Update(int counter)
@@ -208,7 +208,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class BellowingThunderLightningProjectile : PladProjectile, IPostUpdateCameraPosition
+    public class BellowingThunderLightningProjectile : ModProjectile, IPostUpdateCameraPosition
     {
         // TODO: Доделать звук удара молнии...
 
@@ -219,6 +219,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public ref float Timer => ref Projectile.localAI[0];
 
         // ...
+
+        public override string Texture => ModAssets.ProjectilesPath + nameof(BellowingThunderLightningProjectile);
 
         public override void Load()
         {
@@ -246,7 +248,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Projectile.localNPCHitCooldown = -1;
         }
 
-        public override void OnSpawn(Terraria.DataStructures.IEntitySource source)
+        public override void OnSpawn(IEntitySource source)
         {
             Timer += Main.rand.Next(2000);
         }
@@ -291,14 +293,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDraw(ref Color lightColor)
         {
-            var drawPosition = GetDrawPosition();
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var scale = Projectile.scale * 3;
             var effect = BellowingThunderEffect.Value;
             var texture = TextureAssets.Projectile[Type];
             var origin = new Vector2(texture.Width() * 0.5f, texture.Height());
             var offset = Vector2.UnitY * texture.Height() * scale;
 
-            SetSpriteBatch(sortMode: SpriteSortMode.Immediate, blendState: BlendState.Additive, effect: effect);
+            DrawUtils.BeginProjectileSpriteBatch(sortMode: SpriteSortMode.Immediate, blendState: BlendState.Additive, effect: effect);
             {
                 void DrawLightning(Vector2 position, Color color) => Main.EntitySpriteDraw(texture.Value, position, null, color, 0f, origin, scale, SpriteEffects.None, 0);
 
@@ -320,24 +322,24 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     }
                 }
             }
-            SetSpriteBatch();
+            DrawUtils.BeginProjectileSpriteBatch();
 
             return false;
         }
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            var drawPosition = GetDrawPosition();
-            var scale = Projectile.scale * 3 * Vector2.One;
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            var scale = Projectile.scale * 3;
             var texture = ModAssets.GetExtraTexture(25);
             var offset = Vector2.UnitY * texture.Height() * scale;
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition - offset * 3, new Rectangle(0, 0, texture.Width(), (int)offset.Y), _effectColor * BeamProgress, 0f, Vector2.UnitX * texture.Width() * 0.5f, scale, SpriteEffects.None, 0));
 
             texture = ModAssets.GetExtraTexture(26);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, texture.Size() * 0.5f, scale * BeamProgress, SpriteEffects.None));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, texture.Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, 0));
 
             texture = ModAssets.GetExtraTexture(23);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None, 0));
         }
 
         private static readonly Color _effectColor = new(90, 40, 255);

@@ -15,9 +15,7 @@ namespace SPladisonsYoyoMod.Common.Drawing
     public class DrawingManager : ILoadable
     {
         private static readonly List<DrawKey> possibleKeys = new();
-        private static readonly List<DrawKey> pixelatedKeys = new();
-
-        private static readonly Dictionary<DrawLayers, RenderTarget2D> pixelatedRenderTargets = new();
+        private static readonly Dictionary<DrawKey, RenderTarget2D> pixelatedRenderTargets = new();
         private static readonly Dictionary<DrawKey, List<DrawData>> drawDatas = new();
         private static readonly Dictionary<DrawKey, bool> canDrawDataBooleans = new();
         private static readonly Dictionary<DrawLayers, CustomDrawDelegate> customDrawMethods = new();
@@ -35,16 +33,12 @@ namespace SPladisonsYoyoMod.Common.Drawing
                     if (drawDatas.ContainsKey(key)) continue;
 
                     possibleKeys.Add(key);
+                    pixelatedRenderTargets.Add(key, null);
                     drawDatas.Add(key, new List<DrawData>());
                     canDrawDataBooleans.Add(key, false);
-
-                    if (!key.Pixelated) continue;
-
-                    pixelatedKeys.Add(key);
                 }
 
                 customDrawMethods.Add(layer, null);
-                pixelatedRenderTargets.Add(layer, null);
             }
 
             Main.OnResolutionChanged += ClearRenderTargets;
@@ -61,8 +55,6 @@ namespace SPladisonsYoyoMod.Common.Drawing
             canDrawDataBooleans.Clear();
             drawDatas.Clear();
             pixelatedRenderTargets.Clear();
-
-            pixelatedKeys.Clear();
             possibleKeys.Clear();
         }
 
@@ -148,8 +140,8 @@ namespace SPladisonsYoyoMod.Common.Drawing
         {
             if (!CanBeginSpriteBatch(key)) return;
 
-            var target = pixelatedRenderTargets[key.Layer] ??= RecreateRenderTarget(spriteBatch.GraphicsDevice, Main.screenWidth, Main.screenHeight);
-            spriteBatch.Begin(SpriteSortMode.Deferred, blendState, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.ZoomMatrix);
+            var target = pixelatedRenderTargets[key] ??= RecreateRenderTarget(spriteBatch.GraphicsDevice, Main.screenWidth, Main.screenHeight);
+            spriteBatch.Begin(SpriteSortMode.Deferred, blendState, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);
             spriteBatch.Draw(target, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
             spriteBatch.End();
         }
@@ -160,18 +152,22 @@ namespace SPladisonsYoyoMod.Common.Drawing
             var device = spriteBatch.GraphicsDevice;
             var matrix = Matrix.CreateScale(0.5f);
 
-            foreach (var key in pixelatedKeys)
+            RasterizerState rasterizer;
+            if (Main.gameMenu || Main.player[Main.myPlayer].gravDir == 1f) rasterizer = RasterizerState.CullCounterClockwise;
+            else rasterizer = RasterizerState.CullClockwise;
+
+            foreach (var key in pixelatedRenderTargets.Keys)
             {
                 UpdateCanDrawDataDictionary(key);
                 if (!CanBeginSpriteBatch(key)) continue;
 
-                var target = pixelatedRenderTargets[key.Layer] ??= RecreateRenderTarget(spriteBatch.GraphicsDevice, Main.screenWidth, Main.screenHeight);
+                var target = pixelatedRenderTargets[key] ??= RecreateRenderTarget(spriteBatch.GraphicsDevice, Main.screenWidth, Main.screenHeight);
                 var blendState = key.Additive ? BlendState.Additive : BlendState.AlphaBlend;
 
                 device.SetRenderTarget(target);
                 device.Clear(Color.Transparent);
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, blendState, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, matrix * Main.GameViewMatrix.EffectMatrix);
+                spriteBatch.Begin(SpriteSortMode.Deferred, blendState, SamplerState.PointWrap, DepthStencilState.None, rasterizer, null, matrix * Main.GameViewMatrix.EffectMatrix);
                 foreach (var data in drawDatas[key]) data.Draw(spriteBatch, key);
                 spriteBatch.End();
 

@@ -78,7 +78,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override bool PreDraw(ref Color lightColor)
         {
             var texture = TextureAssets.Projectile[Type];
-            Main.EntitySpriteDraw(texture.Value, GetDrawPosition(), null, lightColor, Projectile.rotation, new Vector2(10, 14), Projectile.scale * 0.9f, SpriteEffects.None, 0);
+            var drawPos = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            Main.EntitySpriteDraw(texture.Value, drawPos, null, lightColor, Projectile.rotation, new Vector2(10, 14), Projectile.scale * 0.9f, SpriteEffects.None, 0);
             return false;
         }
 

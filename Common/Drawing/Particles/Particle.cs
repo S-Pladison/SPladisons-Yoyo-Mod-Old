@@ -77,7 +77,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Particles
 
         public void Update()
         {
-            float minScaleForDeath = 0.1f;
+            float minScaleForDeath = 0f;
 
             if (PreUpdate(ref minScaleForDeath))
             {

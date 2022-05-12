@@ -8,6 +8,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public Stable() : base(gamepadExtraRange: 15) { }
 
+        public override void YoyoSetStaticDefaults()
+        {
+            //SPladisonsYoyoMod.Sets.ItemCustomInventoryScale[Type] = 1f;
+        }
+
         public override void YoyoSetDefaults()
         {
             Item.damage = 43;

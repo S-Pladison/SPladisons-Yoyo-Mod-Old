@@ -9,7 +9,7 @@ namespace SPladisonsYoyoMod.Content.Particles
 {
     public class BlackholeSpaceParticle : Particle, IDrawOnRenderTarget
     {
-        public override string Texture => ModAssets.ParticlesPath + "SmokeParticle";
+        public override string Texture => ModAssets.ParticlesPath + "HDSmokeParticle";
 
         public override void OnSpawn()
         {

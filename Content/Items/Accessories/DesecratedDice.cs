@@ -26,6 +26,6 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
     public class DesecratedDiceProjectile : CounterweightProjectile
     {
-
+        public override string Texture => ModAssets.ProjectilesPath + nameof(DesecratedDiceProjectile);
     }
 }

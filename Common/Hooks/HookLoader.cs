@@ -15,6 +15,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 
             HookEndpointManager.Add<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 
+            IL.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += IL_ItemSlot_Draw;
             IL.Terraria.Player.Counterweight += IL_Player_Counterweight;
             IL.Terraria.Projectile.AI_099_1 += IL_Projectile_AI_099_1;
             IL.Terraria.Projectile.AI_099_2 += IL_Projectile_AI_099_2;
@@ -30,6 +31,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 
             HookEndpointManager.Remove<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 
+            IL.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color -= IL_ItemSlot_Draw;
             IL.Terraria.Player.Counterweight -= IL_Player_Counterweight;
             IL.Terraria.Projectile.AI_099_1 -= IL_Projectile_AI_099_1;
             IL.Terraria.Projectile.AI_099_2 -= IL_Projectile_AI_099_2;

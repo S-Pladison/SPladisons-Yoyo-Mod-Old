@@ -100,20 +100,20 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool PreDrawExtras()
         {
-            Main.EntitySpriteDraw(ModAssets.GetExtraTexture(5).Value, GetDrawPosition(), null, Color.White, Projectile.rotation, ModAssets.GetExtraTexture(5).Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(ModAssets.GetExtraTexture(5).Value, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, ModAssets.GetExtraTexture(5).Size() * 0.5f, 1.3f, SpriteEffects.None, 0);
             return true;
         }
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            var drawPosition = GetDrawPosition();
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var origin = ModAssets.GetExtraTexture(8).Size() * 0.5f + new Vector2(0, 7);
             var starRotation = Main.GlobalTimeWrappedHourly;
             var starScalePulse = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 3f) * 0.15f;
 
             void DrawStar(Color color, float rotation, float scale)
             {
-                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(ModAssets.GetExtraTexture(8).Value, drawPosition, null, color, rotation, origin, (scale + starScalePulse) * Vector2.One, SpriteEffects.None));
+                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(ModAssets.GetExtraTexture(8).Value, drawPosition, null, color, rotation, origin, scale + starScalePulse, SpriteEffects.None, 0));
             }
 
             DrawStar(new Color(16, 11, 25, 210), -starRotation, 0.55f);

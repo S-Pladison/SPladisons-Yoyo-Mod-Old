@@ -33,12 +33,14 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
 
             Item.consumable = true;
             Item.createTile = ModContent.TileType<SpaceChestTile>();
-            Item.placeStyle = 1;
+            Item.placeStyle = 0;
         }
     }
 
-    public class SpaceChestTile : PladTile
+    public class SpaceChestTile : ModTile
     {
+        public override string Texture => ModAssets.TilesPath + nameof(SpaceChestTile);
+
         public override void SetStaticDefaults()
         {
             Main.tileLighted[Type] = true;
@@ -57,17 +59,13 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             TileID.Sets.AvoidedByNPCs[Type] = true;
             TileID.Sets.InteractibleByNPCs[Type] = true;
 
-            this.DustType = ModContent.DustType<Dusts.SpaceChestDust>();
-            this.AdjTiles = new int[] { TileID.Containers };
-            this.ChestDrop = ModContent.ItemType<SpaceChest>();
+            DustType = ModContent.DustType<Dusts.SpaceChestDust>();
+            AdjTiles = new int[] { TileID.Containers };
+            ChestDrop = ModContent.ItemType<SpaceChest>();
 
-            this.ContainerName.SetDefault("Space Chest");
-            this.ContainerName.AddTranslation(GameCulture.FromCultureName(GameCulture.CultureName.Russian), "Космический сундук");
-
-            Color mapColor = new Color(174, 129, 92);
-
-            this.CreateMapEntry(color: mapColor, eng: "Space Chest", rus: "Космический сундук", nameFunc: MapChestName);
-            this.CreateMapEntry(color: mapColor, key: this.Name + "_Locked", eng: "Locked Space Chest", rus: "Запертый космический сундук", nameFunc: MapChestName);
+            var color = new Color(174, 129, 92);
+            AddMapEntry(color, CreateMapEntryName(), MapChestName);
+            AddMapEntry(color, CreateMapEntryName(Name + "_Locked"), MapChestName);
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Origin = new Point16(0, 1);
@@ -97,8 +95,9 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
         {
             if (!NPC.downedPlantBoss) return false;
 
-            dustType = this.DustType;
+            dustType = DustType;
             AchievementsHelper.NotifyProgressionEvent(AchievementHelperID.Events.UnlockedBiomeChest);
+
             return true;
         }
 
@@ -110,14 +109,16 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
 
         public override bool RightClick(int i, int j)
         {
-            Player player = Main.LocalPlayer;
-            Tile tile = Main.tile[i, j];
+            var player = Main.LocalPlayer;
+            var tile = Main.tile[i, j];
+            var left = i;
+            var top = j;
+
             Main.mouseRightRelease = false;
-            int left = i;
-            int top = j;
 
             if (tile.TileFrameX % 36 != 0) left--;
             if (tile.TileFrameY != 0) top--;
+
             if (player.sign >= 0)
             {
                 SoundEngine.PlaySound(SoundID.MenuClose);
@@ -125,12 +126,14 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
                 Main.editSign = false;
                 Main.npcChatText = "";
             }
+
             if (Main.editChest)
             {
                 SoundEngine.PlaySound(SoundID.MenuTick);
                 Main.editChest = false;
                 Main.npcChatText = "";
             }
+
             if (player.editedChestName)
             {
                 NetMessage.SendData(MessageID.SyncPlayerChest, -1, -1, NetworkText.FromLiteral(Main.chest[player.chest].name), player.chest, 1f);
@@ -138,6 +141,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
             }
 
             bool isLocked = IsLockedChest(left, top);
+
             if (Main.netMode == NetmodeID.MultiplayerClient && !isLocked)
             {
                 if (left == player.chestX && top == player.chestY && player.chest >= 0)
@@ -157,6 +161,7 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
                 if (isLocked)
                 {
                     int key = ModContent.ItemType<SpaceKey>();
+
                     if (player.ConsumeItem(key) && Chest.Unlock(left, top))
                     {
                         if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -168,9 +173,11 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
                 else
                 {
                     int chest = Chest.FindChest(left, top);
+
                     if (chest >= 0)
                     {
                         Main.stackSplit = 600;
+
                         if (chest == player.chest)
                         {
                             player.chest = -1;
@@ -185,33 +192,47 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
                             player.chestY = top;
                             SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
                         }
+
                         Recipe.FindRecipes();
                     }
                 }
             }
+
             return true;
         }
 
         public override void MouseOver(int i, int j)
         {
-            Player player = Main.LocalPlayer;
-            Tile tile = Main.tile[i, j];
-            int left = i;
-            int top = j;
+            var player = Main.LocalPlayer;
+            var tile = Main.tile[i, j];
+            var left = i;
+            var top = j;
 
             if (tile.TileFrameX % 36 != 0) left--;
             if (tile.TileFrameY != 0) top--;
 
             int chest = Chest.FindChest(left, top);
-            if (chest < 0) player.cursorItemIconText = Language.GetTextValue("LegacyChestType.0");
+
+            if (chest < 0)
+            {
+                player.cursorItemIconText = Language.GetTextValue("LegacyChestType.0");
+            }
             else
             {
                 player.cursorItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Space Chest";
+
                 if (player.cursorItemIconText == "Space Chest")
                 {
-                    player.cursorItemIconID = ModContent.ItemType<SpaceChest>();
-                    if (Main.tile[left, top].TileFrameX / 36 == 1) player.cursorItemIconID = ModContent.ItemType<SpaceKey>();
                     player.cursorItemIconText = "";
+
+                    if (Main.tile[left, top].TileFrameX / 36 == 1)
+                    {
+                        player.cursorItemIconID = ModContent.ItemType<SpaceKey>();
+                    }
+                    else
+                    {
+                        player.cursorItemIconID = ModContent.ItemType<SpaceChest>();
+                    }
                 }
             }
 
@@ -222,7 +243,8 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
         public override void MouseOverFar(int i, int j)
         {
             MouseOver(i, j);
-            Player player = Main.LocalPlayer;
+
+            var player = Main.LocalPlayer;
 
             if (player.cursorItemIconText == "")
             {
@@ -233,41 +255,43 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            Tile tile = Main.tile[i, j];
+            var tile = Main.tile[i, j];
             var player = Main.LocalPlayer;
 
             if (player != null && tile != null && (tile.TileFrameX == 18 || tile.TileFrameX == 18 * 3) && tile.TileFrameY == 18)
             {
-                spriteBatch.End();
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-
                 int chest = FindSpaceChest(i, j);
+
                 if (chest > 0)
                 {
-                    Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
+
+                    var zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
+
                     if (Main.drawToScreen) zero = Vector2.Zero;
 
                     var texture = ModContent.Request<Texture2D>(this.Texture + "_Effect").Value;
                     var position = new Vector2(i * 32 + player.Center.X * 0.2f, j * 32 + player.Center.Y * 0.2f) + zero;
                     var rectangle = new Rectangle((tile.TileFrameX / 18 - 1) * 16, Main.chest[chest].frame * 34, 32, 32);
-
                     var shader = GameShaders.Armor.GetShaderFromItemId(ItemID.TwilightDye);
-                    shader.Apply(null, new DrawData(texture, position, rectangle, Color.White));
 
-                    position = new Vector2(i * 16 - 16 - (int)Main.screenPosition.X, j * 16 - 16 - (int)Main.screenPosition.Y) + zero;
-                    spriteBatch.Draw(texture, position, rectangle, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                    spriteBatch.End();
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null);
+                    {
+                        shader.Apply(null, new DrawData(texture, position, rectangle, Color.White));
+                        position = new Vector2(i * 16 - 16 - (int)Main.screenPosition.X, j * 16 - 16 - (int)Main.screenPosition.Y) + zero;
+                        spriteBatch.Draw(texture, position, rectangle, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                    }
+                    spriteBatch.End();
+                    spriteBatch.Begin();
                 }
-
-                spriteBatch.End();
-                spriteBatch.Begin();
             }
         }
 
         private static int FindSpaceChest(int i, int j)
         {
-            Tile tile = Main.tile[i, j];
-            int left = i;
-            int top = j;
+            var tile = Main.tile[i, j];
+            var left = i;
+            var top = j;
 
             if (tile.TileFrameX % 36 != 0) left--;
             if (tile.TileFrameY != 0) top--;
@@ -277,14 +301,14 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
 
         public static string MapChestName(string name, int i, int j)
         {
-            int left = i;
-            int top = j;
-            Tile tile = Main.tile[i, j];
+            var left = i;
+            var top = j;
+            var tile = Main.tile[i, j];
 
             if (tile.TileFrameX % 36 != 0) left--;
             if (tile.TileFrameY != 0) top--;
 
-            int chest = Chest.FindChest(left, top);
+            var chest = Chest.FindChest(left, top);
 
             if (chest < 0) return Language.GetTextValue("LegacyChestType.0");
             if (Main.chest[chest].name == "") return name;

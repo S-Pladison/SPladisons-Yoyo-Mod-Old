@@ -5,6 +5,7 @@ using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Drawing;
 using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
 using SPladisonsYoyoMod.Common.Drawing.Particles;
+using SPladisonsYoyoMod.Common.Drawing.Primitives;
 using SPladisonsYoyoMod.Content.Particles;
 using SPladisonsYoyoMod.Utilities;
 using System;
@@ -21,8 +22,16 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public Blackhole() : base(gamepadExtraRange: 13) { }
 
+        public override void YoyoSetStaticDefaults()
+        {
+            SPladisonsYoyoMod.Sets.ItemCustomInventoryScale[Type] = 1f;
+        }
+
         public override void YoyoSetDefaults()
         {
+            Item.width = 38;
+            Item.height = 26;
+
             Item.damage = 43;
             Item.knockBack = 2.5f;
 
@@ -35,8 +44,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class BlackholeProjectile : YoyoProjectile, IDrawOnRenderTarget, IPostUpdateCameraPosition
     {
-        private const float RADIUS = 16 * 10;
-        private float RadiusProgress { get => Projectile.localAI[1]; set => Projectile.localAI[1] = value; }
+        public static float Radius { get; } = 16 * 10;
+        public static Effect TrailEffect { get; private set; } = null;
+
+        public float RadiusProgress { get => Projectile.localAI[1]; set => Projectile.localAI[1] = value; }
+
+        private PrimitiveStrip trail;
+        private int timer;
 
         // ...
 
@@ -44,9 +58,19 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool IsSoloYoyo() => true;
 
+        public override void Load()
+        {
+            if (Main.dedServ) return;
+
+            TrailEffect = ModAssets.GetEffect("BlackholeTrail", AssetRequestMode.ImmediateLoad).Value;
+            TrailEffect.Parameters["Texture0"].SetValue(ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad).Value);
+        }
+
         public override void OnSpawn(IEntitySource source)
         {
             BlackholeEffectSystem.AddElement(this);
+
+            trail = new PrimitiveStrip(p => 22 * (1 - p * 0.7f), p => new Color(209, 112, 224) * (1 - p), TrailEffect);
         }
 
         public override bool PreKill(int timeLeft)
@@ -60,15 +84,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             RadiusProgress += !IsReturning ? 0.05f : -0.15f;
             RadiusProgress = Math.Clamp(RadiusProgress, 0, 1);
 
+            timer++;
+
             Lighting.AddLight(Projectile.Center, new Vector3(171 / 255f, 97 / 255f, 255 / 255f) * 0.45f);
 
-            var currentRadius = RADIUS * RadiusProgress * (YoyoGloveActivated ? 1.25f : 1f);
+            var currentRadius = Radius * RadiusProgress * (YoyoGloveActivated ? 1.25f : 1f);
             var targets = NPCUtils.NearestNPCs(
                 center: Projectile.Center,
                 radius: currentRadius,
-                predicate: npc => npc.CanBeChasedBy(Projectile, false) &&
-                           !npc.boss &&
-                           Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height)
+                predicate: npc =>
+                    npc.CanBeChasedBy(Projectile, false) &&
+                    !npc.boss &&
+                    Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height)
             );
 
             foreach (var target in targets)
@@ -112,15 +139,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void PostDraw(Color lightColor)
         {
-            var drawPosition = GetDrawPosition();
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(5);
-            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.Black, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(texture.Value, drawPosition, null, Color.Black, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.2f, SpriteEffects.None, 0);
         }
 
         void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
             var scale = RadiusProgress * (YoyoGloveActivated ? 1.25f : 1f) * Projectile.scale;
-            var drawPosition = GetDrawPosition();
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(30);
             spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.45f * scale, SpriteEffects.None, 0f);
             spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 0.40f * scale, SpriteEffects.None, 0f);
@@ -131,20 +158,24 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            var drawPosition = GetDrawPosition();
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(32);
-            var rotation = (float)Math.Sin(Projectile.localAI[0] * 0.0125f);
-            var scale = Projectile.scale * Vector2.One;
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, drawPosition, null, Color.White * rotation, (float)Math.Sin(Projectile.localAI[0] * 0.025f), texture.Size() * 0.5f, (0.4f + rotation * 0.15f) * scale, SpriteEffects.None));
+            var rotation = (float)Math.Sin(timer * 0.0125f);
+            var scale = Projectile.scale;
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, drawPosition, null, Color.White * rotation, (float)Math.Sin(timer * 0.025f), texture.Size() * 0.5f, (0.4f + rotation * 0.15f) * scale, SpriteEffects.None, 0));
 
             texture = ModAssets.GetExtraTexture(31);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, drawPosition, null, Color.White, rotation, texture.Size() * 0.5f, 0.28f * scale, SpriteEffects.None));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, drawPosition, null, Color.White, rotation, texture.Size() * 0.5f, 0.28f * scale, SpriteEffects.None, 0));
+
+            trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 10, 16 * 7 * ReturningProgress);
+            PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.All, trail);
         }
     }
 
+    [Autoload(Side = ModSide.Client)]
     public sealed class BlackholeEffectSystem : ModSystem
     {
-        private static readonly Color[] Colors = new Color[]
+        public static readonly Color[] Colors = new Color[]
         {
             new Color(8, 9, 15),
             new Color(198, 50, 189),
@@ -176,16 +207,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             firstTexture = ModAssets.GetExtraTexture(28, AssetRequestMode.ImmediateLoad);
             secondTexture = ModAssets.GetExtraTexture(29, AssetRequestMode.ImmediateLoad);
+
             elems = new();
 
-            if (Main.dedServ) return;
-
-            spaceEffect = ModAssets.GetEffect("BlackholeSpace", AssetRequestMode.ImmediateLoad);
-            spaceEffect.Value.Parameters["texture1"].SetValue(firstTexture.Value);
-            spaceEffect.Value.Parameters["texture2"].SetValue(secondTexture.Value);
-            spaceEffect.Value.Parameters["color0"].SetValue(Colors[0].ToVector4());
-            spaceEffect.Value.Parameters["color1"].SetValue(Colors[1].ToVector4());
-            spaceEffect.Value.Parameters["color2"].SetValue(Colors[2].ToVector4());
+            spaceEffect = ModAssets.GetEffect("BlackholeBackground", AssetRequestMode.ImmediateLoad);
+            spaceEffect.Value.Parameters["Texture1"].SetValue(firstTexture.Value);
+            spaceEffect.Value.Parameters["Texture2"].SetValue(secondTexture.Value);
+            spaceEffect.Value.Parameters["Color0"].SetValue(Colors[0].ToVector4());
+            spaceEffect.Value.Parameters["Color1"].SetValue(Colors[1].ToVector4());
+            spaceEffect.Value.Parameters["Color2"].SetValue(Colors[2].ToVector4());
         }
 
         public override void PostSetupContent()
@@ -244,9 +274,10 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             var texture = (Texture2D)target;
             var effect = spaceEffect.Value;
-            effect.Parameters["time"].SetValue((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 0.4f);
-            effect.Parameters["resolution"].SetValue(texture.Size());
-            effect.Parameters["offset"].SetValue(Main.screenPosition * 0.001f);
+
+            effect.Parameters["Time"].SetValue((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 0.4f);
+            effect.Parameters["Resolution"].SetValue(texture.Size());
+            effect.Parameters["Offset"].SetValue(Main.screenPosition * 0.001f);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, effect, Main.GameViewMatrix.ZoomMatrix);
             spriteBatch.Draw(texture, Vector2.Zero, null, Colors[0], 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);

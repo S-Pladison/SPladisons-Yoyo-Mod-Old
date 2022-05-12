@@ -7,7 +7,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Primitives
 {
     public class PrimitiveStrip : IndexedPrimitiveData
     {
-        public List<Vector2> Points { get; private set; }
+        public List<Vector2> Points;
 
         // ...
 
@@ -46,16 +46,16 @@ namespace SPladisonsYoyoMod.Common.Drawing.Primitives
             var progress = 0f;
             (Color color, Vector2 normal) = GetProgressVariables(0);
 
-            AddVertex(Points[0] - normal, color, new Vector2(0, 0));
-            AddVertex(Points[0] + normal, color, new Vector2(0, 1));
+            AddVertex(Points[0] + normal, color, new Vector2(0, 0));
+            AddVertex(Points[0] - normal, color, new Vector2(0, 1));
 
             for (int i = 1; i < Points.Count; i++)
             {
                 progress += distances[i - 1] / length;
                 (color, normal) = GetProgressVariables(progress, i);
 
-                AddVertex(Points[i] - normal, color, new Vector2(progress, 0));
-                AddVertex(Points[i] + normal, color, new Vector2(progress, 1));
+                AddVertex(Points[i] + normal, color, new Vector2(progress, 0));
+                AddVertex(Points[i] - normal, color, new Vector2(progress, 1));
 
                 var i2 = i * 2 - 2;
                 Indeces.AddRange(new short[]

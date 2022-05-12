@@ -87,7 +87,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Primitives
             var blendState = device.BlendState;
 
             // ... I don't like it at all
-            device.RasterizerState.CullMode = CullMode.None;
+            device.RasterizerState.CullMode = Main.Rasterizer.CullMode;
             device.BlendState = key.Additive ? BlendState.Additive : BlendState.AlphaBlend;
 
             foreach (var data in dataCache[key])

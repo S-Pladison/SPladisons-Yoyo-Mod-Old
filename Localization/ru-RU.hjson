@@ -3,7 +3,6 @@ Mods: {
 		ItemName: {
 			// Аксессуары
 			Bearing: Подшипник
-			CandyCane: Карамельная трость
 			DesecratedDice: Оскверненная игральная кость
 			EternalConfusion: Вечное замешательство
 			FlamingFlower: Пылающий цветок
@@ -20,6 +19,7 @@ Mods: {
 			Blackhole: Черная дыра
 			BloomingDeath: Цветущая смерть
 			EmbraceOfRain: Объятья дождя
+			Ignis: Игнис
 			Indefinite: Неопределенный
 			MyocardialInfarction: Инфаркт миокарда
 			OutburstingGust: Шквальный ветер
@@ -37,7 +37,6 @@ Mods: {
 		ItemTooltip: {
 			// Аксессуары
 			Bearing: Увеличивает время полета йо-йо на 16%
-			CandyCane: ...
 			DesecratedDice: ...
 			EternalConfusion: ...
 			FlamingFlower: ...
@@ -81,8 +80,16 @@ Mods: {
 				'''
 			BloomingDeath: Йо-йо и его нить отравляют врагов
 			EmbraceOfRain: ...
+			Ignis: Оставляет за собой опасный удушающий дым
 			Indefinite: ...
-			MyocardialInfarction: ...
+			MyocardialInfarction:
+				'''
+				Очаровывает ближайших врагов
+				Попадение по очарованному врагу также наносит урон остальным
+				|?|Изменяет эффект у «Перчатка для йо-йо»:
+				• Увеличивает максимальное количество очарованных на 2
+				• Вы получаете дополнительные 0.5 HP в секунду за каждого зачарованного врага
+				'''
 			OutburstingGust: ...
 			PaperYoyo: 
 				'''
@@ -128,10 +135,34 @@ Mods: {
 			ImprovedPoisoning: Улучшенное отравление
 		}
 
-		BuffDescription: {
+		MapObject: {
+			FlamingFlowerTile: Пылающий цветок
+			SpaceChestTile: Космический сундук
+			SpaceChestTile_Locked: Запертый космический сундук
+		}
+
+		Containers: {
+			SpaceChestTile: Космический сундук
 		}
 
 		GameUI: {
+			// НИПы
+			NurseButton_1: Подарок
+			NurseButton_2: Подарить
+			NurseText_1:
+				'''
+				Чем могу помочь?
+
+				(Если хотите, можете подарить данный предмет) 
+				'''
+			NurseText_2:
+				'''
+				Ах, не стоило... Спасибо. Взамен возьми вот это. Думаю, тебе он пригодится больше, чем мне.
+
+				(Откуда у нее йо-йо?..) 
+				'''
+
+			// Разное
 			FlamingFlowerMapIcon: Странный цветок
 		}
 

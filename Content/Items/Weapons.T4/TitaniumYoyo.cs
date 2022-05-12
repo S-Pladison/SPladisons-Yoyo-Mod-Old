@@ -47,7 +47,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override bool PreDraw(ref Color lightColor)
         {
             var texture = TextureAssets.Projectile[Type];
-            var drawPos = GetDrawPosition();
+            var drawPos = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
 
             for (int k = 1; k < Projectile.oldPos.Length; k++)
             {

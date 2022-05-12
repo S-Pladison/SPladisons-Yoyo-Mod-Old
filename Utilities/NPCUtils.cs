@@ -31,6 +31,7 @@ namespace SPladisonsYoyoMod.Utilities
             }
 
             result.Sort((x, y) => x.distance.CompareTo(y.distance));
+
             return result;
         }
     }

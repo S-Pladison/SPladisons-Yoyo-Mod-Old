@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
 using System;
 using System.Reflection;
@@ -14,6 +15,12 @@ namespace SPladisonsYoyoMod
 
         // ...
 
+        public static void BeginProjectileSpriteBatch(SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState blendState = null, Effect effect = null, Matrix? matrix = null, bool end = true)
+        {
+            if (end) Main.spriteBatch.End();
+            Main.spriteBatch.Begin(sortMode, blendState ?? BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, effect, matrix ?? Main.GameViewMatrix.TransformationMatrix);
+        }
+
         public static Vector2 GetYoyoStringDrawOffset()
         {
             return Vector2.UnitY * (ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle ? -4 : 0);
@@ -25,12 +32,11 @@ namespace SPladisonsYoyoMod
 
             Player owner = Main.player[projectile.owner];
             Vector2 vector = startPos;
-
             float num2 = projectile.Center.X - vector.X;
-            float num3 = projectile.Center.Y - vector.Y;
-            float num4 = (float)Math.Atan2(num3, num2) - 1.57f;
-
+            float num3 = projectile.Center.Y - vector.Y + projectile.gfxOffY;
+            float num4;
             bool flag = true;
+
             if (num2 == 0f && num3 == 0f)
             {
                 flag = false;
@@ -48,11 +54,13 @@ namespace SPladisonsYoyoMod
             }
 
             int counter = 0;
+
             while (flag)
             {
                 float num7 = 12f;
                 float num8 = (float)Math.Sqrt(num2 * num2 + num3 * num3);
                 float num9 = num8;
+
                 if (float.IsNaN(num8) || float.IsNaN(num9))
                 {
                     flag = false;
@@ -77,18 +85,22 @@ namespace SPladisonsYoyoMod
                 {
                     float num10 = 0.3f;
                     float num11 = Math.Abs(projectile.velocity.X) + Math.Abs(projectile.velocity.Y);
+
                     if (num11 > 16f) num11 = 16f;
 
                     num11 = 1f - num11 / 16f;
                     num10 *= num11;
                     num11 = num9 / 80f;
+
                     if (num11 > 1f) num11 = 1f;
 
                     num10 *= num11;
+
                     if (num10 < 0f) num10 = 0f;
 
                     num10 *= num11;
                     num10 *= 0.5f;
+
                     if (num3 > 0f)
                     {
                         num3 *= 1f + num10;
@@ -97,10 +109,12 @@ namespace SPladisonsYoyoMod
                     else
                     {
                         num11 = Math.Abs(projectile.velocity.X) / 3f;
+
                         if (num11 > 1f) num11 = 1f;
 
                         num11 -= 0.5f;
                         num10 *= num11;
+
                         if (num10 > 0f) num10 *= 2f;
 
                         num3 *= 1f + num10;
