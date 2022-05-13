@@ -13,6 +13,8 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.WorldBuilding;
+using StructureHelper;
+using Terraria.DataStructures;
 
 namespace SPladisonsYoyoMod.Common
 {
@@ -28,21 +30,20 @@ namespace SPladisonsYoyoMod.Common
 
             if (index != -1)
             {
-                tasks.Insert(index + 1, new PassLegacy(Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest"), GenerateSpaceChest));
+                tasks.Insert(index + 1, new PassLegacy(Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest_1"), GenerateSpaceChest));
+            }
+
+            index = tasks.FindIndex(genpass => genpass.Name.Equals("Final Cleanup"));
+
+            if (index != -1)
+            {
+                tasks.Insert(index + 1, new PassLegacy(Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.FlamingFlower_1"), GenerateFlamingFlower));
             }
         }
 
         public override void PostWorldGen()
         {
             ChangeLootInChests();
-        }
-
-        public override void PostUpdateWorld()
-        {
-            if (Main.time == 0 && Main.dayTime)
-            {
-                UpdateFlamingFlower();
-            }
         }
 
         public override void ResetNearbyTileEffects()
@@ -60,21 +61,11 @@ namespace SPladisonsYoyoMod.Common
             FlamingFlowerPosition = tag.Get<Vector2>("flamingFlowerPosition").ToPoint();
         }
 
-        public override void NetSend(BinaryWriter writer)
-        {
-            writer.WriteVector2(FlamingFlowerPosition.ToVector2());
-        }
-
-        public override void NetReceive(BinaryReader reader)
-        {
-            FlamingFlowerPosition = reader.ReadVector2().ToPoint();
-        }
-
         // ...
 
-        public static void ResetFlamingFlowerPosition()
+        public static void SetFlamingFlowerPosition(Point? position = null)
         {
-            FlamingFlowerPosition = Point.Zero;
+            FlamingFlowerPosition = position ?? Point.Zero;
         }
 
         // ...
@@ -117,71 +108,46 @@ namespace SPladisonsYoyoMod.Common
             chest.item = items.ToArray();
         }
 
-        private static void UpdateFlamingFlower()
+        private static void GenerateFlamingFlower(GenerationProgress progress, GameConfiguration _)
         {
-            if (FlamingFlowerPosition != Point.Zero)
-            {
-                var tile = Main.tile[FlamingFlowerPosition.X, FlamingFlowerPosition.Y];
+            progress.Message = Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.FlamingFlower_2");
 
-                if (tile == null || tile.TileType != ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>())
-                {
-                    FlamingFlowerPosition = Point.Zero;
-                }
-            }
-
-            if (FlamingFlowerPosition == Point.Zero && !SearchFlamingFlower())
-            {
-                GenerateFlamingFlower();
-            }
-        }
-
-        private static bool SearchFlamingFlower()
-        {
-            for (int i = 200; i < Main.maxTilesX - 200; i++)
-            {
-                for (int j = Main.maxTilesY - 355; j < Main.maxTilesY - 195; j++)
-                {
-                    var tile = Main.tile[i, j];
-
-                    if (tile.TileType == ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>() && tile.TileFrameX == 0 && tile.TileFrameY == 0)
-                    {
-                        FlamingFlowerPosition = new Point(i, j);
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        private static void GenerateFlamingFlower()
-        {
             int t = 0;
+
+            bool SolidOrSlopedStone(int x, int y) => WorldGen.InWorld(x, y) && WorldGen.SolidOrSlopedTile(x, y) && Main.tile[x, y].TileType == TileID.Stone;
+            bool HasTileOrLiquid(int x, int y) => !WorldGen.InWorld(x, y) || (Main.tile[x, y].HasTile || Main.tile[x, y - 1].LiquidAmount > 0);
 
             while (t < 1000)
             {
                 int x = Main.rand.Next(200, Main.maxTilesX - 200);
                 int y = Main.rand.Next(Main.maxTilesY - 350, Main.maxTilesY - 200);
 
-                if (WorldGen.SolidOrSlopedTile(x, y) && Main.tile[x, y].TileType == TileID.Stone && WorldGen.SolidOrSlopedTile(x + 1, y) && Main.tile[x + 1, y].TileType == TileID.Stone)
-                {
-                    if (Main.tile[x - 1, y - 3].HasTile || Main.tile[x + 2, y - 3].HasTile) continue;
-                    if (WorldGen.SolidOrSlopedTile(x, y - 1) || WorldGen.SolidOrSlopedTile(x + 1, y - 1) || WorldGen.SolidOrSlopedTile(x, y - 2) || WorldGen.SolidOrSlopedTile(x + 1, y - 2)) continue;
-                    if (Main.tile[x, y - 1].LiquidAmount > 0 || Main.tile[x + 1, y - 1].LiquidAmount > 0 || Main.tile[x, y - 2].LiquidAmount > 0 || Main.tile[x + 1, y - 2].LiquidAmount > 0) continue;
-                    if (!WorldGen.SolidOrSlopedTile(x, y + 1) || Main.tile[x, y + 1].TileType != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 1, y + 1) || Main.tile[x + 1, y + 1].TileType != TileID.Stone) continue;
-                    if (!WorldGen.SolidOrSlopedTile(x - 1, y) || Main.tile[x - 1, y].TileType != TileID.Stone || !WorldGen.SolidOrSlopedTile(x + 2, y) || Main.tile[x + 2, y].TileType != TileID.Stone) continue;
+                // Blocks under flower
+                if (!SolidOrSlopedStone(x, y) || !SolidOrSlopedStone(x + 1, y + 1)) continue;
 
-                    WorldGen.PlaceTile(x, y - 1, (ushort)ModContent.TileType<Content.Items.Accessories.FlamingFlowerTile>());
+                // Place of the supposed position of the flower
+                if (HasTileOrLiquid(x, y - 2) || HasTileOrLiquid(x + 1, y - 1)) continue;
+
+                // Corners
+                if (HasTileOrLiquid(x - 2, y - 7) || HasTileOrLiquid(x + 3, y - 7)) continue;
+
+                // Left and right sides
+                if (HasTileOrLiquid(x - 4, y - 1) || HasTileOrLiquid(x + 5, y - 1)) continue;
+
+                // Main.tile[x, y] - first tile under flower
+                var position = new Point16(x - 5, y - 10);
+
+                if (Generator.GenerateMultistructureRandom("Assets/Structures/FlamingFlower", position, SPladisonsYoyoMod.Instance))
+                {
                     FlamingFlowerPosition = new Point(x, y - 1);
                     return;
                 }
             }
         }
 
-        private static void GenerateSpaceChest(GenerationProgress progress, GameConfiguration configuration)
+        private static void GenerateSpaceChest(GenerationProgress progress, GameConfiguration _)
         {
-            progress.Message = Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest_0");
+            progress.Message = Language.GetTextValue("Mods.SPladisonsYoyoMod.WorldGen.SpaceChest_2");
 
             bool flag = false;
 

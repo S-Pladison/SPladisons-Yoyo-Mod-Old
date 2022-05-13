@@ -163,7 +163,7 @@ Mods: {
 				'''
 
 			// Разное
-			FlamingFlowerMapIcon: Странный цветок
+			FlamingFlowerMapIcon: Пылающий цветок
 		}
 
 		Config: {
@@ -172,8 +172,10 @@ Mods: {
 		}
 
 		WorldGen: {
-			SpaceChest: S-Pladison's Yoyo Mod: Космический сундук
-			SpaceChest_0: Добавление кусочка космоса в подземелье...
+			SpaceChest_1: S-Pladison's Yoyo Mod: Космический сундук
+			SpaceChest_2: Добавление кусочка космоса в подземелье...
+			FlamingFlower_1: S-Pladison's Yoyo Mod: Пылающий цветок
+			FlamingFlower_2: Создаем цветок, который давно бы умер, если бы игра была реалистичной
 		}
 
 		Bestiary_ItemDropConditions: {

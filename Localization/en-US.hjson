@@ -175,7 +175,7 @@ Mods: {
 				'''
 
 			// Misc
-			FlamingFlowerMapIcon: Strange Flower
+			FlamingFlowerMapIcon: Flaming Flower
 		}
 
 		Config: {
@@ -184,8 +184,10 @@ Mods: {
 		}
 
 		WorldGen: {
-			SpaceChest: S-Pladison's Yoyo Mod: Space Chest
-			SpaceChest_0: Adding a piece of space to the dungeon...
+			SpaceChest_1: S-Pladison's Yoyo Mod: Space Chest
+			SpaceChest_2: Adding a piece of space to the dungeon...
+			FlamingFlower_1: S-Pladison's Yoyo Mod: Flaming Flower
+			FlamingFlower_2: Creating a flower that would have died long ago if the game were realistic
 		}
 
 		Bestiary_ItemDropConditions: {
