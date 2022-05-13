@@ -65,7 +65,7 @@ Mods: {
 			SpaceKey: Unlocks a Space Chest in the dungeon
 
 			// Weapons
-			AdamantiteYoyo: Leaves behind dangerous metal dust
+			AdamantiteYoyo: Damage dealt is increased by 33% if you are fighting with less than 3 enemies
 			BellowingThunder:
 				'''
 				On hit, gives a {0} chance to strike the enemy with lightning
@@ -84,7 +84,7 @@ Mods: {
 			Indefinite: ...
 			MyocardialInfarction:
 				'''
-				Charms nearest enemies
+				Charms 4 nearest enemies
 				Hitting a charmed enemy also deals damage to others
 				|?|Changes the effect of «Yoyo Glove»:
 				• Increases the maximum amount of charmed enemies by 2

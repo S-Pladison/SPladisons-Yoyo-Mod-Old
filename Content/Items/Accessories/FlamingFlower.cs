@@ -69,6 +69,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
         public override bool IsSceneEffectActive(Player player) => player.GetPladPlayer().ZoneFlamingFlower;
+
         public override void SpecialVisuals(Player player)
         {
             if (!Main.UseHeatDistortion) return;

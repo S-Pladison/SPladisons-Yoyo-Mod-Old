@@ -4,3 +4,4 @@ version = 1.0.0.0
 hideCode = true
 hideResources = false
 buildIgnore = Assets\Effects\Compiler\*
+dllReferences = StructureHelper

@@ -104,7 +104,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var distance = target.distance;
                 var vector = Projectile.Center - npc.Center;
 
-                vector *= 3f / distance * 7f;
+                vector *= 3f / distance * 5f;
 
                 npc.velocity = Vector2.Lerp(vector * (1 - distance / currentRadius), npc.velocity, 0.5f);
                 npc.netUpdate = true;
@@ -131,7 +131,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (!YoyoGloveActivated) return;
 
             var vector = Vector2.Normalize(Projectile.Center - target.Center);
-            var scaleFactor = 12f; // Vanilla: 16f
+            var scaleFactor = 15f; // Vanilla: 16f
 
             Projectile.velocity -= vector * scaleFactor;
             Projectile.velocity *= -2f;
