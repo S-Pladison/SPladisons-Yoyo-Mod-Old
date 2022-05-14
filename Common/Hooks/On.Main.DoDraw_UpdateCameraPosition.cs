@@ -8,7 +8,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
         {
             orig();
 
-            if (Main.gameMenu || Main.dedServ) return;
+            if (Main.gameMenu) return;
 
             foreach (var proj in Main.projectile)
             {

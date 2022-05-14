@@ -1,4 +1,5 @@
 ﻿using MonoMod.RuntimeDetour.HookGen;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Hooks
@@ -7,6 +8,12 @@ namespace SPladisonsYoyoMod.Common.Hooks
     {
         public void Load(Mod mod)
         {
+            IL.Terraria.Player.Counterweight += IL_Player_Counterweight;
+            IL.Terraria.Projectile.AI_099_1 += IL_Projectile_AI_099_1;
+            IL.Terraria.Projectile.AI_099_2 += IL_Projectile_AI_099_2;
+
+            if (Main.dedServ) return;
+
             On.Terraria.Main.DoDraw_Tiles_Solid += On_Main_DoDraw_Tiles_Solid;
             On.Terraria.Main.DoDraw_WallsAndBlacks += On_Main_DoDraw_WallsAndBlacks;
             On.Terraria.Main.DrawDust += On_Main_DrawDust;
@@ -16,13 +23,16 @@ namespace SPladisonsYoyoMod.Common.Hooks
             HookEndpointManager.Add<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 
             IL.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += IL_ItemSlot_Draw;
-            IL.Terraria.Player.Counterweight += IL_Player_Counterweight;
-            IL.Terraria.Projectile.AI_099_1 += IL_Projectile_AI_099_1;
-            IL.Terraria.Projectile.AI_099_2 += IL_Projectile_AI_099_2;
         }
 
         public void Unload()
         {
+            IL.Terraria.Player.Counterweight -= IL_Player_Counterweight;
+            IL.Terraria.Projectile.AI_099_1 -= IL_Projectile_AI_099_1;
+            IL.Terraria.Projectile.AI_099_2 -= IL_Projectile_AI_099_2;
+
+            if (Main.dedServ) return;
+
             On.Terraria.Main.DoDraw_Tiles_Solid -= On_Main_DoDraw_Tiles_Solid;
             On.Terraria.Main.DoDraw_WallsAndBlacks -= On_Main_DoDraw_WallsAndBlacks;
             On.Terraria.Main.DrawDust -= On_Main_DrawDust;
@@ -32,9 +42,6 @@ namespace SPladisonsYoyoMod.Common.Hooks
             HookEndpointManager.Remove<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 
             IL.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color -= IL_ItemSlot_Draw;
-            IL.Terraria.Player.Counterweight -= IL_Player_Counterweight;
-            IL.Terraria.Projectile.AI_099_1 -= IL_Projectile_AI_099_1;
-            IL.Terraria.Projectile.AI_099_2 -= IL_Projectile_AI_099_2;
         }
     }
 }
