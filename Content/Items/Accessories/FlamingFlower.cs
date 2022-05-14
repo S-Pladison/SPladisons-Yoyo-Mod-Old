@@ -129,9 +129,9 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         {
             if (WorldGen.CanKillTile(i, j))
             {
-                WorldGen.KillTile(i, j, false, false, false);
+                WorldGen.KillTile(i, j);
 
-                if (Main.netMode == NetmodeID.Server)
+                if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
                     NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 0, i, j);
                 }
@@ -173,8 +173,8 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
                 }
 
                 if (Main.netMode != NetmodeID.MultiplayerClient) return;
-                
-                NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 0, x, y);
+
+                NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 1, x, y, tile.TileType, tile.TileFrameX, tile.TileFrameY);
             }
 
             UpdateFrameX(left, top);
