@@ -95,6 +95,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 predicate: npc =>
                     npc.CanBeChasedBy(Projectile, false) &&
                     !npc.boss &&
+                    !NPCID.Sets.ShouldBeCountedAsBoss[npc.type] &&
                     Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height)
             );
 
