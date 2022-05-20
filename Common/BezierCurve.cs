@@ -23,8 +23,8 @@ namespace SPladisonsYoyoMod.Common
             this.points = new List<Vector2>(points);
         }
 
-        public Vector2 GetPoint(float t) => GetPoint(t, points);
-        public Vector2 GetPoints(int amount) => GetPoints(amount);
+        public Vector2 GetPoint(float t) => BezierCurve.GetPoint(t, points);
+        public List<Vector2> GetPoints(int amount) => BezierCurve.GetPoints(amount, points);
 
         // ...
 
