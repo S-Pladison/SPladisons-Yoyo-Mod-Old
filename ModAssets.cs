@@ -11,6 +11,7 @@ namespace SPladisonsYoyoMod
         public const string EffectsPath = Path + "Effects/";
         public const string StructuresPath = Path + "Structures/";
         public const string TexturesPath = Path + "Textures/";
+        public const string SoundsPath = Path + "Sounds/";
 
         public const string ItemsPath = TexturesPath + "Items/";
         public const string ProjectilesPath = TexturesPath + "Projectiles/";

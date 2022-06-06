@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using SPladisonsYoyoMod.Content.Items.Misc;
 using SPladisonsYoyoMod.Content.Items.Weapons;
+using StructureHelper;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.IO;
@@ -13,8 +14,6 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.WorldBuilding;
-using StructureHelper;
-using Terraria.DataStructures;
 
 namespace SPladisonsYoyoMod.Common
 {

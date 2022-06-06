@@ -36,6 +36,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Lighting.AddLight(Item.Center, Color.White.ToVector3() * 0.2f * Item.scale);
         }
 
+        public override void HoldItem(Player player)
+        {
+            // Generator.GenerateStructure("Assets/Structures/Test", Main.MouseWorld.ToTileCoordinates16(), Mod);
+        }
+
         public override void AddRecipes()
         {
             var recipe = CreateRecipe();
@@ -51,10 +56,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class ResidualLightProjectile : YoyoProjectile, IPostUpdateCameraPosition
     {
-        public static Effect ResidualLightEffect { get; private set; }
-        private static readonly float _radius = 16 * 15;
+        public static Effect TrailEffect { get; private set; }
+        public static float TrailTextureWidth { get; private set; }
+
+        // ...
 
         private PrimitiveStrip trail;
+        private int timer;
 
         // ...
 
@@ -62,65 +70,71 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override string Texture => ModAssets.ProjectilesPath + nameof(ResidualLightProjectile);
         public override bool IsSoloYoyo() => true;
-        public override void Unload() => ResidualLightEffect = null;
+        public override void Unload() => TrailEffect = null;
 
         public override void Load()
         {
             if (Main.dedServ) return;
 
-            ResidualLightEffect = ModAssets.GetEffect("ResidualLight", AssetRequestMode.ImmediateLoad).Value;
-            ResidualLightEffect.Parameters["texture0"].SetValue(ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad).Value);
-            ResidualLightEffect.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(20, AssetRequestMode.ImmediateLoad).Value);
+            var texture = ModAssets.GetExtraTexture(36, AssetRequestMode.ImmediateLoad);
+            TrailEffect = ModAssets.GetEffect("ResidualLightTrail", AssetRequestMode.ImmediateLoad).Value;
+            TrailEffect.Parameters["Texture0"].SetValue(texture.Value);
+            TrailTextureWidth = texture.Width();
+
+            texture = ModAssets.GetExtraTexture(27, AssetRequestMode.ImmediateLoad);
+            TrailEffect.Parameters["Texture1"].SetValue(texture.Value);
+
+            texture = ModAssets.GetExtraTexture(38, AssetRequestMode.ImmediateLoad);
+            TrailEffect.Parameters["Texture2"].SetValue(texture.Value);
+
+            texture = ModAssets.GetExtraTexture(37, AssetRequestMode.ImmediateLoad);
+            TrailEffect.Parameters["Texture3"].SetValue(texture.Value);
+
+            texture = ModAssets.GetExtraTexture(39, AssetRequestMode.ImmediateLoad);
+            TrailEffect.Parameters["Texture4"].SetValue(texture.Value);
+
+            /*var texture = ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad);
+            TrailEffect = ModAssets.GetEffect("ResidualLightTrail", AssetRequestMode.ImmediateLoad).Value;
+            TrailEffect.Parameters["Texture0"].SetValue(texture.Value);
+
+            texture = ModAssets.GetExtraTexture(20, AssetRequestMode.ImmediateLoad);
+            TrailEffect.Parameters["Texture1"].SetValue(texture.Value);
+            TrailTextureWidth = texture.Width();
+
+            texture = ModAssets.GetExtraTexture(7, AssetRequestMode.ImmediateLoad);
+            TrailEffect.Parameters["Texture2"].SetValue(texture.Value);*/
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            /*PrimitiveTrail.Create(Projectile, t =>
-            {
-                t.SetColor(new DefaultTrailColor(color: new Color(255, 115, 250), disappearOverTime: true));
-                t.SetTip(new RoundedTrailTip(smoothness: 20));
-                t.SetWidth(p => 25 * Math.Min(Vector2.Distance(Projectile.position, Projectile.oldPosition) * 0.075f, 1) * (1 - p * 0.5f));
-                t.SetUpdate(new BoundedTrailUpdate(points: 10, length: 16 * 3));
-                t.SetEffectTexture(ModAssets.GetExtraTexture(11).Value);
-                t.SetDissolveSpeed(0.35f);
-            });
-
-            PrimitiveTrail.Create(Projectile, t =>
-            {
-                t.SetColor(new DefaultTrailColor(color: new Color(230, 230, 230, 230), disappearOverTime: true));
-                t.SetTip(new TriangularTrailTip(length: 3));
-                t.SetWidth(new DefaultTrailWidth(width: 20));
-                t.SetUpdate(new BoundedTrailUpdate(points: 20, length: 16 * 10));
-                t.SetEffect(ResidualLightEffect);
-                t.SetDissolveSpeed(0.35f);
-            });*/
-
-            trail = new PrimitiveStrip(p => 20, p => new Color(230, 230, 230, 230) * (1 - p), ResidualLightEffect);
-            trail.OnUpdateEffectParameters += e => e.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
+            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, TrailEffect);
+            trail.OnUpdateEffectParameters += UpdateTrailEffect;
         }
 
         public override void AI()
         {
             Lighting.AddLight(Projectile.Center, Color.White.ToVector3() * 0.2f * Projectile.scale);
 
+            timer++;
+
             Projectile.rotation -= 0.2f;
 
-            if (Projectile.velocity.Length() >= 1f && Main.rand.Next((int)(Projectile.velocity.Length() * 0.5f)) > 1)
+            /*if (Projectile.velocity.Length() >= 1f && Main.rand.Next((int)(Projectile.velocity.Length() * 0.5f)) > 1)
             {
                 var dust = Main.dust[Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.VenomStaff, 0, 0, 220, default, Main.rand.NextFloat(1f, 1.5f))];
                 dust.noLight = true;
                 dust.noGravity = true;
-            }
+            }*/
         }
 
         public override void ModifyYoyoMaximumRange(ref float maxRange)
         {
-            if (!Main.dayTime) maxRange += 0.2f;
+            //if (!Main.dayTime) maxRange += 0.2f;
         }
 
         public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
         {
-            var projType = ModContent.ProjectileType<ResidualLightHitProjectile>();
+            /*var projType = ModContent.ProjectileType<ResidualLightHitProjectile>();
             Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, projType, 0, 0, Projectile.owner, 1f, 20);
 
             for (int i = 0; i < 7; i++)
@@ -167,34 +181,23 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     t.SetWidth(new DefaultTrailWidth(width: 10));
                     t.SetUpdate(new BoundedTrailUpdate(points: 10, length: 16 * 15));
                     t.SetEffectTexture(ModAssets.GetExtraTexture(9).Value);
-                });*/
-            }
+                });
+            }*/
         }
 
         public override Color? GetAlpha(Color lightColor) => Color.White;
 
+        private void UpdateTrailEffect(Effect effect)
+        {
+            effect.Parameters["Time"].SetValue(-timer * 0.05f);
+            effect.Parameters["Width"].SetValue(trail.Points.TotalDistance() / TrailTextureWidth * 3f);
+        }
+
+        private float GetTrailWidth(float progress) => 25f * (1 - progress * 0.8f);
+        private Color GetTrailColor(float progress) => new Color(230, 230, 230, 230) * (1 - progress) * ReturningProgress;
+
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            /*PrimitiveTrail.Create(Projectile, t =>
-            {
-                t.SetColor(new DefaultTrailColor(color: new Color(255, 115, 250), disappearOverTime: true));
-                t.SetTip(new RoundedTrailTip(smoothness: 20));
-                t.SetWidth(p => 25 * Math.Min(Vector2.Distance(Projectile.position, Projectile.oldPosition) * 0.075f, 1) * (1 - p * 0.5f));
-                t.SetUpdate(new BoundedTrailUpdate(points: 10, length: 16 * 3));
-                t.SetEffectTexture(ModAssets.GetExtraTexture(11).Value);
-                t.SetDissolveSpeed(0.35f);
-            });
-
-            PrimitiveTrail.Create(Projectile, t =>
-            {
-                t.SetColor(new DefaultTrailColor(color: new Color(230, 230, 230, 230), disappearOverTime: true));
-                t.SetTip(new TriangularTrailTip(length: 3));
-                t.SetWidth(new DefaultTrailWidth(width: 20));
-                t.SetUpdate(new BoundedTrailUpdate(points: 20, length: 16 * 10));
-                t.SetEffect(ResidualLightEffect);
-                t.SetDissolveSpeed(0.35f);
-            });*/
-
             trail.UpdatePointsAsSimpleTrail(Projectile.Center, 20, 16 * 10);
             PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.None, trail);
         }

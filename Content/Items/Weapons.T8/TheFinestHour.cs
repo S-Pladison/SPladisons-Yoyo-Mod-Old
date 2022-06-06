@@ -15,6 +15,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             Item.damage = 200;
             Item.knockBack = 4.5f;
+            Item.autoReuse = true;
 
             Item.shoot = ModContent.ProjectileType<TheFinestHourProjectile>();
 

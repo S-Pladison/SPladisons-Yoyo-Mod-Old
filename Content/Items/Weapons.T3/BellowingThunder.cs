@@ -271,7 +271,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             {
                 var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
                 var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3);
-                Particle.NewParticle(ParticleSystem.ParticleType<BellowingThunderSmokeParticle>(), position, velocity, Color.White);
+                Particle.NewParticle(ParticleSystem.ParticleType<BellowingThunderSmokeParticle>(), position, velocity);
             }
 
             // SoundEngine.PlaySound(SoundLoader.GetSoundSlot(Mod, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);

@@ -27,10 +27,10 @@ namespace SPladisonsYoyoMod.Common.Drawing.PlayerDrawLayers
 
             if (!player.dead && modPlayer.eternalConfusionVisible)
             {
-                Vector2 position = new((int)(drawInfo.Position.X - Main.screenPosition.X - player.bodyFrame.Width / 2 + player.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + player.height - player.bodyFrame.Height + 4f));
+                Vector2 position = new((int)(drawInfo.Position.X - Main.screenPosition.X - player.bodyFrame.Width / 2 + player.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + player.height - player.bodyFrame.Height));
                 position += player.headPosition + drawInfo.headVect + Main.OffsetsPlayerHeadgear[player.bodyFrame.Y / player.bodyFrame.Height] * player.gravDir;
 
-                if (player.gravDir == -1f) position.Y += 12f;
+                //if (player.gravDir == -1f) position.Y += 12f;
 
                 float time = Main.GlobalTimeWrappedHourly * 2f;
                 List<float> values = new()
@@ -44,7 +44,8 @@ namespace SPladisonsYoyoMod.Common.Drawing.PlayerDrawLayers
                 {
                     var num = values.Aggregate((x, y) => Math.Abs(x - MathHelper.Pi) < Math.Abs(y - MathHelper.Pi) ? x : y);
                     var num2 = 0.7f + Math.Abs(MathHelper.Pi - num) * 0.15f;
-                    var starPosition = position + new Vector2((float)Math.Sin(num) * 15f, -28 + (float)Math.Cos(num) * 3f).RotatedBy(player.headRotation) * player.Directions;
+                    var rotProgress = num * player.direction * player.gravDir;
+                    var starPosition = position + new Vector2((float)Math.Sin(rotProgress) * 15f, (float)Math.Cos(rotProgress) * 3f).RotatedBy(player.headRotation) * player.gravDir;
 
                     var item = new DrawData
                     (

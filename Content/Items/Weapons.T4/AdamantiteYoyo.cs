@@ -59,6 +59,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             TrailEffect.Parameters["Texture0"].SetValue(ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad).Value);
         }
 
+        public override void Unload()
+        {
+            TrailEffect = null;
+        }
+
         public override void OnSpawn(IEntitySource source) => InitTrails();
 
         public override void AI()

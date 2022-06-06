@@ -21,7 +21,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
 
         public override void Load()
         {
-            Mod.AddEquipTexture(this, EquipType.Head, Texture + "_Head");
+            EquipLoader.AddEquipTexture(Mod, Texture + "_Head", EquipType.Head, this);
         }
 
         public override void SetDefaults()
@@ -108,7 +108,7 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
             AddMapEntry(new Color(238, 145, 105), CreateMapEntryName());
 
             DustType = ModContent.DustType<Dusts.VaporDust>();
-            SoundType = SoundID.Grass;
+            HitSound = SoundID.Grass;
         }
 
         public override bool CanKillTile(int i, int j, ref bool blockDamaged) => IsDousedWithWater(i, j);

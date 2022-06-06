@@ -21,9 +21,9 @@ Mods: {
 			EmbraceOfRain: Embrace of Rain
 			Ignis: Ignis
 			Indefinite: Indefinite
+			MetaBlast: Meta-Blast
 			MyocardialInfarction: Myocardial Infarction
 			OutburstingGust: Outbursting Gust
-			PaperYoyo: Paper Yoyo
 			PrototypeF34: Prototype F-34
 			ResidualLight: Residual Light
 			SoulFilledFlame: Soul-Filled Flame
@@ -54,7 +54,7 @@ Mods: {
 				Increases yoyo range by 4 tiles
 				Slightly increases the string length of counterweights
 				'''
-			YoYoGlove: Some yoyos have different effect
+			YoyoGlove: Allows to use the full potential of yoyo
 
 			// Misc
 			StrangeDrink:
@@ -74,30 +74,27 @@ Mods: {
 			Blackhole:
 				'''
 				Pulls enemies to itself
-				|?|Changes the effect of «Yoyo Glove»:
-				• Increases pull radius by 25% and damage by 20%
-				• Almost completely removes the bounce from enemies
+				[YG]Increases pull radius by 25% and damage by 20%
+				[YG]Almost completely removes the bounce from enemies
 				'''
 			BloomingDeath: Yoyo and its string poison enemies
 			EmbraceOfRain: ...
 			Ignis: Leaves behind dangerous suffocating smoke
 			Indefinite: ...
+			MetaBlast: ...
 			MyocardialInfarction:
 				'''
 				Charms 4 nearest enemies
 				Hitting a charmed enemy also deals damage to others
-				|?|Changes the effect of «Yoyo Glove»:
-				• Increases the maximum amount of charmed enemies by 2
-				• You gain additional 0.5 HP regeneration per second for every charmed enemy
+				[YG]Increases the maximum amount of charmed enemies by 2
+				[YG]You gain additional 0.5 HP regeneration per second for every charmed enemy
 				'''
 			OutburstingGust: ...
-			PaperYoyo: ...
 			PrototypeF34: ...
 			ResidualLight:
 				'''
 				At night, the string length is increased by 20%
-				|?|Changes the effect of «Yoyo Glove»:
-				• On hit, triggers bursts of light
+				[YG]On hit, triggers bursts of light
 				'''
 			SoulFilledFlame: ...
 			Stable: ...
@@ -116,6 +113,8 @@ Mods: {
 
 			// ...
 			EternalConfusionDye: Stars cannot emit light if a dye is equipped
+			YoyoGloveInfo: Additional properties from «Yoyo Glove»:
+			YoyoGloveVanillaDescription: Allows the use of two yoyos at once
 		}
 
 		ProjectileName: {
@@ -129,9 +128,9 @@ Mods: {
 			IgnisProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Ignis}"
 			IgnisSmokeProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Ignis}"
 			IndefiniteProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.Indefinite}"
+			MetaBlastProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.MetaBlast}"
 			MyocardialInfarctionProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.MyocardialInfarction}"
 			OutburstingGustProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.OutburstingGust}"
-			PaperYoyoProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.PaperYoyo}"
 			PrototypeF34Projectile: "{$Mods.SPladisonsYoyoMod.ItemName.PrototypeF34}"
 			ResidualLightProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.ResidualLight}"
 			ResidualLightHitProjectile: "{$Mods.SPladisonsYoyoMod.ItemName.ResidualLight}"
@@ -181,6 +180,8 @@ Mods: {
 		Config: {
 			Misc: Misc
 			YoyoCustomUseStyle: Custom yoyo use style
+			ShowYoyoGloveStandardDescription: Show tooltip line: "‣ Allows the use of two yoyos at once"
+			ShowYoyoGloveStandardDescription_Tooltip: This line is automatically visible on all vanilla and modded yoyos when Yoyo Glove is equipped
 		}
 
 		WorldGen: {

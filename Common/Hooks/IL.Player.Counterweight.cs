@@ -1,5 +1,4 @@
 ﻿using MonoMod.Cil;
-using SPladisonsYoyoMod.Content.Items;
 using System;
 using Terraria;
 using static Mono.Cecil.Cil.OpCodes;
@@ -40,7 +39,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
             c.EmitDelegate<Func<int, int>>((i) =>
             {
                 var proj = Main.projectile[i];
-                return (proj.ModProjectile is YoyoProjectile yoyo && yoyo.IsSoloYoyo() && Main.player[proj.owner].yoyoGlove).ToInt();
+                return (SPladisonsYoyoMod.Sets.IsSoloYoyoProjectile[proj.type] && Main.player[proj.owner].yoyoGlove).ToInt();
             });
             c.Emit(Ldloc, num2Index);
             c.Emit(Add);

@@ -112,6 +112,8 @@ namespace SPladisonsYoyoMod.Content.Items
             ProjectileID.Sets.YoyosMaximumRange[Type] = maxRange;
             ProjectileID.Sets.YoyosTopSpeed[Type] = topSpeed;
 
+            SPladisonsYoyoMod.Sets.IsSoloYoyoProjectile[Type] = IsSoloYoyo();
+
             YoyoSetStaticDefaults();
         }
 

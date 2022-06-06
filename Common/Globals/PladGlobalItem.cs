@@ -27,14 +27,14 @@ namespace SPladisonsYoyoMod.Common.Globals
             switch (item.type)
             {
                 case ItemID.YoYoGlove:
-                    int index = GetTooltipsLastIndex(tooltips);
-                    if (index >= 0)
+                    var line = GetTooltipsLast(tooltips);
+                    if (line != null)
                     {
-                        tooltips.Insert(index + 1, new TooltipLine(Mod, "ModTooltip0", Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoYoGlove")));
+                        line.Text = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoyoGlove");
                     }
                     break;
                 case int type when type >= ItemID.RedString && type <= ItemID.BlackString:
-                    index = GetTooltipsLastIndex(tooltips);
+                    int index = GetTooltipsLastIndex(tooltips);
                     if (index >= 0)
                     {
                         tooltips.RemoveAt(index);
@@ -50,6 +50,12 @@ namespace SPladisonsYoyoMod.Common.Globals
             }
         }
 
-        private static int GetTooltipsLastIndex(List<TooltipLine> tooltips) => tooltips.FindLastIndex(i => i.Mod == "Terraria" && i.Name.StartsWith("Tooltip"));
+        // ...
+
+        private static TooltipLine GetTooltipsLast(List<TooltipLine> tooltips)
+            => tooltips.FindLast(i => i.Mod == "Terraria" && i.Name.StartsWith("Tooltip"));
+
+        private static int GetTooltipsLastIndex(List<TooltipLine> tooltips)
+            => tooltips.FindLastIndex(i => i.Mod == "Terraria" && i.Name.StartsWith("Tooltip"));
     }
 }

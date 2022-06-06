@@ -59,6 +59,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public static Effect TrailEffect { get; private set; }
         public static float TrailTextureWidth { get; private set; }
 
+        // ...
+
         private PrimitiveStrip trail;
         private int timer;
 
@@ -77,14 +79,15 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             TrailTextureWidth = texture.Width();
         }
 
+        public override void Unload()
+        {
+            TrailEffect = null;
+        }
+
         public override void OnSpawn(IEntitySource source)
         {
             trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, TrailEffect);
-            trail.OnUpdateEffectParameters += (Effect effect) =>
-            {
-                effect.Parameters["Time"].SetValue(-timer * 0.05f);
-                effect.Parameters["Width"].SetValue(trail.Points.TotalDistance() / TrailTextureWidth);
-            };
+            trail.OnUpdateEffectParameters += UpdateTrailEffect;
         }
 
         public override void AI()
@@ -129,6 +132,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             Main.EntitySpriteDraw(texture.Value, position, null, lightColor, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
 
             return false;
+        }
+
+        private void UpdateTrailEffect(Effect effect)
+        {
+            effect.Parameters["Time"].SetValue(-timer * 0.05f);
+            effect.Parameters["Width"].SetValue(trail.Points.TotalDistance() / TrailTextureWidth);
         }
 
         private float GetTrailWidth(float progress) => 28f * (1 - progress * 0.2f);

@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using SPladisonsYoyoMod.Common.Drawing.Particles;
+using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
@@ -15,6 +16,17 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 if (proj.active && proj.ModProjectile is IPostUpdateCameraPosition modProj)
                 {
                     modProj.PostUpdateCameraPosition();
+                }
+            }
+
+            foreach (var pair in ParticleSystem.particles)
+            {
+                foreach (var particle in pair.Value)
+                {
+                    if (particle is IPostUpdateCameraPosition obj)
+                    {
+                        obj.PostUpdateCameraPosition();
+                    }
                 }
             }
 

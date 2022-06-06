@@ -34,6 +34,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             Item.damage = 43;
             Item.knockBack = 2.5f;
+            Item.autoReuse = true;
 
             Item.shoot = ModContent.ProjectileType<BlackholeProjectile>();
 
@@ -64,6 +65,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             TrailEffect = ModAssets.GetEffect("BlackholeTrail", AssetRequestMode.ImmediateLoad).Value;
             TrailEffect.Parameters["Texture0"].SetValue(ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad).Value);
+        }
+
+        public override void Unload()
+        {
+            TrailEffect = null;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -186,15 +192,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         private List<IDrawOnRenderTarget> elems;
         private RenderTarget2D target;
         private Asset<Effect> spaceEffect;
-        private Asset<Texture2D> firstTexture;
-        private Asset<Texture2D> secondTexture;
 
         // ...
 
         public static void AddElement(IDrawOnRenderTarget elem)
         {
-            var list = ModContent.GetInstance<BlackholeEffectSystem>().elems;
-            if (!list.Contains(elem)) list.Add(elem);
+            var elems = ModContent.GetInstance<BlackholeEffectSystem>().elems;
+            if (!elems.Contains(elem)) elems.Add(elem);
         }
 
         public static void RemoveElement(IDrawOnRenderTarget elem)
@@ -206,14 +210,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void Load()
         {
-            firstTexture = ModAssets.GetExtraTexture(28, AssetRequestMode.ImmediateLoad);
-            secondTexture = ModAssets.GetExtraTexture(29, AssetRequestMode.ImmediateLoad);
-
             elems = new();
 
             spaceEffect = ModAssets.GetEffect("BlackholeBackground", AssetRequestMode.ImmediateLoad);
-            spaceEffect.Value.Parameters["Texture1"].SetValue(firstTexture.Value);
-            spaceEffect.Value.Parameters["Texture2"].SetValue(secondTexture.Value);
+            spaceEffect.Value.Parameters["Texture1"].SetValue(ModAssets.GetExtraTexture(28, AssetRequestMode.ImmediateLoad).Value);
+            spaceEffect.Value.Parameters["Texture2"].SetValue(ModAssets.GetExtraTexture(29, AssetRequestMode.ImmediateLoad).Value);
             spaceEffect.Value.Parameters["Color0"].SetValue(Colors[0].ToVector4());
             spaceEffect.Value.Parameters["Color1"].SetValue(Colors[1].ToVector4());
             spaceEffect.Value.Parameters["Color2"].SetValue(Colors[2].ToVector4());
@@ -232,10 +233,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             elems.Clear();
             elems = null;
-            target = null;
-            spaceEffect = null;
-            firstTexture = null;
-            secondTexture = null;
         }
 
         public override void OnWorldUnload()
@@ -253,7 +250,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         private void DrawToTarget()
         {
-            if (elems.Count == 0) return;
+            if (!elems.Any()) return;
             if (target == null) RecreateRenderTarget(new Vector2(Main.screenWidth, Main.screenHeight));
 
             var spriteBatch = Main.spriteBatch;

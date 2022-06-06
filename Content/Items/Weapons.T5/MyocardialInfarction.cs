@@ -27,6 +27,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             Item.damage = 43;
             Item.knockBack = 2.5f;
+            Item.autoReuse = true;
 
             Item.shoot = ModContent.ProjectileType<MyocardialInfarctionProjectile>();
 
