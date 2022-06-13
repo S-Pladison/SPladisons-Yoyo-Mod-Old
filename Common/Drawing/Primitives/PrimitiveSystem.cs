@@ -20,7 +20,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Primitives
 
         public override void Load()
         {
-            Main.OnPostDraw += ClearDataCache;
+            SPladisonsYoyoMod.Events.OnPostDraw += ClearDataCache;
         }
 
         public override void PostSetupContent()
@@ -35,8 +35,6 @@ namespace SPladisonsYoyoMod.Common.Drawing.Primitives
 
         public override void Unload()
         {
-            Main.OnPostDraw -= ClearDataCache;
-
             ClearDataCache();
             dataCache.Clear();
         }

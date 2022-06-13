@@ -4,8 +4,6 @@ using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Drawing;
 using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
-using SPladisonsYoyoMod.Content.Particles;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +13,6 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -35,6 +32,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             Item.rare = ItemRarityID.Cyan;
             Item.value = Terraria.Item.sellPrice(platinum: 0, gold: 1, silver: 50, copper: 0);
+        }
+
+        public override void AddRecipes()
+        {
+            var recipe = CreateRecipe();
+            recipe.AddIngredient(ItemID.Code2);
+            recipe.AddIngredient<PrototypeF34>();
+            recipe.AddIngredient(ItemID.BeetleHusk, 3);
+            recipe.AddIngredient(ItemID.ShroomiteBar, 7);
+            recipe.AddIngredient(ItemID.SoulofMight, 15);
+            recipe.AddTile(TileID.Autohammer);
+            recipe.Register();
         }
     }
 
@@ -373,18 +382,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             noiseTexture = ModAssets.GetExtraTexture(15, AssetRequestMode.ImmediateLoad).Value;
             colorTexture = ModAssets.GetExtraTexture(45, AssetRequestMode.ImmediateLoad).Value;
 
-            var effect = ModAssets.GetEffect("MetaBlastFilter", AssetRequestMode.ImmediateLoad).Value;
-            effect.Parameters["Contrast"].SetValue(1.15f);
-
-            Filters.Scene[SceneName] = new(new ScreenShaderData(new Ref<Effect>(effect), "MetaBlastFilter"), EffectPriority.VeryHigh);
-
-            SPladisonsYoyoMod.PostUpdateCameraPositionEvent += DrawToTarget;
-            Main.OnResolutionChanged += RecreateRenderTarget;
+            SPladisonsYoyoMod.Events.OnPostUpdateCameraPosition += DrawToTarget;
+            SPladisonsYoyoMod.Events.OnResolutionChanged += RecreateRenderTarget;
         }
 
-        public override void Unload()
+        public override void PostSetupContent()
         {
-            Main.OnResolutionChanged -= RecreateRenderTarget;
+            EffectLoader.CreateSceneFilter("MetaBlastFilter", EffectPriority.VeryHigh);
         }
 
         public override void PostUpdateEverything()

@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
+using SPladisonsYoyoMod.Common.Drawing;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -23,58 +26,120 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class PrototypeF34Projectile : YoyoProjectile
+    public class PrototypeF34Projectile : YoyoProjectile, IDrawOnRenderTarget
     {
         public PrototypeF34Projectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
-
-        public static Effect Effect { get; private set; }
-
-        public override void YoyoSetStaticDefaults()
-        {
-            if (Main.dedServ) return;
-
-            Effect = ModAssets.GetEffect("PrototypeF34", AssetRequestMode.ImmediateLoad).Value;
-        }
 
         public override void YoyoSetDefaults()
         {
             Projectile.tileCollide = false;
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public override void OnSpawn(IEntitySource source)
         {
-            // Отрисовываем йо-йо
-            // Далее поверх него типа свет. маску с шейдером,
-            // в который передаются две текстуры Main.instance.tilemap и еще одна
-            // Вродь как можно матрицу для отельной текстуры перекинуть прям в шейдер,
-            // поэтому мы не рендерим текстуру, и пихаем ее, а юзаем с матрицами сразу эти две
+            PrototypeF34EffectSystem.AddElement(this);
+        }
 
-            Vector2 unscaledPosition = Main.Camera.UnscaledPosition;
-
-            Vector2 vector = new Vector2((float)Main.offScreenRange, (float)Main.offScreenRange);
-            if (Main.drawToScreen)
-            {
-                vector = Vector2.Zero;
-            }
-
-            //Main.spriteBatch.Draw(Main.instance.tileTarget, Main.sceneTilePos - Main.screenPosition + new Vector2(0, -16 * 10), Color.White);
-
-            DrawUtils.BeginProjectileSpriteBatch(sortMode: SpriteSortMode.Immediate, blendState: BlendState.AlphaBlend, effect: Effect);
-            {
-                var texture = ModAssets.GetExtraTexture(1);
-                var scale = Projectile.scale * 3f;
-                var tileTarget = Main.instance.tileTarget;
-                var sizeDiff = tileTarget.Size() / (texture.Size() * scale);
-                var tileMatrix = Matrix.CreateScale(sizeDiff.X, sizeDiff.Y, 1f);
-
-                Effect.Parameters["TileTarget"].SetValue(tileTarget);
-                Effect.Parameters["TileMatrix"].SetValue(tileMatrix);
-
-                Main.EntitySpriteDraw(texture.Value, Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition, null, Color.White, 0f, texture.Size() * 0.5f, scale, SpriteEffects.None, 0);
-            }
-            DrawUtils.BeginProjectileSpriteBatch();
-
+        public override bool PreKill(int timeLeft)
+        {
+            PrototypeF34EffectSystem.RemoveElement(this);
             return true;
+        }
+
+        void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
+        {
+            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
+            var position = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition + zero;
+            var texture = ModAssets.GetExtraTexture(1);
+            spriteBatch.Draw(texture.Value, position, null, Color.White, 0f, texture.Size() * 0.5f, 1f, SpriteEffects.None, 0);
+        }
+    }
+
+    [Autoload(Side = ModSide.Client)]
+    public sealed class PrototypeF34EffectSystem : ModSystem
+    {
+        public static Effect Effect { get; private set; }
+
+        private List<IDrawOnRenderTarget> elems;
+        private RenderTarget2D elemTarget;
+        private RenderTarget2D swapTileTarget;
+
+        // ...
+
+        public static void AddElement(IDrawOnRenderTarget elem)
+        {
+            var elems = ModContent.GetInstance<PrototypeF34EffectSystem>().elems;
+            if (!elems.Contains(elem)) elems.Add(elem);
+        }
+
+        public static void RemoveElement(IDrawOnRenderTarget elem)
+        {
+            ModContent.GetInstance<PrototypeF34EffectSystem>().elems.Remove(elem);
+        }
+
+        // ...
+
+        public override void Load()
+        {
+            var device = Main.graphics.GraphicsDevice;
+            elems = new List<IDrawOnRenderTarget>();
+
+            Main.QueueMainThreadAction(() => InitTarget(device.PresentationParameters.BackBufferWidth, device.PresentationParameters.BackBufferHeight));
+
+            Main.OnRenderTargetsInitialized += InitTarget;
+            Main.OnRenderTargetsReleased += ReleaseTarget;
+            SPladisonsYoyoMod.Events.OnPostDraw += PostDraw;
+            SPladisonsYoyoMod.Events.OnPostUpdateCameraPosition += () =>
+            {
+                if (swapTileTarget is null || !elems.Any()) return;
+
+                var main = Main.instance;
+                var device = main.GraphicsDevice;
+                var sb = Main.spriteBatch;
+
+                device.SetRenderTarget(swapTileTarget);
+                device.Clear(Color.Transparent);
+
+                sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, Effect, Matrix.Identity);
+                sb.Draw(main.tileTarget, Vector2.Zero, Color.White);
+                foreach (var elem in elems) elem.DrawOnRenderTarget(sb);
+                sb.End();
+
+                device.SetRenderTarget(null);
+
+                (main.tileTarget, swapTileTarget) = (swapTileTarget, main.tileTarget);
+            };
+
+            //Effect = ModAssets.GetEffect("PrototypeF34", AssetRequestMode.ImmediateLoad).Value;
+        }
+
+        public override void Unload()
+        {
+            Main.OnRenderTargetsInitialized -= InitTarget;
+            Main.OnRenderTargetsReleased -= ReleaseTarget;
+
+            elems.Clear();
+            elems = null;
+        }
+
+        private void InitTarget(int width, int height)
+        {
+            var device = Main.graphics.GraphicsDevice;
+            elemTarget = new RenderTarget2D(device, width, height, false, device.PresentationParameters.BackBufferFormat, DepthFormat.None);
+            swapTileTarget = new RenderTarget2D(device, width, height, false, device.PresentationParameters.BackBufferFormat, DepthFormat.None);
+        }
+
+        private void ReleaseTarget()
+        {
+            swapTileTarget?.Dispose();
+        }
+
+        private void PostDraw(GameTime _ = null)
+        {
+            if (swapTileTarget is null || !elems.Any()) return;
+
+            var main = Main.instance;
+            (main.tileTarget, swapTileTarget) = (swapTileTarget, main.tileTarget);
         }
     }
 }

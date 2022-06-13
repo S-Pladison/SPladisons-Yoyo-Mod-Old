@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Drawing;
 using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
@@ -40,8 +39,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public static readonly Color LightColor = new(0.3f, 0.9f, 1f);
 
-        public static Effect TrailEffect { get; private set; }
-
         private PrimitiveStrip[] trails;
 
         // ...
@@ -52,16 +49,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             ProjectileID.Sets.TrailingMode[Type] = 0;
             ProjectileID.Sets.TrailCacheLength[Type] = 4;
-
-            if (Main.dedServ) return;
-
-            TrailEffect = ModAssets.GetEffect("AdamantiteYoyoTrail", AssetRequestMode.ImmediateLoad).Value;
-            TrailEffect.Parameters["Texture0"].SetValue(ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad).Value);
-        }
-
-        public override void Unload()
-        {
-            TrailEffect = null;
         }
 
         public override void OnSpawn(IEntitySource source) => InitTrails();
@@ -110,10 +97,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         private void InitTrails()
         {
             trails = new PrimitiveStrip[2];
+            var effect = ModAssets.GetEffect("AdamantiteYoyoTrail").Value;
 
             for (int i = 0; i < 2; i++)
             {
-                trails[i] = new PrimitiveStrip(GetTrailWidth, GetTrailColor, TrailEffect);
+                trails[i] = new PrimitiveStrip(GetTrailWidth, GetTrailColor, effect);
             }
         }
 

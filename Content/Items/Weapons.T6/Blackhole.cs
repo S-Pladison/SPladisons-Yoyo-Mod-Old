@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Drawing;
 using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
@@ -46,7 +45,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     public class BlackholeProjectile : YoyoProjectile, IDrawOnRenderTarget, IPostUpdateCameraPosition
     {
         public static float Radius { get; } = 16 * 10;
-        public static Effect TrailEffect { get; private set; } = null;
 
         public float RadiusProgress { get => Projectile.localAI[1]; set => Projectile.localAI[1] = value; }
 
@@ -59,24 +57,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool IsSoloYoyo() => true;
 
-        public override void Load()
-        {
-            if (Main.dedServ) return;
-
-            TrailEffect = ModAssets.GetEffect("BlackholeTrail", AssetRequestMode.ImmediateLoad).Value;
-            TrailEffect.Parameters["Texture0"].SetValue(ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad).Value);
-        }
-
-        public override void Unload()
-        {
-            TrailEffect = null;
-        }
-
         public override void OnSpawn(IEntitySource source)
         {
             BlackholeEffectSystem.AddElement(this);
 
-            trail = new PrimitiveStrip(p => 22 * (1 - p * 0.7f), p => new Color(209, 112, 224) * (1 - p), TrailEffect);
+            trail = new PrimitiveStrip(p => 22 * (1 - p * 0.7f), p => new Color(209, 112, 224) * (1 - p), ModAssets.GetEffect("BlackholeTrail").Value);
         }
 
         public override bool PreKill(int timeLeft)
@@ -182,16 +167,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     [Autoload(Side = ModSide.Client)]
     public sealed class BlackholeEffectSystem : ModSystem
     {
-        public static readonly Color[] Colors = new Color[]
-        {
-            new Color(8, 9, 15),
-            new Color(198, 50, 189),
-            new Color(25, 25, 76)
-        };
-
-        private List<IDrawOnRenderTarget> elems;
-        private RenderTarget2D target;
-        private Asset<Effect> spaceEffect;
+        private List<IDrawOnRenderTarget> elems = new();
+        private RenderTarget2D target = null;
 
         // ...
 
@@ -208,29 +185,16 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         // ...
 
-        public override void Load()
-        {
-            elems = new();
-
-            spaceEffect = ModAssets.GetEffect("BlackholeBackground", AssetRequestMode.ImmediateLoad);
-            spaceEffect.Value.Parameters["Texture1"].SetValue(ModAssets.GetExtraTexture(28, AssetRequestMode.ImmediateLoad).Value);
-            spaceEffect.Value.Parameters["Texture2"].SetValue(ModAssets.GetExtraTexture(29, AssetRequestMode.ImmediateLoad).Value);
-            spaceEffect.Value.Parameters["Color0"].SetValue(Colors[0].ToVector4());
-            spaceEffect.Value.Parameters["Color1"].SetValue(Colors[1].ToVector4());
-            spaceEffect.Value.Parameters["Color2"].SetValue(Colors[2].ToVector4());
-        }
-
         public override void PostSetupContent()
         {
-            Main.OnResolutionChanged += RecreateRenderTarget;
-            SPladisonsYoyoMod.PostUpdateCameraPositionEvent += DrawToTarget;
+            SPladisonsYoyoMod.Events.OnPostUpdateCameraPosition += DrawToTarget;
+            SPladisonsYoyoMod.Events.OnResolutionChanged += RecreateRenderTarget;
+
             DrawingManager.AddCustomMethodToLayer(DrawLayers.OverWalls, DrawToScreen);
         }
 
         public override void Unload()
         {
-            Main.OnResolutionChanged -= RecreateRenderTarget;
-
             elems.Clear();
             elems = null;
         }
@@ -271,14 +235,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             if (target == null || !elems.Any()) return;
 
             var texture = (Texture2D)target;
-            var effect = spaceEffect.Value;
+            var effect = ModAssets.GetEffect("BlackholeBackground").Value;
 
             effect.Parameters["Time"].SetValue((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 0.4f);
             effect.Parameters["Resolution"].SetValue(texture.Size());
             effect.Parameters["Offset"].SetValue(Main.screenPosition * 0.001f);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, effect, Main.GameViewMatrix.ZoomMatrix);
-            spriteBatch.Draw(texture, Vector2.Zero, null, Colors[0], 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, Vector2.Zero, null, new Color(8, 9, 15), 0f, Vector2.Zero, 2f, SpriteEffects.None, 0);
             spriteBatch.End();
         }
     }

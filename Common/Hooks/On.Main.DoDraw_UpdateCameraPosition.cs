@@ -30,7 +30,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
                 }
             }
 
-            SPladisonsYoyoMod.PostUpdateCameraPosition();
+            SPladisonsYoyoMod.Events.InvokeOnPostUpdateCameraPosition();
         }
     }
 }

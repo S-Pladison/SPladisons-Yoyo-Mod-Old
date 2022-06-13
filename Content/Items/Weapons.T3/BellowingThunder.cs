@@ -39,6 +39,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public override void AddRecipes()
         {
             var recipe = CreateRecipe();
+            recipe.AddIngredient<EmbraceOfRain>();
+            recipe.AddIngredient(ItemID.Cascade);
             recipe.AddIngredient<OutburstingGust>();
             recipe.AddIngredient<WakeOfEarth>();
             recipe.AddTile(TileID.DemonAltar);
@@ -226,8 +228,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             if (Main.dedServ) return;
 
-            BellowingThunderEffect = ModAssets.GetEffect("BellowingThunder", AssetRequestMode.ImmediateLoad);
-            BellowingThunderEffect.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(24, AssetRequestMode.ImmediateLoad).Value);
+            /*BellowingThunderEffect = ModAssets.GetEffect("BellowingThunder", AssetRequestMode.ImmediateLoad);
+            BellowingThunderEffect.Value.Parameters["texture1"].SetValue(ModAssets.GetExtraTexture(24, AssetRequestMode.ImmediateLoad).Value);*/
         }
 
         public override void Unload() => BellowingThunderEffect = null;

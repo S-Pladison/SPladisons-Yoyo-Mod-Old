@@ -31,6 +31,7 @@ Mods: {
 			TheFinestHour: The Finest Hour
 			TheStellarThrow: The Stellar Throw
 			TitaniumYoyo: Titanium Yoyo
+			TrueBellowingThunder: True Bellowing Thunder
 			WakeOfEarth: Wake of Earth
 		}
 
@@ -105,6 +106,7 @@ Mods: {
 				Attacking generates a defensive barrier of titanium shards
 				Effect stacks with titanium armor, while increasing damage of shards by 30%
 				'''
+			TrueBellowingThunder: ...
 			WakeOfEarth: ...
 
 			// Prefixes

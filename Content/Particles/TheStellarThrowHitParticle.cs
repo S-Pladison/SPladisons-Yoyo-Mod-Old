@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Drawing.Particles;
 using SPladisonsYoyoMod.Common.Drawing.Primitives;
@@ -12,35 +10,18 @@ namespace SPladisonsYoyoMod.Content.Particles
 {
     public class TheStellarThrowHitParticle : Particle, IPostUpdateCameraPosition
     {
-        public static Effect Effect { get; private set; }
-
-        // ...
-
         private PrimitiveStrip trail;
 
         // ...
 
         public override string Texture => ModAssets.ParticlesPath + Name;
 
-        public override void Load()
-        {
-            var texture = ModAssets.GetExtraTexture(35, AssetRequestMode.ImmediateLoad);
-
-            Effect = ModAssets.GetEffect("TheStellarThrowParticleTrail", AssetRequestMode.ImmediateLoad).Value;
-            Effect.Parameters["Texture0"].SetValue(texture.Value);
-        }
-
-        public override void Unload()
-        {
-            Effect = null;
-        }
-
         public override void OnSpawn()
         {
             TimeLeft = 25;
             Rotation = Main.rand.NextFloat(MathHelper.TwoPi);
 
-            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, Effect);
+            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("TheStellarThrowParticleTrail").Value);
         }
 
         public override bool PreUpdate(ref float minScaleForDeath)

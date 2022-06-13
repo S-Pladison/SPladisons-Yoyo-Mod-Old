@@ -6,8 +6,6 @@ using SPladisonsYoyoMod.Common.Drawing;
 using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
 using SPladisonsYoyoMod.Common.Drawing.Primitives;
 using SPladisonsYoyoMod.Utilities;
-using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -56,7 +54,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class ResidualLightProjectile : YoyoProjectile, IPostUpdateCameraPosition
     {
-        public static Effect TrailEffect { get; private set; }
         public static float TrailTextureWidth { get; private set; }
 
         // ...
@@ -70,28 +67,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override string Texture => ModAssets.ProjectilesPath + nameof(ResidualLightProjectile);
         public override bool IsSoloYoyo() => true;
-        public override void Unload() => TrailEffect = null;
 
         public override void Load()
         {
             if (Main.dedServ) return;
 
-            var texture = ModAssets.GetExtraTexture(36, AssetRequestMode.ImmediateLoad);
-            TrailEffect = ModAssets.GetEffect("ResidualLightTrail", AssetRequestMode.ImmediateLoad).Value;
-            TrailEffect.Parameters["Texture0"].SetValue(texture.Value);
-            TrailTextureWidth = texture.Width();
-
-            texture = ModAssets.GetExtraTexture(27, AssetRequestMode.ImmediateLoad);
-            TrailEffect.Parameters["Texture1"].SetValue(texture.Value);
-
-            texture = ModAssets.GetExtraTexture(38, AssetRequestMode.ImmediateLoad);
-            TrailEffect.Parameters["Texture2"].SetValue(texture.Value);
-
-            texture = ModAssets.GetExtraTexture(37, AssetRequestMode.ImmediateLoad);
-            TrailEffect.Parameters["Texture3"].SetValue(texture.Value);
-
-            texture = ModAssets.GetExtraTexture(39, AssetRequestMode.ImmediateLoad);
-            TrailEffect.Parameters["Texture4"].SetValue(texture.Value);
+            TrailTextureWidth = ModAssets.GetExtraTexture(36, AssetRequestMode.ImmediateLoad).Width();
 
             /*var texture = ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad);
             TrailEffect = ModAssets.GetEffect("ResidualLightTrail", AssetRequestMode.ImmediateLoad).Value;
@@ -107,7 +88,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn(IEntitySource source)
         {
-            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, TrailEffect);
+            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("ResidualLightTrail").Value);
             trail.OnUpdateEffectParameters += UpdateTrailEffect;
         }
 

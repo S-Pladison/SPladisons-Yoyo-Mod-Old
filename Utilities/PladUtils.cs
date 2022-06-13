@@ -1,6 +1,5 @@
 ﻿using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Globals;
-using System.Linq;
 using Terraria;
 using Terraria.ID;
 

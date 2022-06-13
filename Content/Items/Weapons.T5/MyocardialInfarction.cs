@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Drawing;
 using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
@@ -40,8 +39,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
     {
         public static readonly Color[] Colors = new Color[] { new(255, 0, 35), new(255, 85, 165), new(255, 40, 0) };
 
-        public static Effect StripEffect { get; private set; }
-
         private const float EFFECT_RADIUS = 16 * 15;
         private const float EFFECT_DRAW_RADIUS = EFFECT_RADIUS + 16 * 2;
 
@@ -53,24 +50,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override bool IsSoloYoyo() => true;
 
-        public override void YoyoSetStaticDefaults()
-        {
-            if (Main.dedServ) return;
-
-            StripEffect = ModAssets.GetEffect("MyocardialInfarctionStrip", AssetRequestMode.ImmediateLoad).Value;
-            StripEffect.Parameters["Texture0"].SetValue(ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad).Value);
-        }
-
-        public override void Unload()
-        {
-            StripEffect = null;
-        }
-
         public override void OnSpawn(IEntitySource source)
         {
+            var effect = ModAssets.GetEffect("MyocardialInfarctionStrip").Value;
+
             trails = new PrimitiveStrip[2];
-            trails[0] = new(p => 8 * (1 - p * 0.75f), p => Colors[0] * (1 - p * p), StripEffect);
-            trails[1] = new(p => 5 * (1 - p * 0.9f), p => Colors[1] * (1 - p * p), StripEffect);
+            trails[0] = new(p => 8 * (1 - p * 0.75f), p => Colors[0] * (1 - p * p), effect);
+            trails[1] = new(p => 5 * (1 - p * 0.9f), p => Colors[1] * (1 - p * p), effect);
         }
 
         public override void AI()
@@ -154,6 +140,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             var scale = Projectile.scale;
             var rect = new Rectangle(0, 0, 200, 200);
             var origin = new Vector2(100);
+            var effect = ModAssets.GetEffect("MyocardialInfarctionStrip").Value;
 
             foreach (var target in GetTargets(EFFECT_DRAW_RADIUS))
             {
@@ -164,7 +151,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var sin = MathF.Sin(Main.GlobalTimeWrappedHourly * 2f + progress + npc.whoAmI);
                 var normal = Vector2.Normalize(Projectile.Center - npc.Center).RotatedBy(MathHelper.PiOver2) * sin * 32f;
                 var points = new List<Vector2>() { projectilePos, projectilePos + normal, npcPos - normal, npcPos };
-                var strip = new PrimitiveStrip(TargetConnectionWidth, p => TargetConnectionColor(p) * progress, StripEffect);
+                var strip = new PrimitiveStrip(TargetConnectionWidth, p => TargetConnectionColor(p) * progress, effect);
                 strip.Points = BezierCurve.GetPoints(8, points);
 
                 PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Pixelated, strip);

@@ -41,16 +41,13 @@ namespace SPladisonsYoyoMod.Common.Drawing
                 customDrawMethods.Add(layer, null);
             }
 
-            Main.OnResolutionChanged += ClearRenderTargets;
-            Main.OnPostDraw += ResetCanDrawDataDictionary;
-            SPladisonsYoyoMod.PostUpdateCameraPositionEvent += DrawLayersToTarget;
+            SPladisonsYoyoMod.Events.OnPostDraw += ResetCanDrawDataDictionary;
+            SPladisonsYoyoMod.Events.OnPostUpdateCameraPosition += DrawLayersToTarget;
+            SPladisonsYoyoMod.Events.OnResolutionChanged += ClearRenderTargets;
         }
 
         void ILoadable.Unload()
         {
-            Main.OnResolutionChanged -= ClearRenderTargets;
-            Main.OnPostDraw -= ResetCanDrawDataDictionary;
-
             customDrawMethods.Clear();
             canDrawDataBooleans.Clear();
             drawDatas.Clear();

@@ -56,7 +56,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class IgnisProjectile : YoyoProjectile, IPostUpdateCameraPosition
     {
-        public static Effect TrailEffect { get; private set; }
         public static float TrailTextureWidth { get; private set; }
 
         // ...
@@ -72,21 +71,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             if (Main.dedServ) return;
 
-            var texture = ModAssets.GetExtraTexture(17, AssetRequestMode.ImmediateLoad);
-
-            TrailEffect = ModAssets.GetEffect("IgnisTrail", AssetRequestMode.ImmediateLoad).Value;
-            TrailEffect.Parameters["Texture0"].SetValue(texture.Value);
-            TrailTextureWidth = texture.Width();
-        }
-
-        public override void Unload()
-        {
-            TrailEffect = null;
+            TrailTextureWidth = ModAssets.GetExtraTexture(17, AssetRequestMode.ImmediateLoad).Width();
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, TrailEffect);
+            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("IgnisTrail").Value);
             trail.OnUpdateEffectParameters += UpdateTrailEffect;
         }
 

@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod
@@ -18,8 +15,9 @@ namespace SPladisonsYoyoMod
 
         public override void Unload()
         {
+            Events.Unload();
             Sets.Unload();
-            UnloadEvents();
+
             Instance = null;
         }
     }

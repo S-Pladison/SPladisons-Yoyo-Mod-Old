@@ -59,7 +59,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public static readonly Color[] ProjectileColors = new Color[] { new Color(255, 206, 90), new Color(255, 55, 125), new Color(137, 59, 114) };
         public static readonly Color[] DustColors = new Color[] { new Color(11, 25, 25), new Color(16, 11, 25), new Color(25, 11, 18) };
 
-        public static Effect TrailEffect { get; private set; }
         public static float TrailTextureWidth { get; private set; }
 
         // ...
@@ -75,21 +74,17 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             if (Main.dedServ) return;
 
-            var texture = ModAssets.GetExtraTexture(7, AssetRequestMode.ImmediateLoad);
-
-            TrailEffect = ModAssets.GetEffect("TheStellarThrowTrail", AssetRequestMode.ImmediateLoad).Value;
-            TrailEffect.Parameters["Texture0"].SetValue(texture.Value);
-            TrailTextureWidth = texture.Width();
+            TrailTextureWidth = ModAssets.GetExtraTexture(7, AssetRequestMode.ImmediateLoad).Width();
         }
 
         public override void Unload()
         {
-            TrailEffect = null;
+            //TrailEffect = null;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, TrailEffect);
+            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("TheStellarThrowTrail").Value);
             trail.OnUpdateEffectParameters += UpdateTrailEffect;
         }
 
@@ -116,6 +111,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 }
             }
         }
+
+        /*void IPostUpdate.PostUpdate()
+        {
+            trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 25, 16 * 9 * ReturningProgress);
+        }*/
 
         public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
         {

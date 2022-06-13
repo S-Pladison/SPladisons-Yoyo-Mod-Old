@@ -12,6 +12,9 @@ namespace SPladisonsYoyoMod.Utilities
             if (Main.gamePaused) return;
 
             var points = strip.Points;
+
+            if (points.Any() && currentPosition == points.First()) return;
+
             points.Insert(0, currentPosition);
 
             if (points.Count > maxPoints) points.Remove(points.Last());

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SPladisonsYoyoMod.Common;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod
@@ -24,6 +25,6 @@ namespace SPladisonsYoyoMod
         // ...
 
         public static Asset<Texture2D> GetExtraTexture(int type, AssetRequestMode mode = AssetRequestMode.AsyncLoad) => ModContent.Request<Texture2D>(MiscPath + "Extra_" + type, mode);
-        public static Asset<Effect> GetEffect(string name, AssetRequestMode mode = AssetRequestMode.AsyncLoad) => ModContent.Request<Effect>(EffectsPath + name, mode);
+        public static Asset<Effect> GetEffect(string name) => EffectLoader.GetEffect(name);
     }
 }

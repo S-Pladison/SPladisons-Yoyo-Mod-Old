@@ -4,7 +4,7 @@ namespace SPladisonsYoyoMod
 {
     public partial class SPladisonsYoyoMod
     {
-        public class Sets
+        public static class Sets
         {
             // Items
             public static float?[] ItemCustomInventoryScale = ItemID.Sets.Factory.CreateCustomSet<float?>(null);
