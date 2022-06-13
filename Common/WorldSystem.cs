@@ -40,17 +40,6 @@ namespace SPladisonsYoyoMod.Common
             }
         }
 
-        public override void PreUpdateProjectiles()
-        {
-            foreach (var proj in Main.projectile)
-            {
-                if (proj.ModProjectile is IPostUpdate post)
-                {
-                    post.PostUpdate();
-                }
-            }
-        }
-
         public override void PostWorldGen()
         {
             ChangeLootInChests();
