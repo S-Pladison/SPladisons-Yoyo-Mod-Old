@@ -9,11 +9,10 @@ namespace SPladisonsYoyoMod.Utilities
     {
         public static void UpdatePointsAsSimpleTrail(this PrimitiveStrip strip, Vector2 currentPosition, uint maxPoints, float? maxLength = null)
         {
+            ref var points = ref strip.Points;
+
             if (Main.gamePaused) return;
-
-            var points = strip.Points;
-
-            if (points.Any() && currentPosition == points.First()) return;
+            if (points.Any() && points.First().Equals(currentPosition)) return;
 
             points.Insert(0, currentPosition);
 

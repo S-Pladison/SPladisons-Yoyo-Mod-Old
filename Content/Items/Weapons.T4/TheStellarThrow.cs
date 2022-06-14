@@ -59,8 +59,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         public static readonly Color[] ProjectileColors = new Color[] { new Color(255, 206, 90), new Color(255, 55, 125), new Color(137, 59, 114) };
         public static readonly Color[] DustColors = new Color[] { new Color(11, 25, 25), new Color(16, 11, 25), new Color(25, 11, 18) };
 
-        public static float TrailTextureWidth { get; private set; }
-
         // ...
 
         private PrimitiveStrip trail;
@@ -69,18 +67,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         // ...
 
         public TheStellarThrowProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
-
-        public override void Load()
-        {
-            if (Main.dedServ) return;
-
-            TrailTextureWidth = ModAssets.GetExtraTexture(7, AssetRequestMode.ImmediateLoad).Width();
-        }
-
-        public override void Unload()
-        {
-            //TrailEffect = null;
-        }
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -112,11 +98,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
         }
 
-        /*void IPostUpdate.PostUpdate()
-        {
-            trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 25, 16 * 9 * ReturningProgress);
-        }*/
-
         public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
         {
             for (int i = 0; i < 7; i++)
@@ -136,7 +117,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         private void UpdateTrailEffect(Effect effect)
         {
             effect.Parameters["Time"].SetValue(-timer * 0.05f);
-            effect.Parameters["Width"].SetValue(trail.Points.TotalDistance() / TrailTextureWidth * 5f);
+            effect.Parameters["Repeats"].SetValue(trail.Points.TotalDistance() / 100f);
         }
 
         private float GetTrailWidth(float progress) => 44f * (1 - progress * 0.45f);

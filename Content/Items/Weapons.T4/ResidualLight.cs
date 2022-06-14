@@ -54,10 +54,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class ResidualLightProjectile : YoyoProjectile, IPostUpdateCameraPosition
     {
-        public static float TrailTextureWidth { get; private set; }
-
-        // ...
-
         private PrimitiveStrip trail;
         private int timer;
 
@@ -67,24 +63,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override string Texture => ModAssets.ProjectilesPath + nameof(ResidualLightProjectile);
         public override bool IsSoloYoyo() => true;
-
-        public override void Load()
-        {
-            if (Main.dedServ) return;
-
-            TrailTextureWidth = ModAssets.GetExtraTexture(36, AssetRequestMode.ImmediateLoad).Width();
-
-            /*var texture = ModAssets.GetExtraTexture(11, AssetRequestMode.ImmediateLoad);
-            TrailEffect = ModAssets.GetEffect("ResidualLightTrail", AssetRequestMode.ImmediateLoad).Value;
-            TrailEffect.Parameters["Texture0"].SetValue(texture.Value);
-
-            texture = ModAssets.GetExtraTexture(20, AssetRequestMode.ImmediateLoad);
-            TrailEffect.Parameters["Texture1"].SetValue(texture.Value);
-            TrailTextureWidth = texture.Width();
-
-            texture = ModAssets.GetExtraTexture(7, AssetRequestMode.ImmediateLoad);
-            TrailEffect.Parameters["Texture2"].SetValue(texture.Value);*/
-        }
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -171,7 +149,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         private void UpdateTrailEffect(Effect effect)
         {
             effect.Parameters["Time"].SetValue(-timer * 0.05f);
-            effect.Parameters["Width"].SetValue(trail.Points.TotalDistance() / TrailTextureWidth * 3f);
+            effect.Parameters["Repeats"].SetValue(trail.Points.TotalDistance() / 106f);
         }
 
         private float GetTrailWidth(float progress) => 25f * (1 - progress * 0.8f);

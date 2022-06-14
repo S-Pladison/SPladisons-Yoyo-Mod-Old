@@ -56,23 +56,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
     public class IgnisProjectile : YoyoProjectile, IPostUpdateCameraPosition
     {
-        public static float TrailTextureWidth { get; private set; }
-
-        // ...
-
         private PrimitiveStrip trail;
         private int timer;
 
         // ...
 
         public IgnisProjectile() : base(lifeTime: -1f, maxRange: 300f, topSpeed: 13f) { }
-
-        public override void Load()
-        {
-            if (Main.dedServ) return;
-
-            TrailTextureWidth = ModAssets.GetExtraTexture(17, AssetRequestMode.ImmediateLoad).Width();
-        }
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -118,7 +107,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             var texture = TextureAssets.Projectile[Type];
             var position = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
-
             Main.EntitySpriteDraw(texture.Value, position, null, lightColor, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
 
             return false;
@@ -127,7 +115,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         private void UpdateTrailEffect(Effect effect)
         {
             effect.Parameters["Time"].SetValue(-timer * 0.05f);
-            effect.Parameters["Width"].SetValue(trail.Points.TotalDistance() / TrailTextureWidth);
+            effect.Parameters["Repeats"].SetValue(trail.Points.TotalDistance() / 256f);
         }
 
         private float GetTrailWidth(float progress) => 28f * (1 - progress * 0.2f);
