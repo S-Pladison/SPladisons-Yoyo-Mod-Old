@@ -301,8 +301,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             var texture = TextureAssets.Projectile[Type];
             var origin = new Vector2(texture.Width() * 0.5f, texture.Height());
             var offset = Vector2.UnitY * texture.Height() * scale;
+            var spriteBatch = Main.spriteBatch;
+            var spriteBatchInfo = new SpriteBatchInfo(spriteBatch);
 
-            DrawUtils.BeginProjectileSpriteBatch(sortMode: SpriteSortMode.Immediate, blendState: BlendState.Additive, effect: effect);
+            spriteBatch.End();
+            spriteBatchInfo.Begin(spriteBatch, SpriteSortMode.Immediate, BlendState.Additive, effect);
             {
                 void DrawLightning(Vector2 position, Color color) => Main.EntitySpriteDraw(texture.Value, position, null, color, 0f, origin, scale, SpriteEffects.None, 0);
 
@@ -324,7 +327,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     }
                 }
             }
-            DrawUtils.BeginProjectileSpriteBatch();
+            spriteBatch.End();
+            spriteBatchInfo.Begin(spriteBatch);
 
             return false;
         }

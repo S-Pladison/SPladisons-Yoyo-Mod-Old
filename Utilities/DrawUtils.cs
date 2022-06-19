@@ -15,12 +15,6 @@ namespace SPladisonsYoyoMod
 
         // ...
 
-        public static void BeginProjectileSpriteBatch(SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState blendState = null, Effect effect = null, Matrix? matrix = null, bool end = true)
-        {
-            if (end) Main.spriteBatch.End();
-            Main.spriteBatch.Begin(sortMode, blendState ?? BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, effect, matrix ?? Main.GameViewMatrix.TransformationMatrix);
-        }
-
         public static Vector2 GetYoyoStringDrawOffset()
         {
             return Vector2.UnitY * (ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle ? -4 : 0);

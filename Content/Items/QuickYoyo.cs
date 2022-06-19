@@ -57,6 +57,8 @@ namespace SPladisonsYoyoMod.Content.Items
             ItemID.Sets.GamepadExtraRange[Type] = gamepadExtraRange;
             ItemID.Sets.GamepadSmartQuickReach[Type] = true;
 
+            SacrificeTotal = 1;
+
             YoyoSetStaticDefaults();
         }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Common.Drawing;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -273,16 +274,17 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
                     var position = new Vector2(i * 32 + player.Center.X * 0.2f, j * 32 + player.Center.Y * 0.2f) + zero;
                     var rectangle = new Rectangle((tile.TileFrameX / 18 - 1) * 16, Main.chest[chest].frame * 34, 32, 32);
                     var shader = GameShaders.Armor.GetShaderFromItemId(ItemID.TwilightDye);
+                    var spriteBatchInfo = new SpriteBatchInfo(spriteBatch);
 
                     spriteBatch.End();
-                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null);
+                    spriteBatchInfo.Begin(spriteBatch, SpriteSortMode.Immediate, BlendState.AlphaBlend, null);
                     {
                         shader.Apply(null, new DrawData(texture, position, rectangle, Color.White));
                         position = new Vector2(i * 16 - 16 - (int)Main.screenPosition.X, j * 16 - 16 - (int)Main.screenPosition.Y) + zero;
                         spriteBatch.Draw(texture, position, rectangle, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
                     }
                     spriteBatch.End();
-                    spriteBatch.Begin();
+                    spriteBatchInfo.Begin(spriteBatch);
                 }
             }
         }

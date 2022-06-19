@@ -11,11 +11,13 @@ namespace SPladisonsYoyoMod.Common.Hooks
             orig(main);
 
             var spriteBatch = Main.spriteBatch;
+            var spriteBatchInfo = new SpriteBatchInfo(spriteBatch);
+
             spriteBatch.End();
             {
                 DrawingManager.DrawLayer(DrawLayers.OverWalls);
             }
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
+            spriteBatchInfo.Begin(spriteBatch);
         }
     }
 }

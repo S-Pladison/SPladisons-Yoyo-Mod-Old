@@ -41,7 +41,7 @@ namespace SPladisonsYoyoMod.Common.Globals
 
         public override void UseStyle(Item item, Player player, Rectangle heldItemFrame)
         {
-            if (!ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle) return;
+            if (!item.useStyle.Equals(ItemUseStyleID.Shoot) || !ModContent.GetInstance<PladConfig>().YoyoCustomUseStyle) return;
 
             float rotation = player.itemRotation * player.gravDir - 1.57079637f * player.direction;
             player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotation);
@@ -140,4 +140,4 @@ namespace SPladisonsYoyoMod.Common.Globals
         private static int GetTooltipsLastIndex(List<TooltipLine> tooltips)
             => tooltips.FindLastIndex(tt => tt.Name.Equals("Speed") || tt.Name.Equals("Knockback") || tt.Name.Equals("Material") || tt.Name.StartsWith("Tooltip"));
     }
-}
+} 
