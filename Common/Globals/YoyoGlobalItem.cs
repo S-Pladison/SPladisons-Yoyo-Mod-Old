@@ -140,4 +140,4 @@ namespace SPladisonsYoyoMod.Common.Globals
         private static int GetTooltipsLastIndex(List<TooltipLine> tooltips)
             => tooltips.FindLastIndex(tt => tt.Name.Equals("Speed") || tt.Name.Equals("Knockback") || tt.Name.Equals("Material") || tt.Name.StartsWith("Tooltip"));
     }
-} 
+}

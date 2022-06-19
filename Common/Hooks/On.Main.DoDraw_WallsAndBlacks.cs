@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using SPladisonsYoyoMod.Common.Drawing;
+﻿using SPladisonsYoyoMod.Common.Drawing;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Common.Hooks
