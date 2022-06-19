@@ -7,13 +7,11 @@ namespace SPladisonsYoyoMod.Content.Particles
 {
     public class HeartParticle : Particle
     {
-        public const int MAX_TIMELEFT = 70;
-
         public override string Texture => ModAssets.ParticlesPath + nameof(HeartParticle);
 
         public override void OnSpawn()
         {
-            TimeLeft = MAX_TIMELEFT;
+            TimeLeft = 70;
             FrameCount = 2;
             Frame = Main.rand.NextBool(3) ? 1 : 0;
         }
@@ -26,16 +24,16 @@ namespace SPladisonsYoyoMod.Content.Particles
             Rotation *= 0.95f;
             Scale *= 0.98f;
 
-            Lighting.AddLight(Position, Color.ToVector3() * (TimeLeft / (float)MAX_TIMELEFT) * 0.15f);
+            Lighting.AddLight(Position, Color.ToVector3() * (TimeLeft / (float)InitTimeLeft) * 0.15f);
 
             return false;
         }
 
-        public override Color GetAlpha(Color lightColor) => Color.White * (TimeLeft / (float)MAX_TIMELEFT) * 1.15f;
+        public override Color GetAlpha(Color lightColor) => Color.White * (TimeLeft / (float)InitTimeLeft) * 1.15f;
 
         public override bool PreDraw(ref Color lightColor, ref float scaleMult)
         {
-            scaleMult = 0.25f * MathF.Sin(TimeLeft / (float)MAX_TIMELEFT * MathF.PI);
+            scaleMult = 0.25f * MathF.Sin(TimeLeft / (float)InitTimeLeft * MathF.PI);
             return true;
         }
     }

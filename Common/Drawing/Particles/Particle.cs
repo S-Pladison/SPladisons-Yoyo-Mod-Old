@@ -45,6 +45,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Particles
             newParticle.Type = particleInstance.Type;
             newParticle.Texture2D = particleInstance.Texture2D;
             newParticle.OnSpawn();
+            newParticle.InitTimeLeft = newParticle.TimeLeft;
 
             ParticleSystem.particles[drawKey].Add(newParticle);
 
@@ -56,6 +57,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Particles
         public int Type { get; private set; }
         public Asset<Texture2D> Texture2D { get; private set; }
         public DrawKey DrawKey { get; private set; }
+        public int InitTimeLeft { get; private set; }
 
         public Color Color;
         public Vector2 Position;
