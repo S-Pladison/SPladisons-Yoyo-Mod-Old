@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
+using SPladisonsYoyoMod.Common.Particles;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
-    public class SmokeParticle : Particle
+    /*public class SmokeParticle : Particle
     {
         public override string Texture => ModAssets.ParticlesPath + "SmokeParticle";
 
@@ -30,5 +30,5 @@ namespace SPladisonsYoyoMod.Content.Particles
             scaleMult = 2f;
             return true;
         }
-    }
+    }*/
 }

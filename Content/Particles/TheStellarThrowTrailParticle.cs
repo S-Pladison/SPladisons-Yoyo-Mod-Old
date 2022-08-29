@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
+using SPladisonsYoyoMod.Common.Particles;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
-    public class TheStellarThrowTrailParticle : Particle
+    /*public class TheStellarThrowTrailParticle : Particle
     {
         public override string Texture => ModAssets.ParticlesPath + Name;
 
@@ -32,5 +32,5 @@ namespace SPladisonsYoyoMod.Content.Particles
             scaleMult = 0.6f;
             return true;
         }
-    }
+    }*/
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
+using SPladisonsYoyoMod.Common.Particles;
 using System;
 using Terraria;
 

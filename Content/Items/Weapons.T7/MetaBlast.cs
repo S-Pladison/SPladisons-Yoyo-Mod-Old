@@ -2,8 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Drawing;
-using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
+using SPladisonsYoyoMod.Common.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +46,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class MetaBlastProjectile : YoyoProjectile, IPostUpdateCameraPosition, IDrawOnRenderTarget
+    public class MetaBlastProjectile : YoyoProjectile, IDrawOnDifferentLayers, IDrawOnRenderTarget
     {
         public const int MAX_CHARGE_VALUE = 60 * 7;
 
@@ -151,18 +150,18 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return true;
         }
 
-        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        void IDrawOnDifferentLayers.DrawOnDifferentLayers(DrawSystem system)
         {
             var texture = ModAssets.GetExtraTexture(40);
             var scaleMult = MathHelper.Lerp(0.4f, 1.3f, charge / (float)MAX_CHARGE_VALUE) * Projectile.scale;
             var position = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
-            var data = new DrawData(texture.Value, position, null, Color.Black * 0.4f * (charge / (float)MAX_CHARGE_VALUE), 0f, texture.Size() * 0.5f, 0.125f * scaleMult, SpriteEffects.None, 0);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverWalls, DrawTypeFlags.None, data);
+            var data = new DefaultDrawData(texture.Value, position, null, Color.Black * 0.4f * (charge / (float)MAX_CHARGE_VALUE), 0f, texture.Size() * 0.5f, 0.125f * scaleMult, SpriteEffects.None);
+            system.AddToLayer(DrawLayers.Walls, DrawTypeFlags.None, data);
 
             texture = ModAssets.GetExtraTexture(43);
             var origin = texture.Size() * 0.5f;
-            data = new DrawData(texture.Value, position, null, Color.White, Projectile.rotation, origin, Projectile.scale * 0.6f, SpriteEffects.None, 0);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Additive, data);
+            data = new DefaultDrawData(texture.Value, position, null, Color.White, Projectile.rotation, origin, Projectile.scale * 0.6f, SpriteEffects.None);
+            system.AddToLayer(DrawLayers.Tiles, DrawTypeFlags.Additive, data);
 
             if (!IsCharged) return;
 
@@ -170,9 +169,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             {
                 var progress = ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 var pos = Projectile.oldPos[k] - Main.screenPosition + Projectile.Size * 0.5f + new Vector2(0f, Projectile.gfxOffY);
-                data = new(texture.Value, pos, null, Color.White * progress, Projectile.rotation, origin, Projectile.scale * (0.6f - (1 - progress) * 0.2f), SpriteEffects.None, 0);
-
-                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Additive, data);
+                data = new(texture.Value, pos, null, Color.White * progress, Projectile.rotation, origin, Projectile.scale * (0.6f - (1 - progress) * 0.2f), SpriteEffects.None);
+                system.AddToLayer(DrawLayers.Tiles, DrawTypeFlags.Additive, data);
             }
         }
 
@@ -181,7 +179,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             var texture = ModAssets.GetExtraTexture(40);
             var red = new Color(255, 0, 0);
             var green = new Color(0, 255, 0) * Projectile.scale;
-            var position = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            var position = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition - new Vector2(1);
             var scaleMult = MathHelper.Lerp(0.4f, 1.3f, charge / (float)MAX_CHARGE_VALUE) * Projectile.scale;
             spriteBatch.Draw(texture.Value, position, null, red, 0f, texture.Size() * 0.5f, 0.125f * scaleMult, SpriteEffects.None, 0);
 
@@ -193,7 +191,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class MetaBlastExplosionProjectile : ModProjectile, IPostUpdateCameraPosition, IDrawOnRenderTarget
+    public class MetaBlastExplosionProjectile : ModProjectile, IDrawOnDifferentLayers, IDrawOnRenderTarget
     {
         public const int MAX_RADIUS = 16 * 11;
 
@@ -271,12 +269,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return base.CanHitNPC(target);
         }
 
-        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        void IDrawOnDifferentLayers.DrawOnDifferentLayers(DrawSystem system)
         {
             var texture = ModAssets.GetExtraTexture(40);
             var position = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
-            var data = new DrawData(texture.Value, position, null, Color.Black * 0.6f * Projectile.scale, 0f, texture.Size() * 0.5f, 0.67f * (Projectile.scale + MathF.Sin(Main.GlobalTimeWrappedHourly) * 0.02f), SpriteEffects.None, 0);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverWalls, DrawTypeFlags.None, data);
+            var data = new DefaultDrawData(texture.Value, position, null, Color.Black * 0.6f * Projectile.scale, 0f, texture.Size() * 0.5f, 0.67f * (Projectile.scale + MathF.Sin(Main.GlobalTimeWrappedHourly) * 0.02f), SpriteEffects.None);
+            system.AddToLayer(DrawLayers.Walls, DrawTypeFlags.None, data);
         }
 
         void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)

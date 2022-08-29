@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.Drawing.Primitives;
+using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Common.Graphics.Primitives;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 
@@ -7,6 +9,9 @@ namespace SPladisonsYoyoMod.Utilities
 {
     public static class PrimitiveUtils
     {
+        public static void AddVertex(this List<VertexPositionColorTexture> vertices, Vector2 position, Color color, Vector2 texCoords)
+               => vertices.Add(new(new Vector3(position - Main.screenPosition, 0), color, texCoords));
+
         public static void UpdatePointsAsSimpleTrail(this PrimitiveStrip strip, Vector2 currentPosition, uint maxPoints, float? maxLength = null)
         {
             ref var points = ref strip.Points;

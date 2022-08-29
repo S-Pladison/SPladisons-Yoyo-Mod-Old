@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Utilities;
 using System;
 using Terraria;
 
-namespace SPladisonsYoyoMod.Common.Drawing.Primitives
+namespace SPladisonsYoyoMod.Common.Graphics.Primitives
 {
     public class PrimitiveSquare : IndexedPrimitiveData
     {
@@ -13,7 +14,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Primitives
         public Color Color;
         public SpriteEffects SpriteEffect;
 
-        public PrimitiveSquare(Vector2 position, Vector2 size, float rotation, Color color, SpriteEffects spriteEffect, Effect effect) : base(PrimitiveType.TriangleStrip, 0, null, null, effect)
+        public PrimitiveSquare(Vector2 position, Vector2 size, float rotation, Color color, SpriteEffects spriteEffect, IPrimitiveEffect effect) : base(PrimitiveType.TriangleStrip, 0, null, null, effect)
         {
             Position = position;
             Size = size;
@@ -32,7 +33,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Primitives
             void AddVertex(Vector2 offset)
             {
                 var texCoord = new Vector2((Convert.ToBoolean(offset.X) ^ SpriteEffect.HasFlag(SpriteEffects.FlipHorizontally)).ToInt(), (Convert.ToBoolean(offset.Y) ^ SpriteEffect.HasFlag(SpriteEffects.FlipVertically)).ToInt());
-                Vertices.Add(new(new Vector3(Position - Main.screenPosition + (Vector2.Subtract(offset, new Vector2(0.5f)) * Size).RotatedBy(Rotation), 0), Color, texCoord));
+				Vertices.AddVertex(Position - Main.screenPosition + (Vector2.Subtract(offset, new Vector2(0.5f)) * Size).RotatedBy(Rotation), Color, texCoord);
             }
 
             AddVertex(new(0, 1));

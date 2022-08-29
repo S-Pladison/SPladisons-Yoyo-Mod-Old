@@ -1,31 +1,32 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SPladisonsYoyoMod.Common.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Common.Drawing.Particles
+namespace SPladisonsYoyoMod.Common.Particles
 {
     public abstract class Particle : ModTexturedType
     {
         public static Particle NewParticle<T>(Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f) where T : Particle
-            => NewParticle<T>(DrawLayers.OverDusts, DrawTypeFlags.None, position, velocity, color, alpha, rotation, scale);
+            => NewParticle<T>(DrawLayers.Dusts, DrawTypeFlags.None, position, velocity, color, alpha, rotation, scale);
 
         public static Particle NewParticle<T>(DrawLayers layer, DrawTypeFlags flags, Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f) where T : Particle
-            => NewParticle<T>(new DrawKey(layer, flags), position, velocity, color, alpha, rotation, scale);
+            => NewParticle<T>(new DrawSystem.DrawKey(layer, flags), position, velocity, color, alpha, rotation, scale);
 
-        public static Particle NewParticle<T>(DrawKey drawKey, Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f) where T : Particle
+        public static Particle NewParticle<T>(DrawSystem.DrawKey drawKey, Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f) where T : Particle
             => NewParticle(drawKey, ParticleSystem.ParticleType<T>(), position, velocity, color, alpha, rotation, scale);
 
         public static Particle NewParticle(int type, Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f)
-            => NewParticle(DrawLayers.OverDusts, DrawTypeFlags.None, type, position, velocity, color, alpha, rotation, scale);
+            => NewParticle(DrawLayers.Dusts, DrawTypeFlags.None, type, position, velocity, color, alpha, rotation, scale);
 
         public static Particle NewParticle(DrawLayers layer, DrawTypeFlags flags, int type, Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f)
-            => NewParticle(new DrawKey(layer, flags), type, position, velocity, color, alpha, rotation, scale);
+            => NewParticle(new DrawSystem.DrawKey(layer, flags), type, position, velocity, color, alpha, rotation, scale);
 
-        public static Particle NewParticle(DrawKey drawKey, int type, Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f)
+        public static Particle NewParticle(DrawSystem.DrawKey drawKey, int type, Vector2 position, Vector2? velocity = null, Color? color = null, int alpha = 0, float rotation = 0f, float scale = 1f)
         {
             if (Main.dedServ) return null;
 
@@ -47,7 +48,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Particles
             newParticle.OnSpawn();
             newParticle.InitTimeLeft = newParticle.TimeLeft;
 
-            ParticleSystem.particles[drawKey].Add(newParticle);
+            ParticleSystem.particles.Add(newParticle);
 
             return newParticle;
         }
@@ -56,7 +57,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Particles
 
         public int Type { get; private set; }
         public Asset<Texture2D> Texture2D { get; private set; }
-        public DrawKey DrawKey { get; private set; }
+        public DrawSystem.DrawKey DrawKey { get; private set; }
         public int InitTimeLeft { get; private set; }
 
         public Color Color;
@@ -121,7 +122,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Particles
             return new(lightColor.R * num, lightColor.G * num, lightColor.B * num, lightColor.A - Alpha);
         }
 
-        public void Draw(SpriteBatch spritebatch)
+        public void Draw(DrawSystem system)
         {
             var lightColor = Lighting.GetColor((int)(Position.X + 4.0) / 16, (int)(Position.Y + 4.0) / 16);
             var scaleMult = 1f;
@@ -132,7 +133,9 @@ namespace SPladisonsYoyoMod.Common.Drawing.Particles
                 var rect = new Rectangle(0, height * Frame, Texture2D.Width(), height);
                 var origin = rect.Size() * 0.5f;
                 var alphaColor = GetAlpha(lightColor);
-                spritebatch.Draw(Texture2D.Value, Position - Main.screenPosition, rect, GetColor(alphaColor), Rotation, origin, Scale * scaleMult, SpriteEffects.None, 0f);
+                var drawData = new DefaultDrawData(Texture2D.Value, Position - Main.screenPosition, rect, GetColor(alphaColor), Rotation, origin, Scale * scaleMult, SpriteEffects.None);
+
+                system.AddToLayer(DrawKey, drawData);
             }
             PostDraw(lightColor, scaleMult);
         }
@@ -143,7 +146,7 @@ namespace SPladisonsYoyoMod.Common.Drawing.Particles
         public void Kill()
         {
             OnKill();
-            ParticleSystem.particles[DrawKey].Remove(this);
+            ParticleSystem.particles.Remove(this);
         }
 
         // ...

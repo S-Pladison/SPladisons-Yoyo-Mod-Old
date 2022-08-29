@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
+using SPladisonsYoyoMod.Common.Particles;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
-    public class BellowingThunderParticle : Particle
+    /*public class BellowingThunderParticle : Particle
     {
         public override string Texture => "SPladisonsYoyoMod/Assets/Textures/Particles/BellowingThunderParticle";
 
@@ -39,5 +39,5 @@ namespace SPladisonsYoyoMod.Content.Particles
             scaleMult = 0.5f;
             return true;
         }
-    }
+    }*/
 }

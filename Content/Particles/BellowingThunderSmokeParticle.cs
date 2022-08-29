@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
+using SPladisonsYoyoMod.Common.Particles;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
-    public class BellowingThunderSmokeParticle : Particle
+    /*public class BellowingThunderSmokeParticle : Particle
     {
         public override string Texture => ModAssets.ParticlesPath + "SmokeParticle";
 
@@ -34,5 +34,5 @@ namespace SPladisonsYoyoMod.Content.Particles
             scaleMult = 0.5f;
             return true;
         }
-    }
+    }*/
 }

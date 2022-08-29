@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Drawing;
-using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
-using SPladisonsYoyoMod.Common.Drawing.Primitives;
+using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Common.Graphics.Primitives;
 using SPladisonsYoyoMod.Content.Particles;
 using SPladisonsYoyoMod.Utilities;
 using System;
@@ -53,7 +52,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class TheStellarThrowProjectile : YoyoProjectile, IPostUpdateCameraPosition
+    public class TheStellarThrowProjectile : YoyoProjectile, IDrawOnDifferentLayers
     {
         public static readonly Color[] ProjectileColors = new Color[] { new Color(255, 206, 90), new Color(255, 55, 125), new Color(137, 59, 114) };
         public static readonly Color[] DustColors = new Color[] { new Color(11, 25, 25), new Color(16, 11, 25), new Color(25, 11, 18) };
@@ -69,8 +68,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn(IEntitySource source)
         {
-            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("TheStellarThrowTrail").Value);
-            trail.OnUpdateEffectParameters += UpdateTrailEffect;
+            trail = new PrimitiveStrip
+            (
+                width: GetTrailWidth,
+                color: GetTrailColor,
+                effect: new IPrimitiveEffect.Custom("TheStellarThrowTrail", UpdateTrailEffect),
+                headTip: null,
+                tailTip: null
+            );
         }
 
         public override void AI()
@@ -92,7 +97,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 {
                     var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
                     var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(2);
-                    Particle.NewParticle<TheStellarThrowTrailParticle>(DrawLayers.OverDusts, DrawTypeFlags.Additive, position, velocity);
+                    //Particle.NewParticle<TheStellarThrowTrailParticle>(DrawLayers.OverDusts, DrawTypeFlags.Additive, position, velocity);
                 }
             }
         }
@@ -103,7 +108,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             {
                 var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
                 var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(2, 4);
-                Particle.NewParticle<TheStellarThrowHitParticle>(DrawLayers.OverDusts, DrawTypeFlags.Additive, position, velocity);
+                //Particle.NewParticle<TheStellarThrowHitParticle>(DrawLayers.OverDusts, DrawTypeFlags.Additive, position, velocity);
             }
         }
 
@@ -113,18 +118,24 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return true;
         }
 
-        private void UpdateTrailEffect(Effect effect)
+        private void UpdateTrailEffect(EffectParameterCollection parameter)
         {
-            effect.Parameters["Time"].SetValue(-timer * 0.05f);
-            effect.Parameters["Repeats"].SetValue(trail.Points.TotalDistance() / 100f);
+            parameter["Time"].SetValue(-timer * 0.05f);
+            parameter["Repeats"].SetValue(trail.Points.TotalDistance() / 100f);
         }
 
         private float GetTrailWidth(float progress) => 44f * (1 - progress * 0.45f);
         private Color GetTrailColor(float progress) => MathUtils.MultipleLerp(Color.Lerp, progress, ProjectileColors) * (1 - progress);
 
-        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        void IDrawOnDifferentLayers.DrawOnDifferentLayers(DrawSystem system)
         {
-            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 10, 16 * 7 * ReturningProgress);
+            system.AddToLayer(DrawLayers.Tiles, DrawTypeFlags.None, trail);
+        }
+
+        /*void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        {
+            /*var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(8);
             var origin = texture.Size() * 0.5f + new Vector2(0, 7);
             var starRotation = Main.GlobalTimeWrappedHourly;
@@ -149,6 +160,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 25, 16 * 9 * ReturningProgress);
             PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.None, trail);
-        }
+        }*/
     }
 }

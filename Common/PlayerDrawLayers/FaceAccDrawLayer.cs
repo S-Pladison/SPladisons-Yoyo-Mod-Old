@@ -10,7 +10,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Common.Drawing.PlayerDrawLayers
+namespace SPladisonsYoyoMod.Common.PlayerDrawLayers
 {
     public class FaceAccDrawLayer : PlayerDrawLayer
     {

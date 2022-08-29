@@ -10,7 +10,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
-namespace SPladisonsYoyoMod.Common
+namespace SPladisonsYoyoMod.Common.Graphics
 {
     [Autoload(Side = ModSide.Client)]
     public class EffectLoader : ILoadable
@@ -70,17 +70,11 @@ namespace SPladisonsYoyoMod.Common
                     parameters["Color1"].SetValue(new Color(198, 50, 189).ToVector4());
                     parameters["Color2"].SetValue(new Color(25, 25, 76).ToVector4());
                     break;
-                case "BlackholeTrail":
-                    parameters["Texture0"].SetValue(GetExtraTexture(11));
-                    break;
                 case "IgnisTrail":
                     parameters["Texture0"].SetValue(GetExtraTexture(17));
                     break;
                 case "MetaBlastFilter":
                     parameters["Contrast"].SetValue(1.15f);
-                    break;
-                case "MyocardialInfarctionStrip":
-                    parameters["Texture0"].SetValue(GetExtraTexture(11));
                     break;
                 case "ResidualLightTrail":
                     parameters["Texture0"].SetValue(GetExtraTexture(36));

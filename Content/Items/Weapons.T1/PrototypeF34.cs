@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SPladisonsYoyoMod.Common.Drawing;
+using SPladisonsYoyoMod.Common.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;

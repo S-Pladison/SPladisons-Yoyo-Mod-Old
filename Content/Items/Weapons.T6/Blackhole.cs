@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Drawing;
-using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
-using SPladisonsYoyoMod.Common.Drawing.Primitives;
+using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Common.Graphics.Primitives;
 using SPladisonsYoyoMod.Content.Particles;
 using SPladisonsYoyoMod.Utilities;
 using System;
@@ -42,7 +41,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class BlackholeProjectile : YoyoProjectile, IDrawOnRenderTarget, IPostUpdateCameraPosition
+    public class BlackholeProjectile : YoyoProjectile, IDrawOnRenderTarget, IDrawOnDifferentLayers
     {
         public static float Radius { get; } = 16 * 10;
 
@@ -61,7 +60,14 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             BlackholeEffectSystem.AddElement(this);
 
-            trail = new PrimitiveStrip(p => 22 * (1 - p * 0.7f), p => new Color(209, 112, 224) * (1 - p), ModAssets.GetEffect("BlackholeTrail").Value);
+            trail = new PrimitiveStrip
+            (
+                width: p => 22 * (1 - p * 0.7f),
+                color: p => new Color(209, 112, 224) * (1 - p),
+                effect: new IPrimitiveEffect.Default(ModAssets.GetExtraTexture(11), false),
+                headTip: null,
+                tailTip: null
+            );
         }
 
         public override bool PreKill(int timeLeft)
@@ -148,19 +154,21 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             spriteBatch.Draw(texture.Value, drawPosition, null, Color.White, Main.GlobalTimeWrappedHourly * 2.5f, texture.Size() * 0.5f, 0.35f * (1 + MathF.Sin(Main.GlobalTimeWrappedHourly) * 0.1f) * scale, SpriteEffects.None, 0f);
         }
 
-        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        void IDrawOnDifferentLayers.DrawOnDifferentLayers(DrawSystem system)
         {
             var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(32);
             var rotation = (float)Math.Sin(timer * 0.0125f);
             var scale = Projectile.scale;
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, drawPosition, null, Color.White * rotation, (float)Math.Sin(timer * 0.025f), texture.Size() * 0.5f, (0.4f + rotation * 0.15f) * scale, SpriteEffects.None, 0));
+            var drawData = new DefaultDrawData(texture.Value, drawPosition, null, Color.White * rotation, (float)Math.Sin(timer * 0.025f), texture.Size() * 0.5f, (0.4f + rotation * 0.15f) * scale, SpriteEffects.None);
+            system.AddToLayer(DrawLayers.Dusts, DrawTypeFlags.All, drawData);
 
             texture = ModAssets.GetExtraTexture(31);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, drawPosition, null, Color.White, rotation, texture.Size() * 0.5f, 0.28f * scale, SpriteEffects.None, 0));
+            drawData = new DefaultDrawData(texture.Value, drawPosition, null, Color.White, rotation, texture.Size() * 0.5f, 0.28f * scale, SpriteEffects.None);
+            system.AddToLayer(DrawLayers.Dusts, DrawTypeFlags.All, drawData);
 
             trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 10, 16 * 7 * ReturningProgress);
-            PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.All, trail);
+            system.AddToLayer(DrawLayers.Tiles, DrawTypeFlags.All, trail);
         }
     }
 
@@ -189,8 +197,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         {
             SPladisonsYoyoMod.Events.OnPostUpdateCameraPosition += DrawToTarget;
             SPladisonsYoyoMod.Events.OnResolutionChanged += RecreateRenderTarget;
-
-            DrawingManager.AddCustomMethodToLayer(DrawLayers.OverWalls, DrawToScreen);
+            DrawSystem.AddPostDrawLayerMethod(DrawLayers.Walls, DrawToScreen);
         }
 
         public override void Unload()
@@ -230,7 +237,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             device.SetRenderTargets(null);
         }
 
-        private void DrawToScreen(SpriteBatch spriteBatch, DrawLayers _)
+        private void DrawToScreen(SpriteBatch spriteBatch)
         {
             if (target == null || !elems.Any()) return;
 

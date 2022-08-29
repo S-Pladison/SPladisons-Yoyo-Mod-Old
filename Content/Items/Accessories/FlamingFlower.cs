@@ -72,9 +72,9 @@ namespace SPladisonsYoyoMod.Content.Items.Accessories
         public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
         public override bool IsSceneEffectActive(Player player) => player.GetPladPlayer().ZoneFlamingFlower;
 
-        public override void SpecialVisuals(Player player)
+        public override void SpecialVisuals(Player player, bool isActive)
         {
-            if (!Main.UseHeatDistortion) return;
+            if (!isActive || !Main.UseHeatDistortion) return;
 
             player.ManageSpecialBiomeVisuals("HeatDistortion", true);
 

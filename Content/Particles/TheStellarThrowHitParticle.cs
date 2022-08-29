@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
-using SPladisonsYoyoMod.Common.Drawing.Primitives;
+using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Common.Graphics.Primitives;
 using SPladisonsYoyoMod.Utilities;
 using System;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
-    public class TheStellarThrowHitParticle : Particle, IPostUpdateCameraPosition
+    /*public class TheStellarThrowHitParticle : Particle, IPostUpdateCameraPosition
     {
         private PrimitiveStrip trail;
 
@@ -46,5 +46,5 @@ namespace SPladisonsYoyoMod.Content.Particles
             trail.UpdatePointsAsSimpleTrail(Position, 10);
             PrimitiveSystem.AddToDataCache(DrawKey.Layer, DrawKey.Flags, trail);
         }
-    }
+    }*/
 }

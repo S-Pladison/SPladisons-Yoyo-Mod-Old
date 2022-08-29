@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Drawing;
-using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
-using SPladisonsYoyoMod.Common.Drawing.Primitives;
+using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Graphics.Primitives;
 using SPladisonsYoyoMod.Utilities;
 using Terraria;
 using Terraria.DataStructures;
@@ -65,8 +64,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn(IEntitySource source)
         {
-            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("ResidualLightTrail").Value);
-            trail.OnUpdateEffectParameters += UpdateTrailEffect;
+            /*trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("ResidualLightTrail").Value);
+            trail.OnUpdateEffectParameters += UpdateTrailEffect;*/
         }
 
         public override void AI()
@@ -156,8 +155,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            trail.UpdatePointsAsSimpleTrail(Projectile.Center, 20, 16 * 10);
-            PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.None, trail);
+            /*trail.UpdatePointsAsSimpleTrail(Projectile.Center, 20, 16 * 10);
+            PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.None, trail);*/
         }
     }
 
@@ -212,7 +211,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            var position = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            /*var position = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(21);
             var scale = Projectile.scale;
             AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None, 0));
@@ -221,7 +220,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * 0.25f * Projectile.scale * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 0.4f, SpriteEffects.None, 0));
 
             texture = ModAssets.GetExtraTexture(3);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 1.3f, SpriteEffects.None, 0));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, null, _color * Projectile.ai[0], Projectile.rotation, texture.Size() * 0.5f, scale * 1.3f, SpriteEffects.None, 0));*/
         }
     }
 

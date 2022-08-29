@@ -2,9 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Drawing;
-using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
+using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Content.Particles;
 using System;
 using System.Collections.Generic;
@@ -111,7 +110,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var rotation = Main.rand.NextFloat(0, MathHelper.TwoPi);
                 var scale = Main.rand.NextFloat(0.8f, 1.2f);
 
-                Particle.NewParticle(ParticleSystem.ParticleType<BellowingThunderParticle>(), position, Vector2.Zero, Color.White, 70, rotation, scale);
+                //Particle.NewParticle(ParticleSystem.ParticleType<BellowingThunderParticle>(), position, Vector2.Zero, Color.White, 70, rotation, scale);
             }
 
             _effect.Update(_counter);
@@ -155,7 +154,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            var texture = ModAssets.GetExtraTexture(21);
+            /*var texture = ModAssets.GetExtraTexture(21);
             var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var scale = Projectile.scale;
             AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, drawPosition, null, _effectColor * 0.6f, 0f, texture.Size() * .5f, scale * 0.25f, SpriteEffects.None, 0));
@@ -166,7 +165,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * 0.4f, 0f, texture.Size() * 0.5f, scale * 0.1f, SpriteEffects.None, 0));
 
             texture = ModAssets.GetExtraTexture(21);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * 0.35f, Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None, 0));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * 0.35f, Projectile.rotation, texture.Size() * 0.5f, scale * 0.6f, SpriteEffects.None, 0));*/
         }
 
         private readonly LightningEffect _effect = new();
@@ -190,7 +189,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
                 var texture = ModAssets.GetExtraTexture(22);
                 var rectangle = new Rectangle(_time * 96, _frame * 96, 96, 96);
-                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, 0));
+                //AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, position, rectangle, Color.White, _rotation, new Vector2(48, 48), scale, _spriteEffects, 0));
             }
 
             public void Update(int counter)
@@ -273,7 +272,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             {
                 var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
                 var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3);
-                Particle.NewParticle(ParticleSystem.ParticleType<BellowingThunderSmokeParticle>(), position, velocity);
+                //Particle.NewParticle(ParticleSystem.ParticleType<BellowingThunderSmokeParticle>(), position, velocity);
             }
 
             // SoundEngine.PlaySound(SoundLoader.GetSoundSlot(Mod, "Content/Sounds/BellowingThunderLightningSound"), Projectile.Center);
@@ -335,7 +334,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            /*var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var scale = Projectile.scale * 3;
             var texture = ModAssets.GetExtraTexture(25);
             var offset = Vector2.UnitY * texture.Height() * scale;
@@ -345,7 +344,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, Color.White * LightningProgress * 2f, 0f, texture.Size() * 0.5f, scale * BeamProgress, SpriteEffects.None, 0));
 
             texture = ModAssets.GetExtraTexture(23);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None, 0));
+            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, _effectColor * LightningProgress * 0.5f, 0f, texture.Size() * 0.5f, scale * LightningProgress * 0.4f, SpriteEffects.None, 0));*/
         }
 
         private static readonly Color _effectColor = new(90, 40, 255);

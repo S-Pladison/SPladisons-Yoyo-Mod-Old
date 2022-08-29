@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace SPladisonsYoyoMod.Common.Drawing
+namespace SPladisonsYoyoMod.Common.Graphics
 {
     public enum DrawLayers
     {
-        OverWalls,
-        OverTiles,
-        OverDusts
+        Walls,
+        Tiles,
+        Dusts
     }
 
     [Flags]

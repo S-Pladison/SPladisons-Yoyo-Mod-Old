@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Drawing;
-using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
-using SPladisonsYoyoMod.Common.Drawing.Primitives;
+using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Graphics.Primitives;
 using SPladisonsYoyoMod.Utilities;
 using System.Collections.Generic;
 using Terraria;
@@ -96,13 +95,13 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         private void InitTrails()
         {
-            trails = new PrimitiveStrip[2];
+            /*trails = new PrimitiveStrip[2];
             var effect = ModAssets.GetEffect("AdamantiteYoyoTrail").Value;
 
             for (int i = 0; i < 2; i++)
             {
                 trails[i] = new PrimitiveStrip(GetTrailWidth, GetTrailColor, effect);
-            }
+            }*/
         }
 
         private float GetTrailWidth(float progress) => 3f * (1 - progress * 0.4f);
@@ -110,7 +109,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            /*var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModContent.Request<Texture2D>(Texture + "_Effect").Value;
 
             AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture, drawPosition, null, Color.White, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.5f, SpriteEffects.None, 0));
@@ -131,7 +130,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
                 trail.UpdatePointsAsSimpleTrail(pos, 5, 16f);
                 PrimitiveSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, trail);
-            }
+            }*/
         }
     }
 

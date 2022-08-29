@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Graphics;
 using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod

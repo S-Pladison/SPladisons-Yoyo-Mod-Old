@@ -103,6 +103,7 @@ namespace SPladisonsYoyoMod.Common.Globals
             var yoyoGloveTooltips = tooltips.FindAll(i => i.Text.StartsWith("[YG]"));
             var rarityColor = ItemRarity.GetColor(item.rare);
             var hexRarityColor = Colors.AlphaDarken(rarityColor).Hex3();
+            var textColor = Color.Lerp(rarityColor, Color.White, 0.625f);
             var infoText = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoyoGloveInfo");
 
             if (yoyoGloveTooltips.Any())
@@ -119,7 +120,7 @@ namespace SPladisonsYoyoMod.Common.Globals
                 {
                     var text = line.Text.Replace("[YG]", $"[c/{hexRarityColor}:‣ ]");
 
-                    tooltips.Insert(index++, new TooltipLine(Mod, "YoyoGloveDescription" + counter++, text));
+                    tooltips.Insert(index++, new TooltipLine(Mod, "YoyoGloveDescription" + counter++, text) { OverrideColor = textColor });
                 }
             }
             else
@@ -131,7 +132,7 @@ namespace SPladisonsYoyoMod.Common.Globals
 
                 var text = $"[c/{hexRarityColor}:‣] " + Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoyoGloveVanillaDescription");
                 tooltips.Insert(index++, new TooltipLine(Mod, "YoyoGloveInfo", infoText) { OverrideColor = rarityColor });
-                tooltips.Insert(index++, new TooltipLine(Mod, "YoyoGloveDescription0", text));
+                tooltips.Insert(index++, new TooltipLine(Mod, "YoyoGloveDescription0", text) { OverrideColor = textColor });
             }
         }
 

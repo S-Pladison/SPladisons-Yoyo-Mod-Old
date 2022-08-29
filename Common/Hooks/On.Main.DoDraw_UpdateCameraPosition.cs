@@ -1,5 +1,7 @@
-﻿using SPladisonsYoyoMod.Common.Drawing.Particles;
+﻿using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Particles;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {
@@ -11,25 +13,7 @@ namespace SPladisonsYoyoMod.Common.Hooks
 
             if (Main.gameMenu) return;
 
-            foreach (var proj in Main.projectile)
-            {
-                if (proj.active && proj.ModProjectile is IPostUpdateCameraPosition modProj)
-                {
-                    modProj.PostUpdateCameraPosition();
-                }
-            }
-
-            foreach (var pair in ParticleSystem.particles)
-            {
-                foreach (var particle in pair.Value)
-                {
-                    if (particle is IPostUpdateCameraPosition obj)
-                    {
-                        obj.PostUpdateCameraPosition();
-                    }
-                }
-            }
-
+            DrawSystem.GetDrawData();
             SPladisonsYoyoMod.Events.InvokeOnPostUpdateCameraPosition();
         }
     }

@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Drawing;
-using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
-using SPladisonsYoyoMod.Common.Drawing.Primitives;
+using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Graphics.Primitives;
+using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Content.Particles;
 using SPladisonsYoyoMod.Utilities;
 using System;
@@ -35,7 +34,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class MyocardialInfarctionProjectile : YoyoProjectile, IPostUpdateCameraPosition
+    public class MyocardialInfarctionProjectile : YoyoProjectile, IDrawOnDifferentLayers
     {
         public static readonly Color[] Colors = new Color[] { new(255, 0, 35), new(255, 85, 165), new(255, 40, 0) };
 
@@ -43,6 +42,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         private const float EFFECT_DRAW_RADIUS = EFFECT_RADIUS + 16 * 2;
 
         private PrimitiveStrip[] trails;
+        private IPrimitiveEffect effect;
 
         // ...
 
@@ -52,8 +52,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn(IEntitySource source)
         {
-            var effect = ModAssets.GetEffect("MyocardialInfarctionStrip").Value;
-
+            effect = new IPrimitiveEffect.Default(ModAssets.GetExtraTexture(11), true);
             trails = new PrimitiveStrip[2];
             trails[0] = new(p => 8 * (1 - p * 0.75f), p => Colors[0] * (1 - p * p), effect);
             trails[1] = new(p => 5 * (1 - p * 0.9f), p => Colors[1] * (1 - p * p), effect);
@@ -78,7 +77,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                     var rotation = Main.rand.NextFloat(-MathHelper.PiOver2, MathHelper.PiOver2);
                     var scale = Main.rand.NextFloat(0.85f, 1.25f);
                     var drawType = Main.rand.NextBool(2) ? DrawTypeFlags.Pixelated : DrawTypeFlags.All;
-                    Particle.NewParticle<HeartParticle>(DrawLayers.OverWalls, drawType, position, velocity, Colors[Main.rand.Next(3)], Main.rand.Next(50), rotation, scale);
+                    Particle.NewParticle<HeartParticle>(DrawLayers.Walls, drawType, position, velocity, Colors[Main.rand.Next(3)], Main.rand.Next(50), rotation, scale);
                 }
 
                 owner.lifeRegen++;
@@ -92,7 +91,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var rotation = Main.rand.NextFloat(-MathHelper.PiOver2, MathHelper.PiOver2);
                 var scale = Main.rand.NextFloat(0.85f, 1.25f);
                 var drawType = Main.rand.NextBool(2) ? DrawTypeFlags.Pixelated : DrawTypeFlags.All;
-                Particle.NewParticle<HeartParticle>(DrawLayers.OverWalls, drawType, position, velocity, Colors[Main.rand.Next(3)], Main.rand.Next(50), rotation, scale);
+                Particle.NewParticle<HeartParticle>(DrawLayers.Walls, drawType, position, velocity, Colors[Main.rand.Next(3)], Main.rand.Next(50), rotation, scale);
             }
         }
 
@@ -117,11 +116,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return false;
         }
 
-        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        void IDrawOnDifferentLayers.DrawOnDifferentLayers(DrawSystem system)
         {
             // Trails
 
             var projectilePos = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY;
+            var overTilesDrawKey = new DrawSystem.DrawKey(DrawLayers.Tiles, DrawTypeFlags.Pixelated);
 
             for (int i = 0; i < 2; i++)
             {
@@ -129,7 +129,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var position = projectilePos + new Vector2(6f, 0).RotatedBy(i * MathHelper.Pi + Projectile.rotation);
 
                 trail.UpdatePointsAsSimpleTrail(position, 30, 16 * 25 * ReturningProgress);
-                PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Pixelated, trail);
+                system.AddToLayer(overTilesDrawKey, trail);
             }
 
             // Targets
@@ -140,7 +140,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             var scale = Projectile.scale;
             var rect = new Rectangle(0, 0, 200, 200);
             var origin = new Vector2(100);
-            var effect = ModAssets.GetEffect("MyocardialInfarctionStrip").Value;
 
             foreach (var target in GetTargets(EFFECT_DRAW_RADIUS))
             {
@@ -154,12 +153,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var strip = new PrimitiveStrip(TargetConnectionWidth, p => TargetConnectionColor(p) * progress, effect);
                 strip.Points = BezierCurve.GetPoints(8, points);
 
-                PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Pixelated, strip);
+                system.AddToLayer(overTilesDrawKey, strip);
 
                 color = Colors[0] * progress;
 
-                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Pixelated, new(texture.Value, npcDrawPos, rect, color * 0.33f, -sin, origin, scale * 0.25f, SpriteEffects.None, 0));
-                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Pixelated, new(texture.Value, npcDrawPos, rect, color, sin, origin, scale * 0.15f, SpriteEffects.None, 0));
+                system.AddToLayer(overTilesDrawKey, new DefaultDrawData(texture.Value, npcDrawPos, rect, color * 0.33f, -sin, origin, scale * 0.25f, SpriteEffects.None));
+                system.AddToLayer(DrawLayers.Dusts, DrawTypeFlags.Pixelated, new DefaultDrawData(texture.Value, npcDrawPos, rect, color, sin, origin, scale * 0.15f, SpriteEffects.None));
             }
 
             // Projectile effects
@@ -167,7 +166,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             var rotation = MathF.Sin(Main.GlobalTimeWrappedHourly * 3) * 0.8f;
             color = Colors[0] * ReturningProgress * 0.7f;
 
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Pixelated, new(texture.Value, drawPosition, rect, color, rotation, origin, scale * 0.25f, SpriteEffects.None, 0));
+            system.AddToLayer(overTilesDrawKey, new DefaultDrawData(texture.Value, drawPosition, rect, color, rotation, origin, scale * 0.25f, SpriteEffects.None));
         }
 
         private List<(NPC npc, float distance)> GetTargets(float radius)

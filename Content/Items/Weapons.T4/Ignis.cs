@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common;
-using SPladisonsYoyoMod.Common.Drawing;
-using SPladisonsYoyoMod.Common.Drawing.AdditionalDrawing;
-using SPladisonsYoyoMod.Common.Drawing.Particles;
-using SPladisonsYoyoMod.Common.Drawing.Primitives;
+using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Common.Graphics.Primitives;
 using SPladisonsYoyoMod.Content.Particles;
 using SPladisonsYoyoMod.Utilities;
 using System.IO;
@@ -64,8 +63,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn(IEntitySource source)
         {
-            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("IgnisTrail").Value);
-            trail.OnUpdateEffectParameters += UpdateTrailEffect;
+            /*trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("IgnisTrail").Value);
+            trail.OnUpdateEffectParameters += UpdateTrailEffect;*/
         }
 
         public override void AI()
@@ -78,7 +77,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
                 var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3);
 
-                Particle.NewParticle(DrawLayers.OverWalls, DrawTypeFlags.None, ParticleSystem.ParticleType<SmokeParticle>(), position, velocity, Color.Black, 200, Main.rand.NextFloat(MathHelper.TwoPi), Main.rand.NextFloat(0.15f, 0.7f));
+                //Particle.NewParticle(DrawLayers.OverWalls, DrawTypeFlags.None, ParticleSystem.ParticleType<SmokeParticle>(), position, velocity, Color.Black, 200, Main.rand.NextFloat(MathHelper.TwoPi), Main.rand.NextFloat(0.15f, 0.7f));
             }
 
             if (timer % 2 == 0)
@@ -122,12 +121,12 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IPostUpdateCameraPosition.PostUpdateCameraPosition()
         {
-            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            /*var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(4).Value;
             AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Additive, new(texture, drawPosition, null, new Color(239, 137, 37), Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.4f, SpriteEffects.None, 0));
 
             trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 30, 16 * 12f);
-            PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.None, trail);
+            PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.None, trail);*/
         }
     }
 
