@@ -33,7 +33,7 @@ namespace SPladisonsYoyoMod.Common.Graphics.Primitives
             void AddVertex(Vector2 offset)
             {
                 var texCoord = new Vector2((Convert.ToBoolean(offset.X) ^ SpriteEffect.HasFlag(SpriteEffects.FlipHorizontally)).ToInt(), (Convert.ToBoolean(offset.Y) ^ SpriteEffect.HasFlag(SpriteEffects.FlipVertically)).ToInt());
-				Vertices.AddVertex(Position - Main.screenPosition + (Vector2.Subtract(offset, new Vector2(0.5f)) * Size).RotatedBy(Rotation), Color, texCoord);
+                Vertices.AddVertex(Position - Main.screenPosition + (Vector2.Subtract(offset, new Vector2(0.5f)) * Size).RotatedBy(Rotation), Color, texCoord);
             }
 
             AddVertex(new(0, 1));

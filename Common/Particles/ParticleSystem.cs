@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.Graphics;
 using System.Collections.Generic;
 using Terraria.ModLoader;
 

@@ -5,12 +5,12 @@ namespace SPladisonsYoyoMod.Common.Graphics.Primitives
 {
     public class PrimitiveData : IDrawData
     {
-		public static readonly IPrimitiveEffect.Default NullEffect = new();
-		public static readonly IPrimitiveTip.Without NullTip = new();
+        public static readonly IPrimitiveEffect.Default NullEffect = new();
+        public static readonly IPrimitiveTip.Without NullTip = new();
 
-		// ...
+        // ...
 
-		public IPrimitiveEffect PrimitiveEffect { get; private set; }
+        public IPrimitiveEffect PrimitiveEffect { get; private set; }
         public PrimitiveType PrimitiveType { get; private set; }
 
         // ...
@@ -22,26 +22,26 @@ namespace SPladisonsYoyoMod.Common.Graphics.Primitives
 
         public PrimitiveData(PrimitiveType type, int primitivesCount, List<VertexPositionColorTexture> vertices, IPrimitiveEffect effect)
         {
-			PrimitiveEffect = effect;
+            PrimitiveEffect = effect;
             PrimitiveType = type;
             PrimitivesCount = primitivesCount;
             Vertices = vertices ?? new List<VertexPositionColorTexture>();
-			PrimitiveEffect = effect ?? NullEffect;
+            PrimitiveEffect = effect ?? NullEffect;
         }
 
         public void UpdateEffectParameters()
-		{
-			PrimitiveEffect.Effect.Value.Parameters["WorldViewProj"].SetValue(PrimitiveEffect.Matrix);
-			PrimitiveEffect.SetParameters(PrimitiveEffect.Effect.Value.Parameters);
-		}
+        {
+            PrimitiveEffect.Effect.Value.Parameters["WorldViewProj"].SetValue(PrimitiveEffect.Matrix);
+            PrimitiveEffect.SetParameters(PrimitiveEffect.Effect.Value.Parameters);
+        }
 
-		public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
             RecreateVertices();
 
             if (PrimitivesCount <= 0) return;
 
-			UpdateEffectParameters();
+            UpdateEffectParameters();
             DrawPrimitives(spriteBatch.GraphicsDevice);
         }
 
@@ -55,7 +55,7 @@ namespace SPladisonsYoyoMod.Common.Graphics.Primitives
                 graphics.DrawUserPrimitives(PrimitiveType, Vertices.ToArray(), 0, PrimitivesCount);
             }
         }
-	}
+    }
 
     public class IndexedPrimitiveData : PrimitiveData
     {

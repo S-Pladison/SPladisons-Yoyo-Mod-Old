@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Graphics;
-using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Common.Graphics.Primitives;
+using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Content.Particles;
 using SPladisonsYoyoMod.Utilities;
 using System;

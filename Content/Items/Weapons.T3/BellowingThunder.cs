@@ -3,8 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Graphics;
-using SPladisonsYoyoMod.Common.Particles;
-using SPladisonsYoyoMod.Content.Particles;
 using System;
 using System.Collections.Generic;
 using System.Linq;

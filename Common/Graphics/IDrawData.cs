@@ -2,8 +2,8 @@
 
 namespace SPladisonsYoyoMod.Common.Graphics
 {
-	public interface IDrawData
-	{
-		void Draw(SpriteBatch spriteBatch);
-	}
+    public interface IDrawData
+    {
+        void Draw(SpriteBatch spriteBatch);
+    }
 }

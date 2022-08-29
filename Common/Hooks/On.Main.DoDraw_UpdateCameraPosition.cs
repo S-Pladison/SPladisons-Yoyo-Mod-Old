@@ -1,7 +1,5 @@
 ﻿using SPladisonsYoyoMod.Common.Graphics;
-using SPladisonsYoyoMod.Common.Particles;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Hooks
 {

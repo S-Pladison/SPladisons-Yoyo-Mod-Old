@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Graphics;
 using System;
 using System.Collections.Generic;
