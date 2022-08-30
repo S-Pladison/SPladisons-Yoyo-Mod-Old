@@ -1,4 +1,6 @@
-﻿using Terraria;
+﻿using MonoMod.RuntimeDetour.HookGen;
+using System.Reflection;
+using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -119,5 +121,25 @@ namespace SPladisonsYoyoMod.Content.Items.Misc
         {
             buttonWasPressed = false;
         }
+
+        public override void Load()
+            => HookEndpointManager.Add<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
+
+        public override void Unload()
+            => HookEndpointManager.Remove<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
+
+        // ...
+
+        private static void On_NPCLoader_SetChatButtons(orig_SetChatButtons orig, ref string button, ref string button2)
+        {
+            orig(ref button, ref button2);
+
+            Instance.SetChatButtons(ref button2);
+        }
+
+        private delegate void orig_SetChatButtons(ref string button, ref string button2);
+        private delegate void hook_SetChatButtons(orig_SetChatButtons orig, ref string button, ref string button2);
+
+        private static readonly MethodInfo SetChatButtonsMethod = typeof(NPCLoader).GetMethod(nameof(NPCLoader.SetChatButtons));
     }
 }

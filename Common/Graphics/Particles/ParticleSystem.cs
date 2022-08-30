@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Common.Particles
+namespace SPladisonsYoyoMod.Common.Graphics.Particles
 {
     [Autoload(Side = ModSide.Client)]
     public class ParticleSystem : ModSystem

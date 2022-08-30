@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Graphics;
 using SPladisonsYoyoMod.Common.Graphics.Primitives;
+using SPladisonsYoyoMod.Utilities;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -32,7 +33,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class AdamantiteYoyoProjectile : YoyoProjectile, IPostUpdateCameraPosition
+    public class AdamantiteYoyoProjectile : YoyoProjectile, IDrawOnDifferentLayers
     {
         public static readonly Color LightColor = new(0.3f, 0.9f, 1f);
 
@@ -93,24 +94,24 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         private void InitTrails()
         {
-            /*trails = new PrimitiveStrip[2];
-            var effect = ModAssets.GetEffect("AdamantiteYoyoTrail").Value;
+            trails = new PrimitiveStrip[2];
+            var effect = new IPrimitiveEffect.Default(ModAssets.GetExtraTexture(11), false);
 
             for (int i = 0; i < 2; i++)
             {
                 trails[i] = new PrimitiveStrip(GetTrailWidth, GetTrailColor, effect);
-            }*/
+            }
         }
 
         private float GetTrailWidth(float progress) => 3f * (1 - progress * 0.4f);
         private Color GetTrailColor(float progress) => LightColor * (1 - progress) * 0.8f;
 
-        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        void IDrawOnDifferentLayers.DrawOnDifferentLayers(DrawSystem system)
         {
-            /*var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModContent.Request<Texture2D>(Texture + "_Effect").Value;
 
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture, drawPosition, null, Color.White, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.5f, SpriteEffects.None, 0));
+            system.AddToLayer(DrawLayers.Dusts, DrawTypeFlags.Additive, new DefaultDrawData(texture, drawPosition, null, Color.White, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.5f, SpriteEffects.None));
 
             var mult = Projectile.localAI[1];
             texture = ModAssets.GetExtraTexture(33).Value;
@@ -118,7 +119,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             for (int i = 0; i < 3; i++)
             {
                 var position = drawPosition + new Vector2(2 * mult, 0).RotatedBy(MathHelper.TwoPi / 3f * i + Main.GlobalTimeWrappedHourly);
-                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Additive, new(texture, position, null, LightColor * 0.7f * mult, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0));
+                system.AddToLayer(DrawLayers.Tiles, DrawTypeFlags.Additive, new DefaultDrawData(texture, position, null, LightColor * 0.7f * mult, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None));
             }
 
             for (int i = 0; i < 2; i++)
@@ -127,8 +128,8 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var trail = trails[i];
 
                 trail.UpdatePointsAsSimpleTrail(pos, 5, 16f);
-                PrimitiveSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, trail);
-            }*/
+                system.AddToLayer(DrawLayers.Dusts, DrawTypeFlags.Additive, trail);
+            }
         }
     }
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Common.Graphics.Particles;
 using SPladisonsYoyoMod.Common.Graphics.Primitives;
 using SPladisonsYoyoMod.Utilities;
 using System;

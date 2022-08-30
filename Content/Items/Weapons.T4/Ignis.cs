@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SPladisonsYoyoMod.Common;
+using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Graphics.Particles;
 using SPladisonsYoyoMod.Common.Graphics.Primitives;
+using SPladisonsYoyoMod.Content.Particles;
 using SPladisonsYoyoMod.Utilities;
 using System.IO;
 using Terraria;
@@ -49,7 +51,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
     }
 
-    public class IgnisProjectile : YoyoProjectile, IPostUpdateCameraPosition
+    public class IgnisProjectile : YoyoProjectile, IDrawOnDifferentLayers
     {
         private PrimitiveStrip trail;
         private int timer;
@@ -60,8 +62,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn(IEntitySource source)
         {
-            /*trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("IgnisTrail").Value);
-            trail.OnUpdateEffectParameters += UpdateTrailEffect;*/
+            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, new IPrimitiveEffect.Custom("IgnisTrail", UpdateTrailEffect));
         }
 
         public override void AI()
@@ -74,7 +75,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
                 var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3);
 
-                //Particle.NewParticle(DrawLayers.OverWalls, DrawTypeFlags.None, ParticleSystem.ParticleType<SmokeParticle>(), position, velocity, Color.Black, 200, Main.rand.NextFloat(MathHelper.TwoPi), Main.rand.NextFloat(0.15f, 0.7f));
+                Particle.NewParticle(DrawLayers.Walls, DrawTypeFlags.None, ParticleSystem.ParticleType<SmokeParticle>(), position, velocity, Color.Black, 200, Main.rand.NextFloat(MathHelper.TwoPi), Main.rand.NextFloat(0.15f, 0.7f));
             }
 
             if (timer % 2 == 0)
@@ -107,23 +108,23 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             return false;
         }
 
-        private void UpdateTrailEffect(Effect effect)
+        private void UpdateTrailEffect(EffectParameterCollection parameters)
         {
-            effect.Parameters["Time"].SetValue(-timer * 0.05f);
-            effect.Parameters["Repeats"].SetValue(trail.Points.TotalDistance() / 256f);
+            parameters["Time"].SetValue(-timer * 0.05f);
+            parameters["Repeats"].SetValue(trail.Points.TotalDistance() / 256f);
         }
 
         private float GetTrailWidth(float progress) => 28f * (1 - progress * 0.2f);
         private Color GetTrailColor(float progress) => Color.Lerp(new Color(255, 196, 63), new Color(220, 7, 7), progress) * (1 - progress) * ReturningProgress;
 
-        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        void IDrawOnDifferentLayers.DrawOnDifferentLayers(DrawSystem system)
         {
-            /*var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(4).Value;
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.Additive, new(texture, drawPosition, null, new Color(239, 137, 37), Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.4f, SpriteEffects.None, 0));
+            system.AddToLayer(DrawLayers.Tiles, DrawTypeFlags.Additive, new DefaultDrawData(texture, drawPosition, null, new Color(239, 137, 37), Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.4f, SpriteEffects.None));
 
             trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 30, 16 * 12f);
-            PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.None, trail);*/
+            system.AddToLayer(DrawLayers.Tiles, DrawTypeFlags.None, trail);
         }
     }
 

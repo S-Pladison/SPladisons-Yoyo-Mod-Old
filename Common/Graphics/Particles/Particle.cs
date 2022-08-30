@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Common.Particles
+namespace SPladisonsYoyoMod.Common.Graphics.Particles
 {
     public abstract class Particle : ModTexturedType
     {

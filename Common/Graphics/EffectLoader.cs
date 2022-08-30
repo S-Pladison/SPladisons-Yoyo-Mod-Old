@@ -60,9 +60,6 @@ namespace SPladisonsYoyoMod.Common.Graphics
 
             switch (name)
             {
-                case "AdamantiteYoyoTrail":
-                    parameters["Texture0"].SetValue(GetExtraTexture(11));
-                    break;
                 case "BlackholeBackground":
                     parameters["Texture1"].SetValue(GetExtraTexture(28));
                     parameters["Texture2"].SetValue(GetExtraTexture(29));
