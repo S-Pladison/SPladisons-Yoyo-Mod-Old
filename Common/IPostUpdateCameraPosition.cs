@@ -23,7 +23,6 @@ namespace SPladisonsYoyoMod.Common
 
                     if (Main.gameMenu) return;
 
-                    DrawSystem.GetDrawData();
                     SPladisonsYoyoMod.Events.InvokeOnPostUpdateCameraPosition();
                 };
             }

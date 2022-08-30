@@ -9,7 +9,7 @@ namespace SPladisonsYoyoMod.Common.Graphics.Primitives
     public interface IPrimitiveEffect
     {
         abstract Asset<Effect> Effect { get; }
-        virtual Matrix Matrix { get => DrawSystem.TransformMatrix; }
+        virtual Matrix Matrix { get => DrawSystem.ActiveTransformMatrix; }
 
         void SetParameters(EffectParameterCollection parameters);
 

@@ -18,7 +18,7 @@ namespace SPladisonsYoyoMod.Content.Particles
 
         public override void OnSpawn()
         {
-            TimeLeft = 25;
+            TimeLeft = 30;
             Rotation = Main.rand.NextFloat(MathHelper.TwoPi);
 
             trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, new IPrimitiveEffect.Custom("TheStellarThrowParticleTrail"));
@@ -29,21 +29,23 @@ namespace SPladisonsYoyoMod.Content.Particles
             OldPosition = Position;
             Position += Velocity;
             Velocity *= 0.9f;
-            Velocity.Y += 0.02f;
+            Velocity.Y += 0.05f;
             Rotation += 0.04f;
             Scale *= 0.9f;
+
+            minScaleForDeath = 0.01f;
 
             return false;
         }
 
         public override Color GetAlpha(Color lightColor) => Color.White;
 
-        private float GetTrailWidth(float progress) => 32f * (1 - progress * 0.5f) * Scale;
-        private Color GetTrailColor(float progress) => Color.White * (1 - MathF.Pow(progress, 1.5f));
+        private float GetTrailWidth(float progress) => 32f * (1 - progress) * Scale;
+        private Color GetTrailColor(float progress) => Color.White * (1 - progress) * (TimeLeft / (float)InitTimeLeft);
 
         public override bool PreDraw(DrawSystem system, ref Color lightColor, ref float scaleMult)
         {
-            trail.UpdatePointsAsSimpleTrail(Position, 10);
+            trail.UpdatePointsAsSimpleTrail(Position, 16);
             system.AddToLayer(DrawKey, trail);
 
             return true;

@@ -106,7 +106,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             for (int i = 0; i < 7; i++)
             {
                 var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
-                var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(2, 4);
+                var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3, 6);
                 Particle.NewParticle<TheStellarThrowHitParticle>(DrawLayers.Dusts, DrawTypeFlags.Additive, position, velocity);
             }
         }
