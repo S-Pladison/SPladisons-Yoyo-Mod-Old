@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using SPladisonsYoyoMod.Common;
 using SPladisonsYoyoMod.Common.Particles;
 using SPladisonsYoyoMod.Common.Graphics.Primitives;
 using SPladisonsYoyoMod.Utilities;
 using System;
 using Terraria;
+using SPladisonsYoyoMod.Common.Graphics;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
-    /*public class TheStellarThrowHitParticle : Particle, IPostUpdateCameraPosition
+    public class TheStellarThrowHitParticle : Particle
     {
         private PrimitiveStrip trail;
 
@@ -21,7 +21,7 @@ namespace SPladisonsYoyoMod.Content.Particles
             TimeLeft = 25;
             Rotation = Main.rand.NextFloat(MathHelper.TwoPi);
 
-            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, ModAssets.GetEffect("TheStellarThrowParticleTrail").Value);
+            trail = new PrimitiveStrip(GetTrailWidth, GetTrailColor, new IPrimitiveEffect.Custom("TheStellarThrowParticleTrail"));
         }
 
         public override bool PreUpdate(ref float minScaleForDeath)
@@ -41,10 +41,12 @@ namespace SPladisonsYoyoMod.Content.Particles
         private float GetTrailWidth(float progress) => 32f * (1 - progress * 0.5f) * Scale;
         private Color GetTrailColor(float progress) => Color.White * (1 - MathF.Pow(progress, 1.5f));
 
-        void IPostUpdateCameraPosition.PostUpdateCameraPosition()
+        public override bool PreDraw(DrawSystem system, ref Color lightColor, ref float scaleMult)
         {
             trail.UpdatePointsAsSimpleTrail(Position, 10);
-            PrimitiveSystem.AddToDataCache(DrawKey.Layer, DrawKey.Flags, trail);
+            system.AddToLayer(DrawKey, trail);
+
+            return true;
         }
-    }*/
+    }
 }

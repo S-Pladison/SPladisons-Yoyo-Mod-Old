@@ -1,10 +1,34 @@
-﻿namespace SPladisonsYoyoMod.Common
+﻿using SPladisonsYoyoMod.Common.Graphics;
+using Terraria;
+using Terraria.ModLoader;
+
+namespace SPladisonsYoyoMod.Common
 {
     public interface IPostUpdateCameraPosition
     {
         /// <summary>
-        /// Useful for things like additional drawing of additive/pixelated things or primitives
+        /// Useful for things like texture rendering, etc.
         /// </summary>
         void PostUpdateCameraPosition();
+
+        // ...
+
+        private class HookLoader : ILoadable
+        {
+            void ILoadable.Load(Mod mod)
+            {
+                On.Terraria.Main.DoDraw_UpdateCameraPosition += (orig) =>
+                {
+                    orig();
+
+                    if (Main.gameMenu) return;
+
+                    DrawSystem.GetDrawData();
+                    SPladisonsYoyoMod.Events.InvokeOnPostUpdateCameraPosition();
+                };
+            }
+
+            void ILoadable.Unload() { }
+        }
     }
 }

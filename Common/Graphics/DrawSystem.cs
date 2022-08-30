@@ -109,7 +109,7 @@ namespace SPladisonsYoyoMod.Common.Graphics
 
                 if (!drawDataDict[key].Any()) return;
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, blendState, Main.DefaultSamplerState, null, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                spriteBatch.Begin(SpriteSortMode.Deferred, blendState, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
                 spriteBatch.Draw(renderTargetDict[key], new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White);
                 spriteBatch.End();
             }
@@ -139,7 +139,7 @@ namespace SPladisonsYoyoMod.Common.Graphics
                 device.SetRenderTarget(target);
                 device.Clear(Color.Transparent);
 
-                spriteBatch.Begin(SpriteSortMode.Immediate, blendState, SamplerState.LinearWrap, null, RasterizerState.CullNone, null, matrix);
+                spriteBatch.Begin(SpriteSortMode.Deferred, blendState, SamplerState.LinearWrap, DepthStencilState.None, RasterizerState.CullNone, null, matrix);
                 foreach (var data in drawDataDict[key]) data.Draw(spriteBatch);
                 spriteBatch.End();
 

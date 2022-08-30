@@ -53,16 +53,20 @@ namespace SPladisonsYoyoMod.Common.Graphics.Primitives
 
             }
 
-            public Custom(string effectName, Action<EffectParameterCollection> onSetParameters)
+            public Custom(string effectName, Action<EffectParameterCollection> onSetParameters = null)
             {
                 EffectName = effectName;
-                OnSetParameters = onSetParameters ?? new Action<EffectParameterCollection>((_) => { });
+                OnSetParameters = onSetParameters ?? NullAction;
             }
 
             void IPrimitiveEffect.SetParameters(EffectParameterCollection parameters)
             {
                 OnSetParameters.Invoke(parameters);
             }
+
+            // ...
+
+            private static void NullAction(EffectParameterCollection parameters) { }
         }
     }
 }

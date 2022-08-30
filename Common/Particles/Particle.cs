@@ -127,7 +127,7 @@ namespace SPladisonsYoyoMod.Common.Particles
             var lightColor = Lighting.GetColor((int)(Position.X + 4.0) / 16, (int)(Position.Y + 4.0) / 16);
             var scaleMult = 1f;
 
-            if (PreDraw(ref lightColor, ref scaleMult))
+            if (PreDraw(system, ref lightColor, ref scaleMult))
             {
                 var height = Texture2D.Height() / FrameCount;
                 var rect = new Rectangle(0, height * Frame, Texture2D.Width(), height);
@@ -137,11 +137,11 @@ namespace SPladisonsYoyoMod.Common.Particles
 
                 system.AddToLayer(DrawKey, drawData);
             }
-            PostDraw(lightColor, scaleMult);
+            PostDraw(system, lightColor, scaleMult);
         }
 
-        public virtual void PostDraw(Color lightColor, float scaleMult) { }
-        public virtual bool PreDraw(ref Color lightColor, ref float scaleMult) => true;
+        public virtual void PostDraw(DrawSystem system, Color lightColor, float scaleMult) { }
+        public virtual bool PreDraw(DrawSystem system, ref Color lightColor, ref float scaleMult) => true;
 
         public void Kill()
         {

@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using SPladisonsYoyoMod.Common.Graphics;
 using SPladisonsYoyoMod.Common.Particles;
 using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
-    /*public class TheStellarThrowTrailParticle : Particle
+    public class TheStellarThrowTrailParticle : Particle
     {
         public override string Texture => ModAssets.ParticlesPath + Name;
 
@@ -27,10 +28,10 @@ namespace SPladisonsYoyoMod.Content.Particles
 
         public override Color GetAlpha(Color lightColor) => Color.White;
 
-        public override bool PreDraw(ref Color lightColor, ref float scaleMult)
+        public override bool PreDraw(DrawSystem system, ref Color lightColor, ref float scaleMult)
         {
             scaleMult = 0.6f;
             return true;
         }
-    }*/
+    }
 }

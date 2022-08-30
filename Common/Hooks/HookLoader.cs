@@ -15,7 +15,6 @@ namespace SPladisonsYoyoMod.Common.Hooks
             if (Main.dedServ) return;
 
             On.Terraria.Main.DrawProj_DrawYoyoString += On_Main_DrawProj_DrawYoyoString;
-            On.Terraria.Main.DoDraw_UpdateCameraPosition += On_Main_DoDraw_UpdateCameraPosition;
 
             HookEndpointManager.Add<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 
@@ -31,7 +30,6 @@ namespace SPladisonsYoyoMod.Common.Hooks
             if (Main.dedServ) return;
 
             On.Terraria.Main.DrawProj_DrawYoyoString -= On_Main_DrawProj_DrawYoyoString;
-            On.Terraria.Main.DoDraw_UpdateCameraPosition -= On_Main_DoDraw_UpdateCameraPosition;
 
             HookEndpointManager.Remove<hook_SetChatButtons>(SetChatButtonsMethod, On_NPCLoader_SetChatButtons);
 

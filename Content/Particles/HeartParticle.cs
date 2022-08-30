@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SPladisonsYoyoMod.Common.Graphics;
 using SPladisonsYoyoMod.Common.Particles;
 using System;
 using Terraria;
@@ -31,7 +32,7 @@ namespace SPladisonsYoyoMod.Content.Particles
 
         public override Color GetAlpha(Color lightColor) => Color.White * (TimeLeft / (float)InitTimeLeft) * 1.15f;
 
-        public override bool PreDraw(ref Color lightColor, ref float scaleMult)
+        public override bool PreDraw(DrawSystem system, ref Color lightColor, ref float scaleMult)
         {
             scaleMult = 0.25f * MathF.Sin(TimeLeft / (float)InitTimeLeft * MathF.PI);
             return true;

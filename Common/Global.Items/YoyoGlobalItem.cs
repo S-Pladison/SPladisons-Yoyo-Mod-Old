@@ -8,7 +8,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Common.Globals
+namespace SPladisonsYoyoMod.Common.Global
 {
     public class YoyoGlobalItem : GlobalItem
     {
@@ -103,7 +103,7 @@ namespace SPladisonsYoyoMod.Common.Globals
             var yoyoGloveTooltips = tooltips.FindAll(i => i.Text.StartsWith("[YG]"));
             var rarityColor = ItemRarity.GetColor(item.rare);
             var hexRarityColor = Colors.AlphaDarken(rarityColor).Hex3();
-            var textColor = Color.Lerp(rarityColor, Color.White, 0.625f);
+            var textColor = Color.Lerp(rarityColor, Color.White, 0.7f);
             var infoText = Language.GetTextValue("Mods.SPladisonsYoyoMod.ItemTooltip.YoyoGloveInfo");
 
             if (yoyoGloveTooltips.Any())

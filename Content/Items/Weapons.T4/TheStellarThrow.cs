@@ -2,7 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using SPladisonsYoyoMod.Common.Graphics;
 using SPladisonsYoyoMod.Common.Graphics.Primitives;
+using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Content.Particles;
 using SPladisonsYoyoMod.Utilities;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -93,7 +96,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 {
                     var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
                     var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(2);
-                    //Particle.NewParticle<TheStellarThrowTrailParticle>(DrawLayers.OverDusts, DrawTypeFlags.Additive, position, velocity);
+                    Particle.NewParticle<TheStellarThrowTrailParticle>(DrawLayers.Dusts, DrawTypeFlags.Additive, position, velocity);
                 }
             }
         }
@@ -104,7 +107,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             {
                 var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
                 var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(2, 4);
-                //Particle.NewParticle<TheStellarThrowHitParticle>(DrawLayers.OverDusts, DrawTypeFlags.Additive, position, velocity);
+                Particle.NewParticle<TheStellarThrowHitParticle>(DrawLayers.Dusts, DrawTypeFlags.Additive, position, velocity);
             }
         }
 
@@ -125,13 +128,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         void IDrawOnDifferentLayers.DrawOnDifferentLayers(DrawSystem system)
         {
-            trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 10, 16 * 7 * ReturningProgress);
-            system.AddToLayer(DrawLayers.Tiles, DrawTypeFlags.None, trail);
-        }
-
-        /*void IPostUpdateCameraPosition.PostUpdateCameraPosition()
-        {
-            /*var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
+            var drawPosition = Projectile.Center + Projectile.gfxOffY * Vector2.UnitY - Main.screenPosition;
             var texture = ModAssets.GetExtraTexture(8);
             var origin = texture.Size() * 0.5f + new Vector2(0, 7);
             var starRotation = Main.GlobalTimeWrappedHourly;
@@ -139,23 +136,23 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             void DrawStar(Color color, float rotation, float scale)
             {
-                AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.All, new(texture.Value, drawPosition, null, color, rotation, origin, (scale + starScalePulse) * Projectile.scale, SpriteEffects.None, 0));
+                system.AddToLayer(DrawLayers.Dusts, DrawTypeFlags.All, new DefaultDrawData(texture.Value, drawPosition, null, color, rotation, origin, (scale + starScalePulse) * Projectile.scale, SpriteEffects.None));
             }
 
             DrawStar(new Color(16, 11, 25, 220), -starRotation, 0.55f);
             DrawStar(new Color(16, 11, 25, 255), starRotation, 0.35f);
 
             texture = ModAssets.GetExtraTexture(4);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, ProjectileColors[1] * 0.3f, 0f, texture.Size() * 0.5f, Projectile.scale * 0.4f, SpriteEffects.None, 0));
+            system.AddToLayer(DrawLayers.Dusts, DrawTypeFlags.Additive, new DefaultDrawData(texture.Value, drawPosition, null, ProjectileColors[1] * 0.3f, 0f, texture.Size() * 0.5f, Projectile.scale * 0.4f, SpriteEffects.None));
 
             texture = ModAssets.GetExtraTexture(3);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, ProjectileColors[1] * 0.6f, 0f, texture.Size() * 0.5f, Projectile.scale * 1.4f, SpriteEffects.None, 0));
+            system.AddToLayer(DrawLayers.Dusts, DrawTypeFlags.Additive, new DefaultDrawData(texture.Value, drawPosition, null, ProjectileColors[1] * 0.6f, 0f, texture.Size() * 0.5f, Projectile.scale * 1.4f, SpriteEffects.None));
 
             texture = ModAssets.GetExtraTexture(34);
-            AdditionalDrawingSystem.AddToDataCache(DrawLayers.OverDusts, DrawTypeFlags.Additive, new(texture.Value, drawPosition, null, Color.White * 0.9f, 0f, texture.Size() * 0.5f, Projectile.scale * 0.15f + starScalePulse * 0.2f, SpriteEffects.None, 0));
+            system.AddToLayer(DrawLayers.Dusts, DrawTypeFlags.Additive, new DefaultDrawData(texture.Value, drawPosition, null, Color.White * 0.9f, 0f, texture.Size() * 0.5f, Projectile.scale * 0.15f + starScalePulse * 0.2f, SpriteEffects.None));
 
-            trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 25, 16 * 9 * ReturningProgress);
-            PrimitiveSystem.AddToDataCache(DrawLayers.OverTiles, DrawTypeFlags.None, trail);
-        }*/
+            trail.UpdatePointsAsSimpleTrail(Projectile.Center + Projectile.gfxOffY * Vector2.UnitY, 20, 16 * 9 * ReturningProgress);
+            system.AddToLayer(DrawLayers.Tiles, DrawTypeFlags.None, trail);
+        }
     }
 }

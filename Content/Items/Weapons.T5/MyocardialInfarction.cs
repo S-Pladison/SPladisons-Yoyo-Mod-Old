@@ -52,7 +52,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
         public override void OnSpawn(IEntitySource source)
         {
-            effect = new IPrimitiveEffect.Default(ModAssets.GetExtraTexture(11), true);
+            effect = new IPrimitiveEffect.Default(ModAssets.GetExtraTexture(46), true);
             trails = new PrimitiveStrip[2];
             trails[0] = new(p => 8 * (1 - p * 0.75f), p => Colors[0] * (1 - p * p), effect);
             trails[1] = new(p => 5 * (1 - p * 0.9f), p => Colors[1] * (1 - p * p), effect);
@@ -180,6 +180,6 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
         }
 
         private float TargetConnectionWidth(float progress) => 8f * MathF.Pow((progress - 0.5f) * 2f, 2) + 2f;
-        private Color TargetConnectionColor(float progress) => Colors[0] * MathF.Pow((progress - 0.5f) * 2f, 2) * ReturningProgress * 0.4f;
+        private Color TargetConnectionColor(float progress) => Colors[0] * MathF.Pow((progress - 0.5f) * 2f, 2) * ReturningProgress;
     }
 }

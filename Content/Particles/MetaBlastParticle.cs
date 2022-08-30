@@ -7,19 +7,19 @@ using Terraria;
 
 namespace SPladisonsYoyoMod.Content.Particles
 {
-    public class BlackholeSpaceParticle : Particle, IDrawOnRenderTarget
+    public class MetaBlastParticle : Particle, IDrawOnRenderTarget
     {
-        public override string Texture => ModAssets.ParticlesPath + "HDSmokeParticle";
+        public override string Texture => ModAssets.MiscPath + "Extra_43";
 
         public override void OnSpawn()
         {
             TimeLeft = 180;
-            BlackholeEffectSystem.AddElement(this);
+            MetaBlastEffectSystem.AddElement(this);
         }
 
         public override void OnKill()
         {
-            BlackholeEffectSystem.RemoveElement(this);
+            MetaBlastEffectSystem.RemoveElement(this);
         }
 
         public override bool PreUpdate(ref float minScaleForDeath)
@@ -27,10 +27,10 @@ namespace SPladisonsYoyoMod.Content.Particles
             OldPosition = Position;
             Position += Velocity;
             Rotation += 0.05f;
-            Velocity *= 0.94f;
-            Scale *= 0.98f;
+            Velocity *= 0.875f;
+            Scale *= 0.9825f;
 
-            minScaleForDeath = 0.15f;
+            minScaleForDeath = 0.01f;
             return false;
         }
 
@@ -38,7 +38,7 @@ namespace SPladisonsYoyoMod.Content.Particles
 
         void IDrawOnRenderTarget.DrawOnRenderTarget(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture2D.Value, Position - Main.screenPosition, null, Color.White * Scale, Rotation, Texture2D.Size() * 0.5f, Scale * 0.5f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture2D.Value, Position - Main.screenPosition, null, Color.White, Rotation, Texture2D.Size() * 0.5f, Scale * 0.4f, SpriteEffects.None, 0f);
         }
     }
 }

@@ -6,7 +6,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SPladisonsYoyoMod.Common.Globals
+namespace SPladisonsYoyoMod.Common.Global
 {
     public class PladGlobalNPC : GlobalNPC
     {

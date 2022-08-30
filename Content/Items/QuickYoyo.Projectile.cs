@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPladisonsYoyoMod.Common.Global;
 using System;
 using System.IO;
 using System.Reflection;
@@ -50,7 +51,7 @@ namespace SPladisonsYoyoMod.Content.Items
             Projectile.width = 16;
             Projectile.height = 16;
 
-            Projectile.aiStyle = Common.Globals.YoyoGlobalProjectile.YoyoAIStyle;
+            Projectile.aiStyle = YoyoGlobalProjectile.YoyoAIStyle;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
 

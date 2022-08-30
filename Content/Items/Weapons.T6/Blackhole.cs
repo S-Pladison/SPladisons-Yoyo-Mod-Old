@@ -108,9 +108,9 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
             }
         }
 
-        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyDamageScaling(ref float damageScale)
         {
-            if (YoyoGloveActivated) damage = (int)(damage * 1.2f);
+            if (YoyoGloveActivated) damageScale *= 1.2f;
         }
 
         public override void YoyoOnHitNPC(Player owner, NPC target, int damage, float knockback, bool crit)
@@ -121,7 +121,7 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 {
                     var position = Projectile.Center + Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(20);
                     var velocity = Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi)) * Main.rand.NextFloat(3);
-                    Particle.NewParticle(ParticleSystem.ParticleType<BlackholeSpaceParticle>(), position, velocity, Color.White);
+                    Particle.NewParticle<BlackholeSpaceParticle>(position, velocity);
                 }
             }
 

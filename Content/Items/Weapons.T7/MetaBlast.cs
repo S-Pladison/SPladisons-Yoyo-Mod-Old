@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SPladisonsYoyoMod.Common.Graphics;
+using SPladisonsYoyoMod.Common.Particles;
+using SPladisonsYoyoMod.Content.Particles;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -226,6 +228,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
 
             MetaBlastEffectSystem.AddElement(this);
             SoundEngine.PlaySound(ExplosionDropSound, Projectile.Center);
+
+            for (int i = 0; i < 35; i++)
+            {
+                Particle.NewParticle<MetaBlastParticle>(Projectile.Center, new Vector2(Main.rand.NextFloat(5, 10), 0).RotatedBy(i / 35.0 * MathHelper.TwoPi));
+            }
         }
 
         public override bool PreKill(int timeLeft)
