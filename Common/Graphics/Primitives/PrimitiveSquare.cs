@@ -11,15 +11,29 @@ namespace SPladisonsYoyoMod.Common.Graphics.Primitives
         public Vector2 Position;
         public Vector2 Size;
         public float Rotation;
-        public Color Color;
+        public Color[] Colors;
         public SpriteEffects SpriteEffect;
+
+        public PrimitiveSquare(Vector2 position, Vector2 size, float rotation, Color[] colors, SpriteEffects spriteEffect, IPrimitiveEffect effect) : base(PrimitiveType.TriangleStrip, 0, null, null, effect)
+        {
+            if (colors.Length != 4) throw new Exception("Are you stupid? The square has 4 corners...");
+
+            Position = position;
+            Size = size;
+            Rotation = rotation;
+            Colors = colors;
+            SpriteEffect = spriteEffect;
+
+            Indeces.AddRange(new short[] { 0, 1, 2, 3 });
+            PrimitivesCount = Indeces.Count - 2;
+        }
 
         public PrimitiveSquare(Vector2 position, Vector2 size, float rotation, Color color, SpriteEffects spriteEffect, IPrimitiveEffect effect) : base(PrimitiveType.TriangleStrip, 0, null, null, effect)
         {
             Position = position;
             Size = size;
             Rotation = rotation;
-            Color = color;
+            Colors = new Color[] { color, color, color, color };
             SpriteEffect = spriteEffect;
 
             Indeces.AddRange(new short[] { 0, 1, 2, 3 });
@@ -30,10 +44,12 @@ namespace SPladisonsYoyoMod.Common.Graphics.Primitives
         {
             Vertices.Clear();
 
+            int colorIndex = 0;
+
             void AddVertex(Vector2 offset)
             {
                 var texCoord = new Vector2((Convert.ToBoolean(offset.X) ^ SpriteEffect.HasFlag(SpriteEffects.FlipHorizontally)).ToInt(), (Convert.ToBoolean(offset.Y) ^ SpriteEffect.HasFlag(SpriteEffects.FlipVertically)).ToInt());
-                Vertices.AddVertex(Position - Main.screenPosition + (Vector2.Subtract(offset, new Vector2(0.5f)) * Size).RotatedBy(Rotation), Color, texCoord);
+                Vertices.AddVertex(Position - Main.screenPosition + (Vector2.Subtract(offset, new Vector2(0.5f)) * Size).RotatedBy(Rotation), Colors[colorIndex++], texCoord);
             }
 
             AddVertex(new(0, 1));
