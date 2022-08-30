@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace SPladisonsYoyoMod.Common.Global
 {
-    public class PladGlobalNPC : GlobalNPC
+    public partial class PladGlobalNPC : GlobalNPC
     {
         public bool improvedPoisoningDebuff;
 
@@ -17,11 +17,6 @@ namespace SPladisonsYoyoMod.Common.Global
         public override void ResetEffects(NPC npc)
         {
             improvedPoisoningDebuff = false;
-        }
-
-        public override void ModifyGlobalLoot(GlobalLoot globalLoot)
-        {
-            globalLoot.Add(new ItemDropWithConditionRule(ModContent.ItemType<SpaceKey>(), 2500, 1, 1, new SpaceKeyCondition(), 1));
         }
 
         public override void GetChat(NPC npc, ref string chat)
@@ -48,23 +43,11 @@ namespace SPladisonsYoyoMod.Common.Global
             }
         }
 
-        public override void SetupShop(int type, Chest shop, ref int nextSlot)
-        {
-            if (type == NPCID.SkeletonMerchant)
-            {
-                int yoyoGloveIndex = shop.item.ToList().FindIndex(i => i.type == ItemID.YoYoGlove);
-                if (yoyoGloveIndex == -1 && NPC.downedBoss3 && Main.rand.NextBool(2))
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.YoYoGlove);
-                }
-            }
-        }
-
         public override void DrawEffects(NPC npc, ref Color drawColor)
         {
-            if (improvedPoisoningDebuff && Main.rand.Next(26) == 0)
+            if (improvedPoisoningDebuff && Main.rand.NextBool(26))
             {
-                Dust dust = Dust.NewDustDirect(npc.position, npc.width, npc.height, 46, 0f, 0f, 120, default, 0.2f);
+                Dust dust = Dust.NewDustDirect(npc.position, npc.width, npc.height, DustID.Poisoned, 0f, 0f, 120, default, 0.2f);
                 dust.noGravity = true;
                 dust.fadeIn = 1.9f;
             }
