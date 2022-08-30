@@ -100,10 +100,11 @@ namespace SPladisonsYoyoMod.Content.Items.Weapons
                 var npc = target.npc;
                 var distance = target.distance;
                 var vector = Projectile.Center - npc.Center;
+                var progress = 1 - distance / currentRadius;
 
                 vector *= 3f / distance * 5f;
 
-                npc.velocity = Vector2.Lerp(vector * (1 - distance / currentRadius), npc.velocity, 0.5f);
+                npc.velocity = Vector2.Lerp(vector * progress, npc.velocity, 0.8f);
                 npc.netUpdate = true;
             }
         }

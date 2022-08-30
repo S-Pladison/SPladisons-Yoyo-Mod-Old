@@ -16,6 +16,7 @@ namespace SPladisonsYoyoMod.Common.Graphics.Primitives
 
         public PrimitiveSquare(Vector2 position, Vector2 size, float rotation, Color[] colors, SpriteEffects spriteEffect, IPrimitiveEffect effect) : base(PrimitiveType.TriangleStrip, 0, null, null, effect)
         {
+            if (colors is null) throw new Exception("Ok...");
             if (colors.Length != 4) throw new Exception("Are you stupid? The square has 4 corners...");
 
             Position = position;
